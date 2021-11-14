@@ -44,7 +44,7 @@ public class GameFrame extends JFrame implements WindowFocusListener {
     }
 
     public void initialize() {
-        this.setTitle(this.getTitle());
+        this.setTitle(getDefTitle());
 //        this.setTitle(DEF_TITLE); Removed direct access and used getter
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.pack();
