@@ -134,7 +134,8 @@ public class Wall {
         this.setLevel(0);
 
         //m_ballCount = BALL_COUNT;
-        this.setBallCount(BALL_COUNT);
+//        this.setBallCount(BALL_COUNT);
+        this.resetBallCount();
 //        m_ballLost = false;
         this.setBallLost(false);
 
@@ -259,118 +260,157 @@ public class Wall {
     }
 
     public void move() {
-        m_player.move();
-        m_ball.move();
+        this.getPlayer().move();
+        this.getBall().move();
     }
 
     public void findImpacts() {
-        if (m_player.impact(m_ball)) {
-            m_ball.reverseY();
+//        if (m_player.impact(m_ball)) {
+//            m_ball.reverseY();
+//        } else if (impactWall()) {
+//            // for efficiency reverse is done into method impactWall because for every brick program checks for horizontal and vertical impacts
+//            m_brickCount--;
+//        } else if (impactBorder()) {
+//            m_ball.reverseX();
+//        } else if (m_ball.getPosition().getY() < m_area.getY()) {
+//            m_ball.reverseY();
+//        } else if (m_ball.getPosition().getY() > m_area.getY() + m_area.getHeight()) {
+//            m_ballCount--;
+//            m_ballLost = true;
+//        }
+        if (this.getPlayer().impact(this.getBall())) {
+            this.getBall().reverseY();
         } else if (impactWall()) {
-            // for efficiency reverse is done into method impactWall because for every brick program checks for horizontal and vertical impacts
-            m_brickCount--;
+            // for efficiency reverse is done into method impactWall because for
+            // every brick program checks for horizontal and vertical impacts
+            this.decrementBallCount();
         } else if (impactBorder()) {
-            m_ball.reverseX();
-        } else if (m_ball.getPosition().getY() < m_area.getY()) {
-            m_ball.reverseY();
-        } else if (m_ball.getPosition().getY() > m_area.getY() + m_area.getHeight()) {
-            m_ballCount--;
-            m_ballLost = true;
+            this.getBall().reverseX();
+        } else if (this.getBall().getPosition().getY() < this.getArea().getY()){
+            this.getBall().reverseY();
+        } else if (this.getBall().getPosition().getY() >
+                   this.getArea().getY() + this.getArea().getHeight()) {
+            this.decrementBallCount();
+            this.setBallLost(true);
         }
     }
 
     public boolean impactWall() {
-        for (Brick b : m_bricks) {
-            switch (b.findImpact(m_ball)) {
+//        for (Brick b : m_bricks) {
+//            switch (b.findImpact(m_ball)) {
+//                //Vertical Impact
+//                case Brick.UP_IMPACT:
+//                    m_ball.reverseY();
+//                    return b.setImpact(m_ball.down, Brick.Crack.UP);
+//                case Brick.DOWN_IMPACT:
+//                    m_ball.reverseY();
+//                    return b.setImpact(m_ball.up, Brick.Crack.DOWN);
+//
+//                //Horizontal Impact
+//                case Brick.LEFT_IMPACT:
+//                    m_ball.reverseX();
+//                    return b.setImpact(m_ball.right, Brick.Crack.RIGHT);
+//                case Brick.RIGHT_IMPACT:
+//                    m_ball.reverseX();
+//                    return b.setImpact(m_ball.left, Brick.Crack.LEFT);
+//            }
+
+        for (Brick b : this.getBricks()) {
+            switch (b.findImpact(this.getBall())) {
                 //Vertical Impact
-                case Brick.UP_IMPACT:
-                    m_ball.reverseY();
-                    return b.setImpact(m_ball.down, Brick.Crack.UP);
-                case Brick.DOWN_IMPACT:
-                    m_ball.reverseY();
-                    return b.setImpact(m_ball.up, Brick.Crack.DOWN);
+                case Brick.UP_IMPACT -> {
+                    this.getBall().reverseY();
+                    return b.setImpact(this.getBall().down, Brick.Crack.UP);
+                }
+                case Brick.DOWN_IMPACT -> {
+                    this.getBall().reverseY();
+                    return b.setImpact(this.getBall().up, Brick.Crack.DOWN);
+                }
 
                 //Horizontal Impact
-                case Brick.LEFT_IMPACT:
-                    m_ball.reverseX();
-                    return b.setImpact(m_ball.right, Brick.Crack.RIGHT);
-                case Brick.RIGHT_IMPACT:
-                    m_ball.reverseX();
-                    return b.setImpact(m_ball.left, Brick.Crack.LEFT);
+                case Brick.LEFT_IMPACT -> {
+                    this.getBall().reverseX();
+                    return b.setImpact(this.getBall().right, Brick.Crack.RIGHT);
+                }
+                case Brick.RIGHT_IMPACT -> {
+                    this.getBall().reverseX();
+                    return b.setImpact(this.getBall().left, Brick.Crack.LEFT);
+                }
             }
         }
         return false;
     }
 
     public boolean impactBorder() {
-        Point2D p = m_ball.getPosition();
-        return ((p.getX() < m_area.getX()) || (p.getX() > (m_area.getX() + m_area
-                .getWidth())));
+        Point2D p = this.getBall().getPosition();
+        return ((p.getX() < this.getArea().getX()) ||
+                (p.getX() > (this.getArea().getX() + this.getArea().getWidth())));
     }
 
     public void ballReset() {
-        m_player.moveTo(m_startPoint);
-        m_ball.moveTo(m_startPoint);
+//        m_player.moveTo(m_startPoint);
+//        m_ball.moveTo(m_startPoint);
+        this.getPlayer().moveTo(this.getStartPoint());
+        this.getBall().moveTo(this.getStartPoint());
         int speedX, speedY;
         do {
-            speedX = m_rnd.nextInt(5) - 2;
+            speedX = this.getRnd().nextInt(5) - 2;
         } while (speedX == 0);
         do {
-            speedY = -m_rnd.nextInt(3);
+            speedY = -this.getRnd().nextInt(3);
         } while (speedY == 0);
 
-        m_ball.setSpeed(speedX, speedY);
-        m_ballLost = false;
+        this.getBall().setSpeed(speedX, speedY);
+        //m_ballLost = false;
+        this.setBallLost(false);
     }
 
     public void wallReset() {
-        for (Brick b : m_bricks)
+        for (Brick b : this.getBricks())
             b.repair();
-        m_brickCount = m_bricks.length;
-        m_ballCount = 3;
+//        m_brickCount = m_bricks.length;
+//        m_ballCount = 3;
+        this.setBrickCount(this.getBricks().length);
+        this.resetBallCount();
     }
 
     public boolean ballEnd() {
-        return m_ballCount == 0;
+        return this.getBallCount() == 0;
     }
 
     public void nextLevel() {
-        m_bricks = m_levels[m_level++];
-        this.m_brickCount = m_bricks.length;
+        this.setBricks(this.getLevels()[this.getLevel()]);
+        this.setLevel(this.getLevel() + 1);
+        this.setBrickCount(this.getBricks().length);
     }
 
     public boolean hasLevel() {
-        return m_level < m_levels.length;
+        return this.getLevel() < this.getLevels().length;
     }
 
     public void setBallXSpeed(int s) {
-        m_ball.setXSpeed(s);
+        this.getBall().setXSpeed(s);
     }
 
     public void setBallYSpeed(int s) {
-        m_ball.setYSpeed(s);
+        this.getBall().setYSpeed(s);
     }
 
     public void resetBallCount() {
-        m_ballCount = 3;
+        this.setBallCount(BALL_COUNT);
     }
 
-    public Brick makeBrick(Point point, Dimension size, int type) {
-        Brick out;
-        switch (type) {
-            case CLAY:
-                out = new Brick2(point, size);
-                break;
-            case STEEL:
-                out = new Brick3(point, size);
-                break;
-            case CEMENT:
-                out = new Brick1(point, size);
-                break;
-            default:
-                throw new IllegalArgumentException(String.format("Unknown Type:%d\n", type));
-        }
-        return out;
+    private Brick makeBrick(Point point, Dimension size, int type) {
+        return switch (type) {
+            case CLAY -> new Brick2(point, size);
+            case STEEL -> new Brick3(point, size);
+            case CEMENT -> new Brick1(point, size);
+            default -> throw new IllegalArgumentException(String.format("Unknown Type:%d\n", type));
+        };
+    }
+
+    private void decrementBallCount() {
+        this.setBallCount(this.getBallCount() - 1);
     }
 
 }
