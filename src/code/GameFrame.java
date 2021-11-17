@@ -43,7 +43,7 @@ public class GameFrame extends JFrame implements WindowFocusListener {
         this.addWindowFocusListener(this);
     }
 
-    public void initialize() {
+    private void initialize() {
         this.setTitle(getDefTitle());
 //        this.setTitle(DEF_TITLE); Removed direct access and used getter
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -52,7 +52,7 @@ public class GameFrame extends JFrame implements WindowFocusListener {
         this.setVisible(true);
     }
 
-    public void autoLocate() {
+    private void autoLocate() {
         final double HALF = 0.5; //Declare symbolic constant to remove magic number
 
         Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
