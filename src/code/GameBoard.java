@@ -9,25 +9,20 @@ import java.awt.font.FontRenderContext;
 public class GameBoard extends JComponent implements KeyListener, MouseListener, MouseMotionListener {
 
     public static final int DELAY = 10;
+    public static final int BRICK_COUNT = 30; //added to remove magic number
+    public static final int LINE_COUNT = 3; //added to remove magic number
+    public static final int X = 300;
+    public static final int Y = 430;
+    public static final double BRICK_DIMENSION_RATIO = 6.0 / 2;
     private static final String CONTINUE = "Continue";
     private static final String RESTART = "Restart";
     private static final String EXIT = "Exit";
     private static final String PAUSE = "Pause Menu";
     private static final int TEXT_SIZE = 30;
     private static final Color MENU_COLOR = new Color(0, 255, 0);
-
-
     private static final int DEF_WIDTH = 600;
     private static final int DEF_HEIGHT = 450;
-
     private static final Color BG_COLOR = Color.WHITE;
-
-    public static final int BRICK_COUNT = 30; //added to remove magic number
-    public static final int LINE_COUNT = 3; //added to remove magic number
-    public static final int X = 300;
-    public static final int Y = 430;
-    public static final int BRICK_DIMENSION_RATIO = 6 / 2;
-
     private Timer m_gameTimer;
 
     private Wall m_wall;
@@ -49,7 +44,7 @@ public class GameBoard extends JComponent implements KeyListener, MouseListener,
     Added getters and setter for non final member variable
      */
 
-    public Timer getgameTimer() {
+    public Timer getGameTimer() {
         return m_gameTimer;
     }
 
@@ -65,15 +60,15 @@ public class GameBoard extends JComponent implements KeyListener, MouseListener,
         this.m_wall = wall;
     }
 
-    public String getmessage() {
+    public String getMessage() {
         return m_message;
     }
 
     public void setMessage(String message) {
-        this.m_message = m_message;
+        this.m_message = message;
     }
 
-    public boolean isshowPauseMenu() {
+    public boolean isShowPauseMenu() {
         return m_showPauseMenu;
     }
 
@@ -81,7 +76,7 @@ public class GameBoard extends JComponent implements KeyListener, MouseListener,
         this.m_showPauseMenu = showPauseMenu;
     }
 
-    public Font getmenuFont() {
+    public Font getMenuFont() {
         return m_menuFont;
     }
 
@@ -89,31 +84,31 @@ public class GameBoard extends JComponent implements KeyListener, MouseListener,
         this.m_menuFont = menuFont;
     }
 
-    public Rectangle getcontinueButtonRect() {
+    public Rectangle getContinueButtonRect() {
         return m_continueButtonRect;
     }
 
-    public void setcontinueButtonRect(Rectangle continueButtonRect) {
+    public void setContinueButtonRect(Rectangle continueButtonRect) {
         this.m_continueButtonRect = continueButtonRect;
     }
 
-    public Rectangle getexitButtonRect() {
+    public Rectangle getExitButtonRect() {
         return m_exitButtonRect;
     }
 
-    public void setexitButtonRect(Rectangle exitButtonRect) {
+    public void setExitButtonRect(Rectangle exitButtonRect) {
         this.m_exitButtonRect = exitButtonRect;
     }
 
-    public Rectangle getrestartButtonRect() {
+    public Rectangle getRestartButtonRect() {
         return m_restartButtonRect;
     }
 
-    public void setrestartButtonRect(Rectangle restartButtonRect) {
+    public void setRestartButtonRect(Rectangle restartButtonRect) {
         this.m_restartButtonRect = restartButtonRect;
     }
 
-    public int getstrLen() {
+    public int getStrLen() {
         return m_strLen;
     }
 
@@ -121,7 +116,7 @@ public class GameBoard extends JComponent implements KeyListener, MouseListener,
         this.m_strLen = strLen;
     }
 
-    public DebugConsole getdebugConsole() {
+    public DebugConsole getDebugConsole() {
         return m_debugConsole;
     }
 
@@ -132,24 +127,25 @@ public class GameBoard extends JComponent implements KeyListener, MouseListener,
     public GameBoard(JFrame owner) {
         super();
 
-        m_strLen = 0;
-        //this.setStrLen(0);
+        //m_strLen = 0;
+        this.setStrLen(0);
 
-        m_showPauseMenu = false;
-        //this.setShowPauseMenu(false);
+        //m_showPauseMenu = false;
+        this.setShowPauseMenu(false);
 
-        m_menuFont = new Font("Monospaced", Font.PLAIN, TEXT_SIZE);
-        //this.setMenuFont(new Font("Monospaced", Font.PLAIN, TEXT_SIZE));
+        //m_menuFont = new Font("Monospaced", Font.PLAIN, TEXT_SIZE);
+        this.setMenuFont(new Font("Monospaced", Font.PLAIN, TEXT_SIZE));
 
         this.initialize();
-        m_message = "Press SPACE to start";
-        //this.setMessage("Press SPACE to start");
+        //m_message = "Press SPACE to start";
+        this.setMessage("Press SPACE to start");
 
-        //m_wall = new Wall(new Rectangle(0, 0, DEF_WIDTH, DEF_HEIGHT), 30, 3, 6 / 2, new Point(300, 430)); Removed Magic Number and reduced line length
+        //m_wall = new Wall(new Rectangle(0, 0, DEF_WIDTH, DEF_HEIGHT), 30, 3, 6.0 / 2, new Point(300, 430));
         this.setWall(new Wall(new Rectangle(0, 0, DEF_WIDTH, DEF_HEIGHT),
-                BRICK_COUNT, LINE_COUNT, BRICK_DIMENSION_RATIO, new Point(X, Y)));
+                              BRICK_COUNT, LINE_COUNT, BRICK_DIMENSION_RATIO,
+                             new Point(X, Y)));
 
-        //m_debugConsole = new DebugConsole(owner, m_wall, this); removed direct assignment
+        //m_debugConsole = new DebugConsole(owner, m_wall, this);
         this.setDebugConsole(new DebugConsole(owner, m_wall, this));
 
         //initialize the first level
@@ -182,35 +178,9 @@ public class GameBoard extends JComponent implements KeyListener, MouseListener,
 
             repaint();
         });*/ //Extracted lambda expression method to reduce indentation level
-        m_gameTimer = new Timer(DELAY,e->timeActionListener());
+        //m_gameTimer = new Timer(DELAY, e -> timeActionListener());
+        this.setGameTimer(new Timer(DELAY, e -> timeActionListener()));
     }
-
-    private void timeActionListener() {
-            m_wall.move();
-            m_wall.findImpacts();
-            m_message = String.format("Bricks: %d Balls %d", m_wall.getBrickCount(), m_wall.getBallCount());
-            if (m_wall.isBallLost()) {
-                if (m_wall.ballEnd()) {
-                    m_wall.wallReset();
-                    m_message = "Game over";
-                }
-                m_wall.ballReset();
-                m_gameTimer.stop();
-            } else if (m_wall.isDone()) {
-                if (m_wall.hasLevel()) {
-                    m_message = "Go to Next Level";
-                    m_gameTimer.stop();
-                    m_wall.ballReset();
-                    m_wall.wallReset();
-                    m_wall.nextLevel();
-                } else {
-                    m_message = "ALL WALLS DESTROYED";
-                    m_gameTimer.stop();
-                }
-            }
-            repaint();
-    }
-
 
     public void initialize() {
         this.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
@@ -221,25 +191,28 @@ public class GameBoard extends JComponent implements KeyListener, MouseListener,
         this.addMouseMotionListener(this);
     }
 
-
     public void paint(Graphics g) {
+        final int X_COORDINATE = 250;
+        final int Y_COORDINATE = 225;
 
         Graphics2D g2d = (Graphics2D) g;
 
         clear(g2d);
 
         g2d.setColor(Color.BLUE);
-        g2d.drawString(m_message, 250, 225);
+        //g2d.drawString(m_message, 250, 225);
+        g2d.drawString(this.getMessage(), X_COORDINATE, Y_COORDINATE);
 
-        drawBall(m_wall.ball, g2d);
+        drawBall(this.getWall().ball, g2d);
 
-        for (Brick b : m_wall.bricks)
+        for (Brick b : this.getWall().bricks)
             if (!b.isBroken())
                 drawBrick(b, g2d);
 
-        drawPlayer(m_wall.player, g2d);
+        //drawPlayer(m_wall.player, g2d);
+        drawPlayer(this.getWall().player, g2d);
 
-        if (m_showPauseMenu)
+        if (isShowPauseMenu())
             drawMenu(g2d);
 
         Toolkit.getDefaultToolkit().sync();
@@ -298,11 +271,13 @@ public class GameBoard extends JComponent implements KeyListener, MouseListener,
     }
 
     public void obscureGameBoard(Graphics2D g2d) {
+        final float ALPHA = 0.55f;
 
         Composite tmp = g2d.getComposite();
         Color tmpColor = g2d.getColor();
 
-        AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.55f);
+        AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
+                                                       ALPHA);
         g2d.setComposite(ac);
 
         g2d.setColor(Color.BLACK);
@@ -313,49 +288,75 @@ public class GameBoard extends JComponent implements KeyListener, MouseListener,
     }
 
     public void drawPauseMenu(Graphics2D g2d) {
+        final float HALF = 0.5f;
+        final float TENTH = 0.1f;
+        final float EIGTH = 0.125f;
+        final float QUATER = 0.25f;
+        final int DOUBLE = 2;
+        final int TRIPLE = 3;
+
+
         Font tmpFont = g2d.getFont();
         Color tmpColor = g2d.getColor();
 
 
-        g2d.setFont(m_menuFont);
+        g2d.setFont(this.getMenuFont());
         g2d.setColor(MENU_COLOR);
 
-        if (m_strLen == 0) {
+        if (this.getStrLen() == 0) {
             FontRenderContext frc = g2d.getFontRenderContext();
-            m_strLen = m_menuFont.getStringBounds(PAUSE, frc).getBounds().width;
+            //m_strLen = m_menuFont.getStringBounds(PAUSE, frc).getBounds().width;
+            this.setStrLen(this.getMenuFont()
+                               .getStringBounds(PAUSE, frc)
+                               .getBounds().width);
         }
 
-        int x = (this.getWidth() - m_strLen) / 2;
-        int y = this.getHeight() / 10;
+        int x = (int) ((this.getWidth() - this.getStrLen()) * HALF);
+        int y = (int) (this.getHeight() * TENTH);
 
         g2d.drawString(PAUSE, x, y);
 
-        x = this.getWidth() / 8;
-        y = this.getHeight() / 4;
+        x = (int) (this.getWidth() * EIGTH);
+        y = (int) (this.getHeight() * QUATER);
 
 
-        if (m_continueButtonRect == null) {
+        //if (m_continueButtonRect == null) {
+        if (this.getContinueButtonRect() == null) {
             FontRenderContext frc = g2d.getFontRenderContext();
-            m_continueButtonRect = m_menuFont.getStringBounds(CONTINUE, frc).getBounds();
-            m_continueButtonRect.setLocation(x, y - m_continueButtonRect.height);
+            //m_continueButtonRect = m_menuFont.getStringBounds(CONTINUE, frc).getBounds();
+            //m_continueButtonRect.setLocation(x, y - m_continueButtonRect.height);
+            this.setContinueButtonRect(this.getMenuFont()
+                                           .getStringBounds(CONTINUE, frc)
+                                           .getBounds());
         }
 
         g2d.drawString(CONTINUE, x, y);
 
-        y *= 2;
+        y *= DOUBLE;
 
-        if (m_restartButtonRect == null) {
-            m_restartButtonRect = (Rectangle) m_continueButtonRect.clone();
-            m_restartButtonRect.setLocation(x, y - m_restartButtonRect.height);
+//        if (m_restartButtonRect == null) {
+//            m_restartButtonRect = (Rectangle) m_continueButtonRect.clone();
+//            m_restartButtonRect.setLocation(x, y - m_restartButtonRect.height);
+//        }
+        if (this.getRestartButtonRect() == null) {
+            this.setRestartButtonRect((Rectangle) this.getContinueButtonRect()
+                                                      .clone());
+            this.getRestartButtonRect()
+                .setLocation(x, y - this.getRestartButtonRect().height);
         }
 
         g2d.drawString(RESTART, x, y);
 
-        y *= 3.0 / 2;
+        y *= TRIPLE * HALF;
 
-        if (m_exitButtonRect == null) {
-            m_exitButtonRect = (Rectangle) m_continueButtonRect.clone();
-            m_exitButtonRect.setLocation(x, y - m_exitButtonRect.height);
+//        if (m_exitButtonRect == null) {
+//            m_exitButtonRect = (Rectangle) m_continueButtonRect.clone();
+//            m_exitButtonRect.setLocation(x, y - m_exitButtonRect.height);
+//        }
+        if (this.getExitButtonRect() == null) {
+            this.setExitButtonRect((Rectangle) this.getContinueButtonRect()
+                                                   .clone());
+            this.getExitButtonRect().setLocation(x, y - this.getExitButtonRect().height);
         }
 
         g2d.drawString(EXIT, x, y);
@@ -373,49 +374,56 @@ public class GameBoard extends JComponent implements KeyListener, MouseListener,
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
         if (code == KeyEvent.VK_LEFT) {
-            m_wall.player.moveLeft();
+            this.getWall().player.moveLeft();
         }
         if (code == KeyEvent.VK_RIGHT) {
-            m_wall.player.movRight();
+            this.getWall().player.movRight();
         }
         if (code == KeyEvent.VK_SPACE) {
-            if (!m_showPauseMenu)
-                if (m_gameTimer.isRunning())
-                    m_gameTimer.stop();
+            //if (!m_showPauseMenu)
+            if (!this.isShowPauseMenu())
+//                if (m_gameTimer.isRunning())
+//                    m_gameTimer.stop();
+                if (this.getGameTimer().isRunning())
+                    this.getGameTimer().stop();
                 else
-                    m_gameTimer.start();
+                    this.getGameTimer().start();
         }
         if (code == KeyEvent.VK_ESCAPE) {
-            m_showPauseMenu = !m_showPauseMenu;
+            // m_showPauseMenu = !m_showPauseMenu;
+            this.setShowPauseMenu(!this.isShowPauseMenu());
             repaint();
-            m_gameTimer.stop();
+            //m_gameTimer.stop();
+            this.getGameTimer().stop();
         }
         if (code == KeyEvent.VK_F1) {
             if (e.isAltDown() && e.isShiftDown())
-                m_debugConsole.setVisible(true);
+                //m_debugConsole.setVisible(true);
+                this.getDebugConsole().setVisible(true);
         }
     }
 
     @Override
     public void keyReleased(KeyEvent keyEvent) {
-        m_wall.player.stop();
+        this.getWall().player.stop();
     }
 
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
         Point p = mouseEvent.getPoint();
-        if (!m_showPauseMenu)
+        if (!this.isShowPauseMenu())
             return;
-        if (m_continueButtonRect.contains(p)) {
-            m_showPauseMenu = false;
+        //if (m_continueButtonRect.contains(p)) {
+        if (this.getContinueButtonRect().contains(p)) {
+            this.setShowPauseMenu(false);
             repaint();
-        } else if (m_restartButtonRect.contains(p)) {
-            m_message = "Restarting Game...";
-            m_wall.ballReset();
-            m_wall.wallReset();
-            m_showPauseMenu = false;
+        } else if (this.getRestartButtonRect().contains(p)) {
+            this.setMessage("Restarting Game...");
+            this.getWall().ballReset();
+            this.getWall().wallReset();
+            this.setShowPauseMenu(false);
             repaint();
-        } else if (m_exitButtonRect.contains(p)) {
+        } else if (this.getExitButtonRect().contains(p)) {
             System.exit(0);
         }
 
@@ -449,9 +457,14 @@ public class GameBoard extends JComponent implements KeyListener, MouseListener,
     @Override
     public void mouseMoved(MouseEvent mouseEvent) {
         Point p = mouseEvent.getPoint();
-        if (m_exitButtonRect != null && m_showPauseMenu) {
-            if (m_exitButtonRect.contains(p) || m_continueButtonRect.contains(p) || m_restartButtonRect.contains(p))
-                this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+//        if (m_exitButtonRect != null && m_showPauseMenu) {
+//            if (m_exitButtonRect.contains(p) || m_continueButtonRect.contains(p) || m_restartButtonRect
+//                    .contains(p))
+        if (this.getExitButtonRect() != null && this.isShowPauseMenu()) {
+            if (this.getExitButtonRect().contains(p) ||
+                this.getContinueButtonRect().contains(p) ||
+                this.getRestartButtonRect().contains(p))
+                    this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             else
                 this.setCursor(Cursor.getDefaultCursor());
         } else {
@@ -460,8 +473,42 @@ public class GameBoard extends JComponent implements KeyListener, MouseListener,
     }
 
     public void onLostFocus() {
-        m_gameTimer.stop();
-        m_message = "Focus Lost";
+        //m_gameTimer.stop();
+        this.getGameTimer().stop();
+//        m_message = "Focus Lost";
+        this.setMessage("Focus Lost");
+        repaint();
+    }
+
+    private void timeActionListener() {
+        //m_wall.move();
+        this.getWall().move();
+//        m_wall.findImpacts();
+        this.getWall().findImpacts();
+//        m_message = String.format("Bricks: %d Balls %d", m_wall.getBrickCount(), m_wall
+//                .getBallCount());
+        this.setMessage(String.format("Bricks: %d Balls %d",
+                                      this.getWall().getBrickCount(),
+                                      this.getWall().getBallCount()));
+        if (this.getWall().isBallLost()) {
+            if (this.getWall().ballEnd()) {
+                this.getWall().wallReset();
+                this.setMessage("Game Over");
+            }
+            this.getWall().ballReset();
+            this.getGameTimer().stop();
+        } else if (this.getWall().isDone()) {
+            if (this.getWall().hasLevel()) {
+                this.setMessage("Go to Next Level");
+                this.getGameTimer().stop();
+                this.getWall().ballReset();
+                this.getWall().wallReset();
+                this.getWall().nextLevel();
+            } else {
+                this.setMessage("ALL WALLS DESTROYED");
+                this.getGameTimer().stop();
+            }
+        }
         repaint();
     }
 
