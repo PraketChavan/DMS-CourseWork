@@ -142,7 +142,7 @@ public class Wall {
         //m_rnd = new Random();
         this.setRnd(new Random());
 
-        makeBall(ballPos);
+        this.makeBall(ballPos);
 
         int speedX, speedY;
         do {
@@ -202,7 +202,7 @@ public class Wall {
 
     }
 
-    public Brick[] makeChessboardLevel(Rectangle drawArea, int brickCnt, int lineCnt, double brickSizeRatio, int typeA, int typeB) {
+    private Brick[] makeChessboardLevel(Rectangle drawArea, int brickCnt, int lineCnt, double brickSizeRatio, int typeA, int typeB) {
         // if brickCount is not divisible by line count, brickCount is adjusted
         // to the biggest multiple of lineCount smaller then brickCount
         brickCnt -= brickCnt % lineCnt;

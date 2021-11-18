@@ -16,10 +16,10 @@ public class Brick3 extends Brick {
     private Random rnd;
     private Shape brickFace;
 
-    public Brick3(Point point, Dimension size){
+    public Brick3(Point point, Dimension size) {
         super(NAME,point,size,DEF_BORDER,DEF_INNER,STEEL_STRENGTH);
         rnd = new Random();
-        brickFace = super.brickFace;
+        brickFace = super.getBrickFace();
     }
 
 
