@@ -320,21 +320,21 @@ public class Wall {
                 //Vertical Impact
                 case Brick.UP_IMPACT -> {
                     this.getBall().reverseY();
-                    return b.setImpact(this.getBall().down, Brick.Crack.UP);
+                    return b.setImpact(this.getBall().getDown(), Brick.Crack.UP);
                 }
                 case Brick.DOWN_IMPACT -> {
                     this.getBall().reverseY();
-                    return b.setImpact(this.getBall().up, Brick.Crack.DOWN);
+                    return b.setImpact(this.getBall().getUp(), Brick.Crack.DOWN);
                 }
 
                 //Horizontal Impact
                 case Brick.LEFT_IMPACT -> {
                     this.getBall().reverseX();
-                    return b.setImpact(this.getBall().right, Brick.Crack.RIGHT);
+                    return b.setImpact(this.getBall().getRight(), Brick.Crack.RIGHT);
                 }
                 case Brick.RIGHT_IMPACT -> {
                     this.getBall().reverseX();
-                    return b.setImpact(this.getBall().left, Brick.Crack.LEFT);
+                    return b.setImpact(this.getBall().getLeft(), Brick.Crack.LEFT);
                 }
             }
         }

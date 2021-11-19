@@ -130,13 +130,13 @@ abstract public class Brick {
         if (this.isBroken())
             return 0;
         int out = 0;
-        if (this.getBrickFace().contains(b.right))
+        if (this.getBrickFace().contains(b.getRight()))
             out = LEFT_IMPACT;
-        else if (this.getBrickFace().contains(b.left))
+        else if (this.getBrickFace().contains(b.getLeft()))
             out = RIGHT_IMPACT;
-        else if (this.getBrickFace().contains(b.up))
+        else if (this.getBrickFace().contains(b.getUp()))
             out = DOWN_IMPACT;
-        else if (this.getBrickFace().contains(b.down))
+        else if (this.getBrickFace().contains(b.getDown()))
             out = UP_IMPACT;
         return out;
     }
