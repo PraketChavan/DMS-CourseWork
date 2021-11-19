@@ -13,14 +13,25 @@ public class Brick1 extends Brick {
     private static final Color DEF_BORDER = new Color(217, 199, 175);
     private static final int CEMENT_STRENGTH = 2;
 
-    private Crack crack;
-    private Shape brickFace;
+    private final Crack crack;
+    private Shape m_ChildBrickFace;
 
+    public Crack getCrack() {
+        return crack;
+    }
+
+    public Shape getChildBrickFace() {
+        return m_ChildBrickFace;
+    }
+
+    public void setChildBrickFace(Shape m_brickFace) {
+        this.m_ChildBrickFace = m_brickFace;
+    }
 
     public Brick1(Point point, Dimension size){
         super(NAME,point,size,DEF_BORDER,DEF_INNER,CEMENT_STRENGTH);
         crack = new Crack(DEF_CRACK_DEPTH,DEF_STEPS);
-        brickFace = super.getBrickFace();
+        this.setChildBrickFace(super.getBrickFace());
     }
 
     @Override
@@ -34,7 +45,7 @@ public class Brick1 extends Brick {
             return false;
         super.impact();
         if(!super.isBroken()){
-            crack.makeCrack(point,dir);
+            this.getCrack().makeCrack(point,dir);
             updateBrick();
             return false;
         }
@@ -44,20 +55,22 @@ public class Brick1 extends Brick {
 
     @Override
     public Shape getBrick() {
-        return brickFace;
+        return m_ChildBrickFace;
     }
 
     private void updateBrick(){
         if(!super.isBroken()){
-            GeneralPath gp = crack.draw();
+            GeneralPath gp = this.getCrack().draw();
             gp.append(super.getBrickFace(),false);
-            brickFace = gp;
+//            m_brickFace = gp;
+            this.setChildBrickFace(gp);
         }
     }
 
     public void repair(){
         super.repair();
-        crack.reset();
-        brickFace = super.getBrickFace();
+        this.getCrack().reset();
+//        m_brickFace = super.getBrickFace();
+        this.setChildBrickFace(super.getBrickFace());
     }
 }

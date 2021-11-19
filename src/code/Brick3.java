@@ -13,13 +13,22 @@ public class Brick3 extends Brick {
     private static final int STEEL_STRENGTH = 1;
     private static final double STEEL_PROBABILITY = 0.4;
 
-    private Random rnd;
-    private Shape brickFace;
+    private final Random m_ChildRnd;
+
+    public Random getChildRnd() {
+        return m_ChildRnd;
+    }
+
+    public Shape getM_ChildBrickFace() {
+        return m_ChildBrickFace;
+    }
+
+    private final Shape m_ChildBrickFace;
 
     public Brick3(Point point, Dimension size) {
         super(NAME,point,size,DEF_BORDER,DEF_INNER,STEEL_STRENGTH);
-        rnd = new Random();
-        brickFace = super.getBrickFace();
+        m_ChildRnd = new Random();
+        m_ChildBrickFace = super.getBrickFace();
     }
 
 
@@ -30,7 +39,7 @@ public class Brick3 extends Brick {
 
     @Override
     public Shape getBrick() {
-        return brickFace;
+        return m_ChildBrickFace;
     }
 
     public  boolean setImpact(Point2D point , int dir){
@@ -41,7 +50,7 @@ public class Brick3 extends Brick {
     }
 
     public void impact(){
-        if(rnd.nextDouble() < STEEL_PROBABILITY){
+        if(this.getChildRnd().nextDouble() < STEEL_PROBABILITY){
             super.impact();
         }
     }

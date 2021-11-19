@@ -283,7 +283,7 @@ public class Wall {
         } else if (impactWall()) {
             // for efficiency reverse is done into method impactWall because for
             // every brick program checks for horizontal and vertical impacts
-            this.decrementBallCount();
+            this.setBrickCount(this.getBrickCount() - 1);
         } else if (impactBorder()) {
             this.getBall().reverseX();
         } else if (this.getBall().getPosition().getY() < this.getArea().getY()){
