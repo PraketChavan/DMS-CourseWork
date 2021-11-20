@@ -10,47 +10,87 @@ public class DebugPanel extends JPanel {
     private static final Color DEF_BKG = Color.WHITE;
 
 
-    private JButton skipLevel;
-    private JButton resetBalls;
+    private JButton m_skipLevel;
+    private JButton m_resetBalls;
 
-    private JSlider ballXSpeed;
-    private JSlider ballYSpeed;
+    private JSlider m_ballXSpeed;
+    private JSlider m_ballYSpeed;
 
-    private Wall wall;
+    private Wall m_wall;
 
-    public DebugPanel(Wall wall){
+    public JButton getSkipLevel() {
+        return m_skipLevel;
+    }
 
-        this.wall = wall;
+    public void setSkipLevel(JButton skipLevel) {
+        this.m_skipLevel = skipLevel;
+    }
+
+    public JButton getResetBalls() {
+        return m_resetBalls;
+    }
+
+    public void setResetBalls(JButton resetBalls) {
+        this.m_resetBalls = resetBalls;
+    }
+
+    public JSlider getBallXSpeed() {
+        return m_ballXSpeed;
+    }
+
+    public void setBallXSpeed(JSlider ballXSpeed) {
+        this.m_ballXSpeed = ballXSpeed;
+    }
+
+    public JSlider getBallYSpeed() {
+        return m_ballYSpeed;
+    }
+
+    public void setBallYSpeed(JSlider ballYSpeed) {
+        this.m_ballYSpeed = ballYSpeed;
+    }
+
+    public Wall getWall() {
+        return m_wall;
+    }
+
+    public void setWall(Wall wall) {
+        this.m_wall = wall;
+    }
+
+    public DebugPanel(Wall wall) {
+
+        this.setWall(wall);
 
         initialize();
 
-        skipLevel = makeButton("Skip Level",e -> wall.nextLevel());
-        resetBalls = makeButton("Reset Balls",e -> wall.resetBallCount());
+        setSkipLevel(makeButton("Skip Level", e -> wall.nextLevel()));
+        setResetBalls(makeButton("Reset Balls", e -> wall.resetBallCount()));
 
-        ballXSpeed = makeSlider(-4,4,e -> wall.setBallXSpeed(ballXSpeed.getValue()));
-        ballYSpeed = makeSlider(-4,4,e -> wall.setBallYSpeed(ballYSpeed.getValue()));
+        setBallXSpeed(makeSlider(-4, 4, e -> wall.setBallXSpeed(getBallXSpeed().getValue())));
+        setBallYSpeed(makeSlider(-4, 4, e -> wall.setBallYSpeed(getBallYSpeed().getValue())));
 
-        this.add(skipLevel);
-        this.add(resetBalls);
+        this.add(getSkipLevel());
+        this.add(getResetBalls());
 
-        this.add(ballXSpeed);
-        this.add(ballYSpeed);
+        this.add(getBallXSpeed());
+        this.add(getBallYSpeed());
 
     }
 
-    public void initialize(){
+    public void initialize() {
         this.setBackground(DEF_BKG);
-        this.setLayout(new GridLayout(2,2));
+        this.setLayout(new GridLayout(2, 2));
     }
 
-    public JButton makeButton(String title, ActionListener e){
+    public JButton makeButton(String title, ActionListener e) {
         JButton out = new JButton(title);
         out.addActionListener(e);
-        return  out;
+        return out;
     }
 
-    public JSlider makeSlider(int min, int max, ChangeListener e){
-        JSlider out = new JSlider(min,max);
+    public JSlider makeSlider(int min, int max, ChangeListener e) {
+        JSlider out = new JSlider(min, max);
         out.setMajorTickSpacing(1);
         out.setSnapToTicks(true);
         out.setPaintTicks(true);
@@ -58,9 +98,8 @@ public class DebugPanel extends JPanel {
         return out;
     }
 
-    public void setValues(int x,int y){
-        ballXSpeed.setValue(x);
-        ballYSpeed.setValue(y);
+    public void setValues(int x, int y) {
+        getBallXSpeed().setValue(x);
+        getBallYSpeed().setValue(y);
     }
-
 }
