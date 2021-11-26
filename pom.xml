@@ -11,19 +11,30 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit.version>5.7.1</junit.version>
+        <junit.version>5.8.1</junit.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>16</version>
+            <version>17.0.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-base</artifactId>
+            <version>17.0.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>17.0.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>16</version>
+            <version>17.0.0.1</version>
         </dependency>
 
         <dependency>
@@ -37,6 +48,11 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.aquafx-project</groupId>
+            <artifactId>aquafx</artifactId>
+            <version>0.2</version>
         </dependency>
     </dependencies>
 
@@ -54,17 +70,10 @@
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.7</version>
-                <executions>
-                    <execution>
-                        <!-- Default configuration for running with: mvn clean javafx:run -->
-                        <id>default-cli</id>
-                        <configuration>
-                            <mainClass>com.example.breakout_clone/com.example.breakout_clone.HelloApplication
-                            </mainClass>
-                        </configuration>
-                    </execution>
-                </executions>
+                <version>0.0.8</version>
+                <configuration>
+                    <mainClass>com.example.breakout_clone.StartScreen</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>
