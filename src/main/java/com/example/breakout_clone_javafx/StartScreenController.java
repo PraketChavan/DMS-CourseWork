@@ -1,6 +1,7 @@
-package com.example.breakout_clone;
+package com.example.breakout_clone_javafx;
 
 
+import com.example.breakout_clone.GameFrame;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;

@@ -1,4 +1,4 @@
-package com.example.breakout_clone;
+package com.example.breakout_clone_javafx;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
