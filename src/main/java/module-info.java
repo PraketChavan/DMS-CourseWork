@@ -8,4 +8,6 @@ module com.example.breakout_clone {
 
     opens com.example.breakout_clone to javafx.fxml;
     exports com.example.breakout_clone;
+    exports com.example.breakout_clone_javafx;
+    opens com.example.breakout_clone_javafx to javafx.fxml;
 }

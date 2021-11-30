@@ -72,7 +72,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>com.example.breakout_clone.StartScreen</mainClass>
+                    <mainClass>com.example.breakout_clone_javafx.StartScreen</mainClass>
                 </configuration>
             </plugin>
         </plugins>
