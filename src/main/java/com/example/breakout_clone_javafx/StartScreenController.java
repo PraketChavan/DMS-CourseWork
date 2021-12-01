@@ -5,6 +5,7 @@ import com.example.breakout_clone.GameFrame;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -12,6 +13,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.stage.Stage;
 
 import javax.swing.*;
+import java.io.IOException;
 
 public class StartScreenController {
     private final String DARKTHEME = StartScreen.class.getResource(
@@ -67,10 +69,14 @@ public class StartScreenController {
     }
 
     @FXML
-    private void onButtonClick() {
-        SwingUtilities.invokeLater(GameFrame::new);
+    private void onButtonClick() throws IOException{
+        FXMLLoader fxmlLoader = new FXMLLoader(
+                StartScreen.class.getResource("GameFrame.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+
+        //SwingUtilities.invokeLater(GameFrame::new);
         Stage stage = (Stage) getStartButton().getScene().getWindow();
-        stage.close();
+        stage.setScene(scene);
     }
 
     @FXML
