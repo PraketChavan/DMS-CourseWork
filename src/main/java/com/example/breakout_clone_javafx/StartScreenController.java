@@ -71,12 +71,21 @@ public class StartScreenController {
     @FXML
     private void onButtonClick() throws IOException{
         FXMLLoader fxmlLoader = new FXMLLoader(
-                StartScreen.class.getResource("GameFrame.fxml"));
+                StartScreen.class.getResource("SpriteTest-View.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
 
         //SwingUtilities.invokeLater(GameFrame::new);
         Stage stage = (Stage) getStartButton().getScene().getWindow();
         stage.setScene(scene);
+
+
+//        FXMLLoader fxmlLoader = new FXMLLoader(
+//                StartScreen.class.getResource("GameFrame.fxml"));
+//        Scene scene = new Scene(fxmlLoader.load());
+//
+//        //SwingUtilities.invokeLater(GameFrame::new);
+//        Stage stage = (Stage) getStartButton().getScene().getWindow();
+//        stage.setScene(scene);
     }
 
     @FXML
