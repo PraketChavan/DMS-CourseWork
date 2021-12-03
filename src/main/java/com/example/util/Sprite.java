@@ -1,30 +1,20 @@
 package com.example.util;
 
+import com.example.breakout_clone_javafx.Impactable;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 
-public abstract class Sprite extends Region {
+public abstract class Sprite extends Region implements Movable, Impactable {
 
-    private final SimpleObjectProperty<Vector2D> SPEED = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<Vector2D> POSITION = new SimpleObjectProperty<>();
-    private final SimpleDoubleProperty RADIUS = new SimpleDoubleProperty();
-    private final SimpleDoubleProperty m_Width = new SimpleDoubleProperty();
-    private final SimpleDoubleProperty m_Height = new SimpleDoubleProperty();
+    private final SimpleObjectProperty<Vector2D> SPEED;
+    private final SimpleObjectProperty<Vector2D> POSITION;
+    private final SimpleDoubleProperty RADIUS;
+    private final SimpleDoubleProperty WIDTH;
+    private final SimpleDoubleProperty HEIGHT;
 
-    protected Node m_View;
-
-    public Pane getPane() {
-        return m_Pane;
-    }
-
-    public void setPane(Pane pane) {
-        m_Pane = pane;
-    }
-
-    private Pane m_Pane = null;
+    private Node m_View;
 
     public Vector2D getPosition() {
         return POSITION.get();
@@ -59,34 +49,39 @@ public abstract class Sprite extends Region {
     }
 
     public void setmWidth(double width) {
-        this.m_Width.set(width);
+        this.WIDTH.set(width);
     }
 
     public double getmWidth() {
-        return m_Width.get();
+        return WIDTH.get();
     }
 
     public void setmHeight(double height) {
-        this.m_Height.set(height);
+        this.HEIGHT.set(height);
     }
 
     public double getmHeight() {
-        return m_Height.get();
+        return HEIGHT.get();
     }
 
-    public Sprite(Pane pane, Vector2D speed, Vector2D position, double height, double width) {
-        setSpeed(speed);
-        setPosition(position);
-        setmHeight(height);
-        setmWidth(width);
-        setPane(pane);
+    public Sprite(SimpleObjectProperty<Vector2D> speed,
+                  SimpleObjectProperty<Vector2D> position,
+                  SimpleDoubleProperty radius,
+                  SimpleDoubleProperty height,
+                  SimpleDoubleProperty width) {
+
+        SPEED = speed;
+        POSITION = position;
+        RADIUS = radius;
+        HEIGHT = height;
+        WIDTH = width;
+
     }
 
     public void initialize() {
-        m_View = createView();
+        setView(createView());
         setPrefSize(getmWidth(),getmHeight());
         getChildren().add(getView());
-       // getPane().getChildren().add(this);
     }
 
     public SimpleObjectProperty<Vector2D> speedProperty() {
@@ -98,8 +93,6 @@ public abstract class Sprite extends Region {
     }
 
     public abstract Node createView();
-
-    public abstract void move();
 
     public abstract void display();
 

@@ -1,15 +1,15 @@
 package com.example.breakout_clone_javafx;
 
 import com.example.util.Vector2D;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 public class RubberBall extends Ball{
 
-    public RubberBall(Pane pane, Vector2D position) {
-        super(pane, position);
+    public RubberBall(Vector2D position) {
+        super(new SimpleObjectProperty<>(position));
     }
 
     @Override

@@ -6,9 +6,13 @@ import javafx.scene.layout.Pane;
 
 public abstract class CircleSprite extends Sprite {
 
-    public CircleSprite(Pane pane, Vector2D speed, Vector2D position, double radius, double height, double width) {
-        super(pane, speed, position, height, width);
-        this.setRadius(radius);
+    public CircleSprite(SimpleObjectProperty<Vector2D> speed,
+                        SimpleObjectProperty<Vector2D> position,
+                        SimpleDoubleProperty radius,
+                        SimpleDoubleProperty height,
+                        SimpleDoubleProperty width) {
+        super(speed, position, radius, height, width);
+
     }
 
 }

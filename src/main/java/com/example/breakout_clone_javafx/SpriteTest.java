@@ -20,7 +20,7 @@ public class SpriteTest {
 
     @FXML
     private void initialize() {
-        Sprite ball = new RubberBall(playfield, new Vector2D(playfield.getWidth(), playfield.getHeight()));
+        Sprite ball = new RubberBall(new Vector2D(playfield.getWidth(), playfield.getHeight()));
         ball.initialize();
         Pane layerpane = new Pane();
         playfield.getChildren().addAll(layerpane);
