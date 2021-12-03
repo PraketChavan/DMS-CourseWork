@@ -73,6 +73,7 @@ public abstract class Sprite extends Region implements Movable, Impactable {
         SPEED = speed;
         POSITION = position;
         RADIUS = radius;
+
         HEIGHT = height;
         WIDTH = width;
 
