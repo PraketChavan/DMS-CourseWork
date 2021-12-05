@@ -1,8 +1,15 @@
 package com.example.breakout_clone_javafx;
 
+import com.example.util.Sprite;
 import com.example.util.Vector2D;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.Bounds;
+import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
@@ -13,19 +20,43 @@ public class RubberBall extends Ball{
     }
 
     @Override
+    public int findImpact(Sprite sprite) {
+//        Point2D top = new Point2D(getPosition().getX() , getPosition().getY() - getRadius());
+//        Point2D bottom = new Point2D(getPosition().getX(), getPosition().getY() + getRadius());
+//        Point2D left = new Point2D(getPosition().getX() - getRadius(), getPosition().getY());
+//        Point2D right = new Point2D(getPosition().getX() + getRadius(), getPosition().getY());
+
+
+
+        Bounds bounds = this.getParent().getLayoutBounds();
+        //System.out.println(bounds);
+        if (this.getPosition().getX() >= (bounds.getMaxX() - this.getRadius()))
+            return RIGHT;
+        if (this.getPosition().getX() <= (bounds.getMinX() + this.getRadius()))
+            return LEFT;
+        if (this.getPosition().getY() >= (bounds.getMaxY() - this.getRadius()))
+            return DOWN;
+        if (this.getPosition().getY() <= (bounds.getMinY() + this.getRadius()))
+            return UP;
+
+        return NO_IMPACT;
+    }
+
+    @Override
     public void onImpact(int side) {
-        switch (side) {
-            case UP, DOWN -> getSpeed().invertY();
-            case RIGHT, LEFT -> getSpeed().invertX();
+        switch (side){
+            case LEFT, RIGHT -> getSpeed().invertX();
+            case DOWN, UP -> getSpeed().invertY();
         }
     }
 
     @Override
     public Node createView() {
+
         Circle circle = new Circle();
         circle.setRadius(getRadius());
-        circle.setCenterX(getPosition().getX());
-        circle.setCenterY(getPosition().getY());
+        circle.setCenterX(getRadius());
+        circle.setCenterY(getRadius());
         circle.setStroke(Color.GREEN);
         circle.setFill(Color.GREEN.deriveColor(1, 1, 1, 0.3));
         return circle;
