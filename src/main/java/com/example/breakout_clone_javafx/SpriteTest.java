@@ -6,6 +6,7 @@ import javafx.animation.AnimationTimer;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.Control;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
@@ -14,11 +15,13 @@ import javafx.scene.transform.Translate;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 public class SpriteTest {
     @FXML
     private Pane playfield;
-    Sprite ball, brick;
+    ArrayList<Ball> balls = new ArrayList<>();
+    ArrayList<Brick> bricks = new ArrayList<>();
 
     @FXML
     private void initialize() {
@@ -28,12 +31,18 @@ public class SpriteTest {
 
     @FXML
     private void run() {
-        ball = new RubberBall(new Vector2D(playfield.getWidth()/4, playfield.getHeight()/4));
+        Sprite ball = new RubberBall(new Vector2D(playfield.getWidth()/4, playfield.getHeight()/4));
         ball.initialize();
-        brick = new ClayBrick(new Vector2D(playfield.getWidth()/2, playfield.getHeight()/2));
+        Sprite brick = new ClayBrick(new Vector2D(playfield.getWidth()/2, playfield.getHeight()/2));
         brick.initialize();
+        balls.add((Ball) ball);
+        bricks.add((Brick) brick);
         playfield.getChildren().add(ball);
         playfield.getChildren().add(brick);
+        for (Brick bric :
+                bricks) {
+            bric.display();
+        }
 //        playfield.setOnMouseClicked(e->{
 //            System.out.println("hello");
 //            ball.getTransforms().add(new Translate(20, 20));
@@ -56,8 +65,9 @@ public class SpriteTest {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
-                ball.move() ;
-                brick.move();
+                for (Ball ball : balls) {
+                    ball.move();
+                }
             }
         };
         timer.start();

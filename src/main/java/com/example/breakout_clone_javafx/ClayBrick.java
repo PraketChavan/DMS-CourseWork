@@ -1,5 +1,6 @@
 package com.example.breakout_clone_javafx;
 
+import com.example.util.Sprite;
 import com.example.util.Vector2D;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -16,8 +17,12 @@ public class ClayBrick extends Brick{
     }
 
     @Override
-    public void onImpact(int side) {
+    public int findImpact(Sprite sprite) {
+        return 0;
+    }
 
+    @Override
+    public void onImpact(int side) {
     }
 
     @Override
@@ -26,7 +31,7 @@ public class ClayBrick extends Brick{
         brick.setHeight(this.getmHeight());
         brick.setWidth(this.getmWidth());
         brick.setFill(Color.GRAY);
-        brick.setStroke(Color.GRAY.deriveColor(1, 1, 1 , 0.5));
+        brick.setStroke(Color.TRANSPARENT.deriveColor(1, 1, 1 , 0.5));
 
         return brick;
     }

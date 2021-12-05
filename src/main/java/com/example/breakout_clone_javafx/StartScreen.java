@@ -20,5 +20,6 @@ public class StartScreen extends Application {
         stage.setTitle("Breakout Game!");
         stage.setScene(scene);
         stage.show();
+        stage.setResizable(false);
     }
 }
