@@ -20,8 +20,8 @@ import java.util.ArrayList;
 public class SpriteTest {
     @FXML
     private Pane playfield;
-    ArrayList<Ball> balls = new ArrayList<>();
-    ArrayList<Brick> bricks = new ArrayList<>();
+    ArrayList<Sprite> balls = new ArrayList<>();
+    ArrayList<Sprite> bricks = new ArrayList<>();
 
     @FXML
     private void initialize() {
@@ -31,16 +31,15 @@ public class SpriteTest {
 
     @FXML
     private void run() {
-        Sprite ball = new RubberBall(new Vector2D(playfield.getWidth()/4, playfield.getHeight()/4));
+        Sprite ball = new RubberBall(new Vector2D(playfield.getWidth()/2, playfield.getHeight()/2));
         ball.initialize();
         Sprite brick = new ClayBrick(new Vector2D(playfield.getWidth()/2, playfield.getHeight()/2));
         brick.initialize();
-        balls.add((Ball) ball);
-        bricks.add((Brick) brick);
+        balls.add(ball);
+        bricks.add( brick);
         playfield.getChildren().add(ball);
         playfield.getChildren().add(brick);
-        for (Brick bric :
-                bricks) {
+        for (Sprite bric : bricks) {
             bric.display();
         }
 //        playfield.setOnMouseClicked(e->{
@@ -54,20 +53,21 @@ public class SpriteTest {
         Task<Object> task = new Task<>() {
             @Override
             protected Object call(){
-                timer();
+                timer(new ImpactHandler(balls, bricks, null));
                 return null;
             }
         };
         task.run();
     }
 
-    private void timer(){
+    private void timer(ImpactHandler handler){
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
-                for (Ball ball : balls) {
+                for (Sprite ball : balls) {
                     ball.move();
                 }
+                handler.handleImpacts();
             }
         };
         timer.start();

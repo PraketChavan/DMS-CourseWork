@@ -12,6 +12,9 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 public class RubberBall extends Ball{
 
@@ -21,25 +24,42 @@ public class RubberBall extends Ball{
 
     @Override
     public int findImpact(Sprite sprite) {
-//        Point2D top = new Point2D(getPosition().getX() , getPosition().getY() - getRadius());
-//        Point2D bottom = new Point2D(getPosition().getX(), getPosition().getY() + getRadius());
-//        Point2D left = new Point2D(getPosition().getX() - getRadius(), getPosition().getY());
-//        Point2D right = new Point2D(getPosition().getX() + getRadius(), getPosition().getY());
+        Point2D top = new Point2D(getPosition().getX() , getPosition().getY() - getRadius());
+        Point2D bottom = new Point2D(getPosition().getX(), getPosition().getY() + getRadius());
+        Point2D left = new Point2D(getPosition().getX() - getRadius(), getPosition().getY());
+        Point2D right = new Point2D(getPosition().getX() + getRadius(), getPosition().getY());
 
-
-
-        Bounds bounds = this.getParent().getLayoutBounds();
-        //System.out.println(bounds);
-        if (this.getPosition().getX() >= (bounds.getMaxX() - this.getRadius()))
-            return RIGHT;
-        if (this.getPosition().getX() <= (bounds.getMinX() + this.getRadius()))
-            return LEFT;
-        if (this.getPosition().getY() >= (bounds.getMaxY() - this.getRadius()))
-            return DOWN;
-        if (this.getPosition().getY() <= (bounds.getMinY() + this.getRadius()))
+        if (sprite.contains(top)) {
+            sprite.onImpact(DOWN);
             return UP;
+        }
+        if (sprite.contains(bottom)) {
+            sprite.onImpact(UP);
+            return DOWN;
+        }
+        if (sprite.contains(left)) {
+            sprite.onImpact(RIGHT);
+            return LEFT;
+        }
+        if (sprite.contains(right)){
+            sprite.onImpact(LEFT);
+            return RIGHT;
+        }
 
         return NO_IMPACT;
+
+//        Bounds bounds = this.getParent().getLayoutBounds();
+//        //System.out.println(bounds);
+//        if (this.getPosition().getX() >= (bounds.getMaxX() - this.getRadius()))
+//            return RIGHT;
+//        if (this.getPosition().getX() <= (bounds.getMinX() + this.getRadius()))
+//            return LEFT;
+//        if (this.getPosition().getY() >= (bounds.getMaxY() - this.getRadius()))
+//            return DOWN;
+//        if (this.getPosition().getY() <= (bounds.getMinY() + this.getRadius()))
+//            return UP;
+//
+//        return NO_IMPACT;
     }
 
     @Override

@@ -46,7 +46,7 @@ public abstract class Brick extends RectSprite {
 
     @Override
     public void display() {
-        relocate(getPosition().getX(), getPosition().getY());
+        relocate(getPosition().getX() - getmWidth()/2, getPosition().getY() - getmHeight()/2);
         setRotate(0);
         this.setBackground(new Background(new BackgroundFill(
                 Color.valueOf("ff00ff"), null, null)));

@@ -4,16 +4,17 @@ import com.example.util.Sprite;
 import javafx.geometry.Bounds;
 
 import java.util.ArrayList;
+import java.util.List;
 
 //Class to handle all the impact for the game
 public class ImpactHandler {
-    private ArrayList<Impactable> m_balls = new ArrayList<>();
-    private ArrayList<Impactable> m_bricks = new ArrayList<>();
+    private List<? extends Impactable> m_balls;
+    private List<? extends Impactable> m_bricks;
     private Impactable m_player;
 
-    private ImpactHandler(
-            ArrayList<Impactable> balls,
-            ArrayList<Impactable> bricks,
+    public ImpactHandler(
+            List<? extends Impactable> balls,
+            List<? extends Impactable> bricks,
             Impactable player) {
         m_balls = balls;
         m_bricks = bricks;

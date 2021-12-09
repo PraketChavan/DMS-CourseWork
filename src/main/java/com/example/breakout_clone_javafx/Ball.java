@@ -12,7 +12,7 @@ public abstract class Ball extends CircleSprite {
             25);
     private static final SimpleDoubleProperty DEF_RADIUS =
             new SimpleDoubleProperty(12.5);
-    private static final double DEF_INITIAL_SPEED_X = 1;
+    private static final double DEF_INITIAL_SPEED_X = 0;
     private static final double DEF_INITIAL_SPEED_Y = 1;
 
 
@@ -25,7 +25,6 @@ public abstract class Ball extends CircleSprite {
 
     @Override
     public void move() {
-        onImpact(findImpact(null));
         getPosition().addVector(getSpeed());
         display();
     }
