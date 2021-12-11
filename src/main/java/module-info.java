@@ -11,6 +11,7 @@ module com.example.breakout_clone {
     exports com.example.breakout_clone;
     exports com.example.breakout_clone_javafx;
     exports com.example.util;
+    exports com.example.migrateFx;
     opens com.example.breakout_clone_javafx to javafx.fxml;
     opens com.example.util to javafx.fxml;
 
