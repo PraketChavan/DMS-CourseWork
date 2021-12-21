@@ -1,10 +1,10 @@
-package com.example.migrateFx;
+package com.example.migrateFx.view;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
-public class SpriteView {
+public abstract class SpriteView {
     private ImageView m_View;
 
     public ImageView getView() {
@@ -19,9 +19,7 @@ public class SpriteView {
         setView(new ImageView(new Image(url, width, height, false, false)));
     }
 
-    public void addView(Pane parent) {
-        parent.getChildren().add(getView());
-    }
+    public abstract void createView(Pane parent);
 
     public void setView(ImageView view) {
         m_View = view;

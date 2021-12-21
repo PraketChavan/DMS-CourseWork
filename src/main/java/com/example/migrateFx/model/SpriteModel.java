@@ -1,25 +1,18 @@
-package com.example.migrateFx;
+package com.example.migrateFx.model;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Point2D;
 
-public class SpriteModel {
+import java.awt.*;
+
+public abstract class SpriteModel {
     private SimpleStringProperty m_Name;
     private SimpleObjectProperty<Point2D> m_Location;
     private SimpleDoubleProperty m_XLocation;
     private SimpleDoubleProperty m_YLocation;
     private SimpleObjectProperty<Point2D> m_Speed;
-    private SpriteController m_Controller;
-
-    public SpriteController getController() {
-        return m_Controller;
-    }
-
-    public void setController(SpriteController controller) {
-        m_Controller = controller;
-    }
 
     public Point2D getLocation() {
         return m_Location.get();
@@ -89,10 +82,10 @@ public class SpriteModel {
         m_YLocation = YLocation;
     }
 
-    public SpriteModel() {
+    public SpriteModel(Point2D location) {
         this.m_YLocation = new SimpleDoubleProperty();
         this.m_XLocation = new SimpleDoubleProperty();
-        this.m_Location = new SimpleObjectProperty<>();
+        this.m_Location = new SimpleObjectProperty<>(location);
         this.m_Name = new SimpleStringProperty();
         this.m_Speed = new SimpleObjectProperty<>();
     }

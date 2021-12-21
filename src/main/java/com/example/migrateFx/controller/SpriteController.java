@@ -1,6 +1,9 @@
-package com.example.migrateFx;
+package com.example.migrateFx.controller;
 
-public class SpriteController {
+import com.example.migrateFx.model.SpriteModel;
+import com.example.migrateFx.view.SpriteView;
+
+public abstract class SpriteController {
     private SpriteModel m_Model;
     private SpriteView m_View;
 
@@ -25,8 +28,5 @@ public class SpriteController {
         this.setView(view);
     }
 
-    public void initalize() {
-        m_View.getView().xProperty().bind(m_Model.getXLocationProperty());
-        m_View.getView().yProperty().bind(m_Model.getYLocationProperty());
-    }
+    public abstract void initialize();
 }
