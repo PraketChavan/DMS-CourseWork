@@ -7,7 +7,6 @@ import com.example.migrateFx.view.SpriteView;
 import com.example.util.Movable;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
-import javafx.scene.layout.Pane;
 
 public class BallController extends SpriteController implements Movable, Impactable {
 
@@ -31,17 +30,27 @@ public class BallController extends SpriteController implements Movable, Impacta
     }
 
     @Override
-    public void findImpact(Pane parent) {
-        Bounds bound = parent.getBoundsInParent();
+    public int findImpact(SpriteModel parent) {
+        Bounds bound = ((TestModel)parent).bounds.get();
         BallModel model = (BallModel) getModel();
-        if (model.bottomProperty().get().getY() >= bound.getMaxY())
+        if (model.bottomProperty().get().getY() >= bound.getMaxY()) {
             onImpact(DOWN);
-        if (model.topProperty().get().getY() <= bound.getMinY())
+            return DOWN;
+        }
+        if (model.topProperty().get().getY() <= bound.getMinY()) {
             onImpact(UP);
-        if (model.leftProperty().get().getX() <= bound.getMinX())
+            return UP;
+        }
+        if (model.leftProperty().get().getX() <= bound.getMinX()) {
             onImpact(LEFT);
-        if (model.rightProperty().get().getX() >= bound.getMaxX())
+            return LEFT;
+        }
+        if (model.rightProperty().get().getX() >= bound.getMaxX()) {
             onImpact(RIGHT);
+            return RIGHT;
+        }
+
+        return -1;
     }
 
     @Override

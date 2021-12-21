@@ -64,28 +64,9 @@ public class BallModel extends SpriteModel {
         this.m_Top.set(top);
     }
 
-    public BallModel(Point2D location) {
-        super(location);
-        initializeProperty();
-    }
-
-    public void initializeCenter() {
-        centerProperty().set(getLocation().add(getRadius(), getRadius()));
-    }
-
-    private void initializeProperty() {
-        initCenterProperty(new SimpleObjectProperty<>());
-        initRightProperty(new SimpleObjectProperty<>());
-        initBottomProperty(new SimpleObjectProperty<>());
-        initLeftProperty(new SimpleObjectProperty<>());
-        initTopProperty(new SimpleObjectProperty<>());
-        setRadius(new SimpleDoubleProperty(0));
-    }
-
     public SimpleDoubleProperty radiusProperty() {
         return m_Radius;
     }
-
 
     public SimpleObjectProperty<Point2D> topProperty() {
         return m_Top;
@@ -105,6 +86,25 @@ public class BallModel extends SpriteModel {
 
     public SimpleObjectProperty<Point2D> centerProperty() {
         return m_Center;
+    }
+
+
+    public BallModel(Point2D location) {
+        super(location);
+        initializeProperty();
+    }
+
+    public void initializeCenter() {
+        centerProperty().set(getLocation().add(getRadius(), getRadius()));
+    }
+
+    private void initializeProperty() {
+        initCenterProperty(new SimpleObjectProperty<>());
+        initRightProperty(new SimpleObjectProperty<>());
+        initBottomProperty(new SimpleObjectProperty<>());
+        initLeftProperty(new SimpleObjectProperty<>());
+        initTopProperty(new SimpleObjectProperty<>());
+        setRadius(new SimpleDoubleProperty(0));
     }
 
     private void initBottomProperty(

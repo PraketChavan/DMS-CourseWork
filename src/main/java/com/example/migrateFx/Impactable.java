@@ -1,8 +1,7 @@
 package com.example.migrateFx;
 
 
-import com.example.util.Sprite;
-import javafx.scene.layout.Pane;
+import com.example.migrateFx.model.SpriteModel;
 
 public interface Impactable {
     int UP = 0;
@@ -10,6 +9,6 @@ public interface Impactable {
     int DOWN = 2;
     int LEFT = 3;
     int NO_IMPACT = -1;
-    void findImpact(Pane parent);
+    int findImpact(SpriteModel parent);
     void onImpact(int side);
 }
