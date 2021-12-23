@@ -1,10 +1,14 @@
 package com.example.migrateFx;
 
-import java.awt.*;
-
+import com.example.migrateFx.model.SpriteModel;
+import com.example.migrateFx.wrappers.Brick;
+import com.example.migrateFx.wrappers.Ball;
+import com.example.migrateFx.wrappers.ClayBrick;
+import com.example.migrateFx.wrappers.RubberBall;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Rectangle;
+
 import java.util.Random;
 
 public class Wall {
@@ -28,6 +32,16 @@ public class Wall {
     private Rectangle m_area;
     private Brick[][] m_levels;
     private int m_level;
+
+    public SpriteModel getModel() {
+        return model;
+    }
+
+    public void setModel(SpriteModel model) {
+        this.model = model;
+    }
+
+    private SpriteModel model;
 
     private Point2D m_startPoint;
     private int m_brickCount;
@@ -156,7 +170,7 @@ public class Wall {
             speedY = - this.getRnd().nextInt(Y_SPEED_BOUND);
         } while (speedY == 0);
 
-        this.getBall().setSpeed(speedX, speedY);
+        this.getBall().getModel().setSpeed(new Point2D(speedX, speedY));
 
         //m_player = new Paddle((Point) ballPos.clone(), 150, 10, drawArea);
         this.setPlayer(new Paddle(new Point2D(ballPos.getX(), ballPos.getY()), PADDLE_WIDTH,
@@ -199,7 +213,7 @@ public class Wall {
         for (double y = brickHgt; i < tmp.length; i++, y += 2 * brickHgt) {
             double x = (brickOnLine * brickLen) - (brickLen / 2);
             p = new Point2D(x, y);
-            tmp[i] = new Brick2(p, brickSize);
+            tmp[i] = new ClayBrick("D:\\Data\\Praket\\Nottingham\\Y2\\DMS\\Breakout_Clone\\src\\main\\resources\\com\\example\\breakout_clone_javafx\\sprite\\blue\\tile000\\clay0.png", p);
         }
         return tmp;
 
@@ -250,7 +264,7 @@ public class Wall {
 
     public void makeBall(Point2D ballPos) {
         //m_ball = new Ball1(ballPos);
-        this.setBall(new Ball1(ballPos));
+        this.setBall(new RubberBall("D:\\Data\\Praket\\Nottingham\\Y2\\DMS\\Breakout_Clone\\src\\main\\resources\\com\\example\\breakout_clone_javafx\\sprite\\blue\\tile000\\ball0.png", ballPos));
     }
 
     public Brick[][] makeLevels(Rectangle drawArea, int brickCount, int lineCount, double brickDimensionRatio) {
@@ -264,7 +278,7 @@ public class Wall {
 
     public void move() {
         this.getPlayer().move();
-        this.getBall().move();
+        this.getBall().getController().move();
     }
 
     public void findImpacts() {
@@ -281,21 +295,19 @@ public class Wall {
 //            m_ballCount--;
 //            m_ballLost = true;
 //        }
-        if (this.getPlayer().impact(this.getBall())) {
-            this.getBall().reverseY();
+        if (this.getPlayer().getPaddleFace().intersects(this.getBall().getView().getView().getBoundsInParent())) {
+            this.getBall().getController().onImpact(0);
         } else if (impactWall()) {
             // for efficiency reverse is done into method impactWall because for
             // every brick program checks for horizontal and vertical impacts
             this.setBrickCount(this.getBrickCount() - 1);
-        } else if (impactBorder()) {
-            this.getBall().reverseX();
-        } else if (this.getBall().getPosition().getY() < this.getArea().getY()){
-            this.getBall().reverseY();
-        } else if (this.getBall().getPosition().getY() >
-                   this.getArea().getY() + this.getArea().getHeight()) {
-            this.decrementBallCount();
-            this.setBallLost(true);
+        } else {
+            this.getBall().getController().findImpact(model);
+//            this.decrementBallCount();
+//            this.setBallLost(true);
         }
+
+
     }
 
     public boolean impactWall() {
@@ -319,42 +331,45 @@ public class Wall {
 //            }
 
         for (Brick b : this.getBricks()) {
-            switch (b.findImpact(this.getBall())) {
-                //Vertical Impact
-                case Brick.UP_IMPACT -> {
-                    this.getBall().reverseY();
-                    return b.setImpact(this.getBall().getDown(), Brick.Crack.UP);
-                }
-                case Brick.DOWN_IMPACT -> {
-                    this.getBall().reverseY();
-                    return b.setImpact(this.getBall().getUp(), Brick.Crack.DOWN);
-                }
+            if (!b.getModel().isBroken()) {
+                switch (b.getController()
+                         .findImpact(this.getBall().getModel())) {
+                    //Vertical Impact
+                    case Impactable.UP -> {
+                        this.getBall().getController().onImpact(Impactable.UP);
+                        return true;
+                    }
+                    case Impactable.DOWN ->  {
+                        this.getBall().getController().onImpact(Impactable.DOWN);
+                        return true;
+                    }
 
-                //Horizontal Impact
-                case Brick.LEFT_IMPACT -> {
-                    this.getBall().reverseX();
-                    return b.setImpact(this.getBall().getRight(), Brick.Crack.RIGHT);
-                }
-                case Brick.RIGHT_IMPACT -> {
-                    this.getBall().reverseX();
-                    return b.setImpact(this.getBall().getLeft(), Brick.Crack.LEFT);
+                    //Horizontal Impact
+                    case Impactable.LEFT -> {
+                        this.getBall().getController().onImpact(Impactable.LEFT);
+                        return true;
+                    }
+                    case Impactable.RIGHT -> {
+                        this.getBall().getController().onImpact(Impactable.RIGHT);
+                        return true;
+                    }
                 }
             }
         }
         return false;
     }
 
-    public boolean impactBorder() {
-        Point2D p = this.getBall().getPosition();
-        return ((getBall().getLeft().getX() < this.getArea().getX()) ||
-                (getBall().getRight().getX() > (this.getArea().getX() + this.getArea().getWidth())));
-    }
+//    public boolean impactBorder() {
+//        Point2D p = this.getBall().getPosition();
+//        return ((getBall().getLeft().getX() < this.getArea().getX()) ||
+//                (getBall().getRight().getX() > (this.getArea().getX() + this.getArea().getWidth())));
+//    }
 
     public void ballReset() {
 //        m_player.moveTo(m_startPoint);
 //        m_ball.moveTo(m_startPoint);
         this.getPlayer().moveTo(this.getStartPoint());
-        this.getBall().moveTo(this.getStartPoint());
+        this.getBall().getModel().setLocation(this.getStartPoint());
         int speedX, speedY;
         do {
             speedX = this.getRnd().nextInt(5) - 2;
@@ -363,14 +378,14 @@ public class Wall {
             speedY = -this.getRnd().nextInt(3);
         } while (speedY == 0);
 
-        this.getBall().setSpeed(speedX, speedY);
+        this.getBall().getModel().setSpeed(new Point2D(speedX, speedY));
         //m_ballLost = false;
         this.setBallLost(false);
     }
 
     public void wallReset() {
-        for (Brick b : this.getBricks())
-            b.repair();
+//        for (Brick b : this.getBricks())
+//            b.repair();
 //        m_brickCount = m_bricks.length;
 //        m_ballCount = 3;
         this.setBrickCount(this.getBricks().length);
@@ -392,11 +407,11 @@ public class Wall {
     }
 
     public void setBallXSpeed(int s) {
-        this.getBall().setXSpeed(s);
+        this.getBall().getModel().setSpeed(new Point2D(s, s));
     }
 
     public void setBallYSpeed(int s) {
-        this.getBall().setYSpeed(s);
+        this.getBall().getModel().setSpeed(new Point2D(s, s));
     }
 
     public void resetBallCount() {
@@ -405,9 +420,9 @@ public class Wall {
 
     private Brick makeBrick(Point2D point, Dimension2D size, int type) {
         return switch (type) {
-            case CLAY -> new Brick2(point, size);
-            case STEEL -> new Brick3(point, size);
-            case CEMENT -> new Brick1(point, size);
+            case CLAY, STEEL, CEMENT -> new ClayBrick("D:\\Data\\Praket\\Nottingham\\Y2\\DMS\\Breakout_Clone\\src\\main\\resources\\com\\example\\breakout_clone_javafx\\sprite\\blue\\tile000\\clay0.png", point);
+//            case STEEL -> new ClayBrick(point);
+//            case CEMENT -> new ClayBrick(point);
             default -> throw new IllegalArgumentException(String.format("Unknown Type:%d\n", type));
         };
     }

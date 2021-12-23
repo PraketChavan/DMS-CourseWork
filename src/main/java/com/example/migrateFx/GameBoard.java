@@ -1,9 +1,13 @@
 package com.example.migrateFx;
 
+import com.example.migrateFx.model.SpriteModel;
+import com.example.migrateFx.wrappers.Brick;
+import com.example.migrateFx.wrappers.Ball;
+
 import javafx.animation.AnimationTimer;
-import javafx.animation.Timeline;
-import javafx.event.EventHandler;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Bounds;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
@@ -11,15 +15,15 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.stage.Stage;
 import javafx.scene.shape.Shape;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 
-public class GameBoard extends Canvas {
+public class GameBoard extends Pane {
 
     public static final int DELAY = 10;
     public static final int BRICK_COUNT = 30; //added to remove magic number
@@ -38,7 +42,7 @@ public class GameBoard extends Canvas {
     private static final Color BG_COLOR = Color.WHITE;
     private AnimationTimer m_gameTimer;
 
-    private Wall m_wall;
+    private Wall1 m_wall;
 
     private String m_message;
     private boolean pause;
@@ -65,11 +69,11 @@ public class GameBoard extends Canvas {
         this.m_gameTimer = gameTimer;
     }
 
-    public Wall getWall() {
+    public Wall1 getWall() {
         return m_wall;
     }
 
-    public void setWall(Wall wall) {
+    public void setWall(Wall1 wall) {
         this.m_wall = wall;
     }
 
@@ -151,11 +155,14 @@ public class GameBoard extends Canvas {
         this.initialize(parent);
         //m_message = "Press SPACE to start";
         this.setMessage("Press SPACE to start");
-
+        TestModel model = new TestModel(new Point2D(0, 0));
+        model.size = new SimpleObjectProperty<>(new Dimension2D(DEF_WIDTH, DEF_HEIGHT));
+        model.bounds = new SimpleObjectProperty<>(this.getBoundsInParent());
         //m_wall = new Wall(new Rectangle(0, 0, DEF_WIDTH, DEF_HEIGHT), 30, 3, 6.0 / 2, new Point(300, 430));
-        this.setWall(new Wall(new Rectangle(0, 0, DEF_WIDTH, DEF_HEIGHT),
-                              BRICK_COUNT, LINE_COUNT, BRICK_DIMENSION_RATIO,
-                             new Point2D(X, Y)));
+        this.setWall(new Wall1(new Rectangle(0, 0, DEF_WIDTH, DEF_HEIGHT),
+                               BRICK_COUNT, LINE_COUNT, BRICK_DIMENSION_RATIO,
+                               new Point2D(X, Y)));
+        this.getWall().setModel(model);
 
         //m_debugConsole = new DebugConsole(owner, m_wall, this);
         //this.setDebugConsole(new DebugConsole(owner, m_wall, this));
@@ -163,7 +170,8 @@ public class GameBoard extends Canvas {
         //initialize the first level
         //m_wall.nextLevel();
         this.getWall().nextLevel();
-        paint(this.getGraphicsContext2D());
+        //  paint(this.getGraphicsContext2D());
+        paint();
 
         /*m_gameTimer = new Timer(10, e -> {
             m_wall.move();
@@ -221,87 +229,95 @@ public class GameBoard extends Canvas {
 //        this.addMouseMotionListener(this);
     }
 
-    public void paint(GraphicsContext g) {
+    public void paint() {
         final int X_COORDINATE = 250;
         final int Y_COORDINATE = 225;
 
 
-        clear(g);
-
-        g.setFill(Color.BLUE);
+        clear();
+        Text text = new Text();
+        text.setFill(Color.BLUE);
+//        g.setFill(Color.BLUE);
         //g2d.drawString(m_message, 250, 225);
-        g.fillText(this.getMessage(), X_COORDINATE, Y_COORDINATE);
+        text.setText(this.getMessage());
+        this.getChildren().add(text);
+        text.setLayoutX(X_COORDINATE);
+        text.setLayoutY(Y_COORDINATE);
 //        g.drawString(this.getMessage(), X_COORDINATE, Y_COORDINATE);
-
-        drawBall(this.getWall().getBall(), g);
+        if (!this.getChildren().contains(this.getWall().getBall()))
+            drawBall(this.getWall().getBall());
 
         for (Brick b : this.getWall().getBricks())
-            if (!b.isBroken())
-                drawBrick(b, g);
+            if (!b.getModel().isBroken())
+                drawBrick(b);
 
         //drawPlayer(m_wall.player, g2d);
-        drawPlayer(this.getWall().getPlayer(), g);
+        drawPlayer(this.getWall().getPlayer());
 
         if (isShowPauseMenu())
             System.out.println("DRAW PAUSE MENU");
-            //drawMenu(g);
+        //drawMenu(g);
 
         //Toolkit.getDefaultToolkit().sync();
     }
 
-    private void clear(GraphicsContext g2d) {
-        Color tmp = (Color)g2d.getFill();
-        g2d.setFill(BG_COLOR);
-        g2d.fillRect(0, 0, (int)getWidth(), (int)getHeight());
-        g2d.setFill(tmp);
+    private void clear() {
+//        g2d.setFill(BG_COLOR);
+//        g2d.fillRect(0, 0, (int)getWidth(), (int)getHeight());
+//        g2d.setFill(tmp);
     }
 
-    private void drawBrick(Brick brick, GraphicsContext g2d) {
-        Color tmp = (Color) g2d.getFill();
+    private void drawBrick(Brick brick) {
+//        Color tmp = (Color) g2d.getFill();
 
-        g2d.setFill(brick.getInnerColor());
-        g2d.fillRect(((Rectangle)brick.getBrickFace()).getX(), ((Rectangle) brick.getBrickFace()).getY(),
-                     brick.getSize().getWidth(), brick.getSize().getHeight());
+//        g2d.setFill(brick.getInnerColor());
+//        g2d.fillRect(((Rectangle)brick.getBrickFace()).getX(), ((Rectangle) brick.getBrickFace()).getY(),
+//                     brick.getSize().getWidth(), brick.getSize().getHeight());
 
-        g2d.setFill(brick.getBorderColor());
-        g2d.strokeRect(((Rectangle)brick.getBrickFace()).getX(), ((Rectangle) brick.getBrickFace()).getY(),
-                       brick.getSize().getWidth(), brick.getSize().getHeight());
-
-
-        g2d.setFill(tmp);
+//        g2d.setFill(brick.getBorderColor());
+//        g2d.strokeRect(((Rectangle)brick.getBrickFace()).getX(), ((Rectangle) brick.getBrickFace()).getY(),
+//                       brick.getSize().getWidth(), brick.getSize().getHeight());
+        if (!this.getChildren().contains(brick))
+            brick.getView().createView(this);
+//        g2d.setFill(tmp);
     }
 
-    private void drawBall(Ball ball, GraphicsContext g2d) {
-        Color tmp = (Color) g2d.getFill();
-
-        Shape s = ball.getBallFace();
-        Bounds bou = ball.getBallFace().getBoundsInParent();
-        g2d.setFill(ball.getInnerColor());
-        g2d.fillOval(bou.getMinX(), bou.getMinY() ,bou.getWidth(),bou.getHeight());
-
-        g2d.setFill(ball.getBorderColor());
-        g2d.strokeOval(bou.getMinX(), bou.getMinY() ,bou.getWidth(), bou.getHeight());
-
-        g2d.setFill(tmp);
-
-        g2d.strokeLine(bou.getMinX(), bou.getMinY(), bou.getMinX() + bou.getWidth(), bou.getMinY());
-        g2d.strokeLine(bou.getMinX(), bou.getMinY(), bou.getMinX(), bou.getMinY() + bou.getHeight());
-        g2d.strokeLine(bou.getMaxX(), bou.getMaxY(), bou.getMaxX() - bou.getWidth(), bou.getMaxY());
-        g2d.strokeLine(bou.getMaxX(), bou.getMaxY(), bou.getMaxX(), bou.getMaxY() - bou.getHeight());
+    private void drawBall(Ball ball) {
+//        Color tmp = (Color) g2d.getFill();
+        if (!this.getChildren().contains(ball))
+            ball.getView().createView(this);
+//        Shape s = ball.getBallFace();
+//        Bounds bou = ball.getBallFace().getBoundsInParent();
+//        g2d.setFill(ball.getInnerColor());
+//        g2d.fillOval(bou.getMinX(), bou.getMinY() ,bou.getWidth(),bou.getHeight());
+//
+//        g2d.setFill(ball.getBorderColor());
+//        g2d.strokeOval(bou.getMinX(), bou.getMinY() ,bou.getWidth(), bou.getHeight());
+//
+//        g2d.setFill(tmp);
+//
+//        g2d.strokeLine(bou.getMinX(), bou.getMinY(), bou.getMinX() + bou.getWidth(), bou.getMinY());
+//        g2d.strokeLine(bou.getMinX(), bou.getMinY(), bou.getMinX(), bou.getMinY() + bou.getHeight());
+//        g2d.strokeLine(bou.getMaxX(), bou.getMaxY(), bou.getMaxX() - bou.getWidth(), bou.getMaxY());
+//        g2d.strokeLine(bou.getMaxX(), bou.getMaxY(), bou.getMaxX(), bou.getMaxY() - bou.getHeight());
 
     }
 
-    private void drawPlayer(Paddle p, GraphicsContext g2d) {
-        Color tmp = (Color) g2d.getFill();
-
-        Shape s = p.getPaddleFace();
-        g2d.setFill(Paddle.INNER_COLOR);
-        g2d.fillRect(((Rectangle)s).getX(), ((Rectangle) s).getY() , ((Rectangle) s).getWidth(), ((Rectangle) s).getHeight());
-
-        g2d.setFill(Paddle.BORDER_COLOR);
-        g2d.strokeRect(((Rectangle)s).getX(), ((Rectangle) s).getY() , ((Rectangle) s).getWidth(), ((Rectangle) s).getHeight());
-
-        g2d.setFill(tmp);
+    private void drawPlayer(Paddle p) {
+        Rectangle paddle = new Rectangle(40, 10);
+        this.getChildren().add(paddle);
+        paddle.setLayoutX(this.getWidth()/2 - 20);
+        paddle.setLayoutY(this.getHeight() - 20);
+//        Color tmp = (Color) g2d.getFill();
+//
+//        Shape s = p.getPaddleFace();
+//        g2d.setFill(Paddle.INNER_COLOR);
+//        g2d.fillRect(((Rectangle)s).getX(), ((Rectangle) s).getY() , ((Rectangle) s).getWidth(), ((Rectangle) s).getHeight());
+//
+//        g2d.setFill(Paddle.BORDER_COLOR);
+//        g2d.strokeRect(((Rectangle)s).getX(), ((Rectangle) s).getY() , ((Rectangle) s).getWidth(), ((Rectangle) s).getHeight());
+//
+//        g2d.setFill(tmp);
     }
 
 //    private void drawMenu(GraphicsContext g2d) {
@@ -424,8 +440,8 @@ public class GameBoard extends Canvas {
             }
             case F1 -> {
                 if (e.isAltDown() && e.isShiftDown())
-                //m_debugConsole.setVisible(true);
-                this.getDebugConsole().setVisible(true);
+                    //m_debugConsole.setVisible(true);
+                    this.getDebugConsole().setVisible(true);
             }
         }
     }
@@ -450,7 +466,7 @@ public class GameBoard extends Canvas {
             this.getWall().ballReset();
             this.getWall().wallReset();
             this.setShowPauseMenu(false);
-            paint(getGraphicsContext2D());
+            paint();
         } else if (this.getExitButtonRect().contains(p)) {
             System.exit(0);
         }
@@ -465,9 +481,9 @@ public class GameBoard extends Canvas {
 //                    .contains(p))
         if (this.getExitButtonRect() != null && this.isShowPauseMenu()) {
             if (this.getExitButtonRect().contains(p) ||
-                this.getContinueButtonRect().contains(p) ||
-                this.getRestartButtonRect().contains(p))
-                    this.setCursor(Cursor.OPEN_HAND);
+                    this.getContinueButtonRect().contains(p) ||
+                    this.getRestartButtonRect().contains(p))
+                this.setCursor(Cursor.OPEN_HAND);
             else
                 this.setCursor(Cursor.DEFAULT);
         } else {
@@ -480,7 +496,7 @@ public class GameBoard extends Canvas {
         //this.getGameTimer().stop();
 //        m_message = "Focus Lost";
         this.setMessage("Focus Lost");
-        paint(getGraphicsContext2D());
+        paint();
     }
 
     private void timeActionListener() {
@@ -512,7 +528,7 @@ public class GameBoard extends Canvas {
                 this.getGameTimer().stop();
             }
         }
-        paint(this.getGraphicsContext2D());
+//        paint();
     }
 
 

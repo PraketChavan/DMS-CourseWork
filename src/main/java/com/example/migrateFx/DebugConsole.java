@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import com.example.migrateFx.wrappers.Ball;
 
 public class DebugConsole extends JDialog implements WindowListener {
 
@@ -105,7 +106,7 @@ public class DebugConsole extends JDialog implements WindowListener {
     public void windowActivated(WindowEvent windowEvent) {
         setLocation();
         Ball b = getWall().getBall();
-        getDebugPanel().setValues(b.getSpeedX(), b.getSpeedY());
+        getDebugPanel().setValues((int) b.getModel().getSpeed().getX(), (int) b.getModel().getSpeed().getY());
     }
 
     @Override
