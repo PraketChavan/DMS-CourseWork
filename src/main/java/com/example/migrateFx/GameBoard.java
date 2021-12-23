@@ -22,6 +22,8 @@ import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.util.Arrays;
+
 
 public class GameBoard extends Pane {
 
@@ -37,12 +39,12 @@ public class GameBoard extends Pane {
     private static final String PAUSE = "Pause Menu";
     private static final int TEXT_SIZE = 30;
     private static final Color MENU_COLOR = Color.rgb(0, 255, 0);
-    private static final int DEF_WIDTH = 600;
+    private static final int DEF_WIDTH = 640;
     private static final int DEF_HEIGHT = 450;
     private static final Color BG_COLOR = Color.WHITE;
     private AnimationTimer m_gameTimer;
 
-    private Wall1 m_wall;
+    private Wall m_wall;
 
     private String m_message;
     private boolean pause;
@@ -69,11 +71,11 @@ public class GameBoard extends Pane {
         this.m_gameTimer = gameTimer;
     }
 
-    public Wall1 getWall() {
+    public Wall getWall() {
         return m_wall;
     }
 
-    public void setWall(Wall1 wall) {
+    public void setWall(Wall wall) {
         this.m_wall = wall;
     }
 
@@ -159,7 +161,7 @@ public class GameBoard extends Pane {
         model.size = new SimpleObjectProperty<>(new Dimension2D(DEF_WIDTH, DEF_HEIGHT));
         model.bounds = new SimpleObjectProperty<>(this.getBoundsInParent());
         //m_wall = new Wall(new Rectangle(0, 0, DEF_WIDTH, DEF_HEIGHT), 30, 3, 6.0 / 2, new Point(300, 430));
-        this.setWall(new Wall1(new Rectangle(0, 0, DEF_WIDTH, DEF_HEIGHT),
+        this.setWall(new Wall(new Rectangle(0, 0, DEF_WIDTH, DEF_HEIGHT),
                                BRICK_COUNT, LINE_COUNT, BRICK_DIMENSION_RATIO,
                                new Point2D(X, Y)));
         this.getWall().setModel(model);
@@ -247,9 +249,12 @@ public class GameBoard extends Pane {
         if (!this.getChildren().contains(this.getWall().getBall()))
             drawBall(this.getWall().getBall());
 
-        for (Brick b : this.getWall().getBricks())
+        for (Brick b : this.getWall().getBricks()) {
+            Arrays.stream(this.getWall().getBricks()).toList().forEach(
+                    System.out::println);
             if (!b.getModel().isBroken())
                 drawBrick(b);
+        }
 
         //drawPlayer(m_wall.player, g2d);
         drawPlayer(this.getWall().getPlayer());

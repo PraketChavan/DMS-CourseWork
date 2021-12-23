@@ -41,19 +41,23 @@ public class BrickController extends SpriteController implements Breakable, Impa
             BallModel ball = (BallModel) parent;
             if (this.getView().getView().contains(ball.rightProperty().get())) {
                 onImpact(LEFT);
+                ((BrickModel)getModel()).decreaseStrength();
                 return LEFT;
             }
             if (this.getView().getView().contains(ball.leftProperty().get())) {
                 onImpact(RIGHT);
+                ((BrickModel)getModel()).decreaseStrength();
                 return RIGHT;
             }
             if (this.getView().getView().contains(ball.topProperty().get())) {
                 onImpact(DOWN);
+                ((BrickModel)getModel()).decreaseStrength();
                 return DOWN;
             }
             if (this.getView().getView()
                     .contains(ball.bottomProperty().get())) {
                 onImpact(UP);
+                ((BrickModel)getModel()).decreaseStrength();
                 return UP;
             }
         }

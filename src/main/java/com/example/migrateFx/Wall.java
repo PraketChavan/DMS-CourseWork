@@ -1,5 +1,6 @@
 package com.example.migrateFx;
 
+import com.example.migrateFx.factory.LevelFactory;
 import com.example.migrateFx.model.SpriteModel;
 import com.example.migrateFx.wrappers.Brick;
 import com.example.migrateFx.wrappers.Ball;
@@ -269,7 +270,9 @@ public class Wall {
 
     public Brick[][] makeLevels(Rectangle drawArea, int brickCount, int lineCount, double brickDimensionRatio) {
         Brick[][] tmp = new Brick[LEVELS_COUNT][];
-        tmp[0] = makeSingleTypeLevel(drawArea, brickCount, lineCount, brickDimensionRatio, CLAY);
+        LevelFactory factory = new LevelFactory();
+
+        tmp[0] = factory.createLevel(1, 3);
         tmp[1] = makeChessboardLevel(drawArea, brickCount, lineCount, brickDimensionRatio, CLAY, CEMENT);
         tmp[2] = makeChessboardLevel(drawArea, brickCount, lineCount, brickDimensionRatio, CLAY, STEEL);
         tmp[3] = makeChessboardLevel(drawArea, brickCount, lineCount, brickDimensionRatio, STEEL, CEMENT);
@@ -331,7 +334,6 @@ public class Wall {
 //            }
 
         for (Brick b : this.getBricks()) {
-            if (!b.getModel().isBroken()) {
                 switch (b.getController()
                          .findImpact(this.getBall().getModel())) {
                     //Vertical Impact
@@ -354,7 +356,8 @@ public class Wall {
                         return true;
                     }
                 }
-            }
+            if (b.getController().isBroken())
+                b.getController().onBreak();
         }
         return false;
     }

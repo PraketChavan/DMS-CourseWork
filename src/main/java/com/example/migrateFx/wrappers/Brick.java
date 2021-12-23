@@ -6,6 +6,9 @@ import com.example.migrateFx.view.BrickView;
 import javafx.geometry.Point2D;
 
 public abstract class Brick {
+
+    public static final int BRICK_WIDTH = 80;
+    public static final int BRICK_HEIGHT = 16;
     private final BrickModel m_Model;
     private final BrickController m_Controller;
     private final BrickView m_View;
@@ -22,9 +25,9 @@ public abstract class Brick {
         return m_View;
     }
 
-    public Brick(String url, Point2D location, double width, double height) {
+    public Brick(String url, Point2D location) {
         m_Model = new BrickModel(location);
-        m_View = new BrickView(url, width, height);
+        m_View = new BrickView(url, BRICK_WIDTH, BRICK_HEIGHT);
         m_Controller = new BrickController(getModel(), getView());
         getController().initialize();
     }

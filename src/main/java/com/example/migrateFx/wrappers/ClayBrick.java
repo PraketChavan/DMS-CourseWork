@@ -12,10 +12,7 @@ import javax.swing.text.View;
 
 public class ClayBrick extends Brick{
 
-    private static final int BRICK_WIDTH = 60;
-    private static final int BRICK_HEIGHT = 12;
-
     public ClayBrick(String url, Point2D location) {
-        super(url, location, BRICK_WIDTH, BRICK_HEIGHT);
+        super(url, location);
     }
 }

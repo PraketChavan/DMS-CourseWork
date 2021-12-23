@@ -31,6 +31,10 @@ public class BrickModel extends SpriteModel {
         return m_Size.get();
     }
 
+    public void decreaseStrength() {
+        setStrength(getStrength() - 1);
+    }
+
     private void setSize(Dimension2D size) {
         this.m_Size.set(size);
     }
