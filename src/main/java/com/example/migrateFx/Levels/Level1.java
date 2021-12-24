@@ -40,17 +40,13 @@ public class Level1 extends Level {
             double x = (i % brickOnLine) * (brickAllocatedSize) + offset;
             double y = (line) * BRICK_HEIGHT;
             p = new Point2D(x, y);
-            temp[i] = new ClayBrick(
-                    "D:\\Data\\Praket\\Nottingham\\Y2\\DMS\\Breakout_Clone\\src\\main\\resources\\com\\example\\breakout_clone_javafx\\sprite\\blue\\tile000\\clay0.png",
-                    p);
+            temp[i] = BRICK_FACTORY.createBrick(1, p);
         }
 
         for (double y = BRICK_HEIGHT; i < temp.length; i++, y += 2 * BRICK_HEIGHT) {
             double x = (brickOnLine * BRICK_WIDTH) - (BRICK_WIDTH / 2);
             p = new Point2D(x, y);
-            temp[i] = new ClayBrick(
-                    "D:\\Data\\Praket\\Nottingham\\Y2\\DMS\\Breakout_Clone\\src\\main\\resources\\com\\example\\breakout_clone_javafx\\sprite\\blue\\tile000\\clay0.png",
-                    p);
+            temp[i] = BRICK_FACTORY.createBrick(1, p);
         }
         return temp;
 
