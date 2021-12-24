@@ -4,7 +4,7 @@ import com.example.migrateFx.*;
 import com.example.migrateFx.model.BallModel;
 import com.example.migrateFx.model.SpriteModel;
 import com.example.migrateFx.view.SpriteView;
-import com.example.util.Movable;
+import com.example.migrateFx.Movable;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 
@@ -37,11 +37,11 @@ public class BallController extends SpriteController implements Movable, Impacta
             onImpact(DOWN);
             return DOWN;
         }
-        if (model.topProperty().get().getY() <= bound.getMinY()) {
+        if (model.topProperty().get().getY() <= 0) {
             onImpact(UP);
             return UP;
         }
-        if (model.leftProperty().get().getX() <= bound.getMinX()) {
+        if (model.leftProperty().get().getX() <= 0) {
             onImpact(LEFT);
             return LEFT;
         }
