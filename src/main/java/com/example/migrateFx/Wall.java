@@ -6,6 +6,7 @@ import com.example.migrateFx.wrappers.Brick;
 import com.example.migrateFx.wrappers.Ball;
 import com.example.migrateFx.wrappers.ClayBrick;
 import com.example.migrateFx.wrappers.RubberBall;
+import com.example.migrateFx.wrappers.Paddle;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Rectangle;
@@ -163,19 +164,20 @@ public class Wall {
         this.makeBall(new Point2D(ballPos.getX(), ballPos.getY() - 200));
 
         int speedX, speedY;
-        do {
-            speedX = this.getRnd().nextInt(X_SPEED_BOUND) - OFFSET;
-        } while (speedX == 0);
-
-        do {
-            speedY = - this.getRnd().nextInt(Y_SPEED_BOUND);
-        } while (speedY == 0);
+//        do {
+//            speedX = this.getRnd().nextInt(X_SPEED_BOUND) - OFFSET;
+//        } while (speedX == 0);
+//
+//        do {
+//            speedY = - this.getRnd().nextInt(Y_SPEED_BOUND);
+//        } while (speedY == 0);
+        speedX = -2;
+        speedY = -1;
 
         this.getBall().getModel().setSpeed(new Point2D(speedX, speedY));
 
         //m_player = new Paddle((Point) ballPos.clone(), 150, 10, drawArea);
-        this.setPlayer(new Paddle(new Point2D(ballPos.getX(), ballPos.getY()), PADDLE_WIDTH,
-                                  PADDLE_HEIGHT, drawArea));
+        this.setPlayer(new Paddle("D:\\Data\\Praket\\Nottingham\\Y2\\DMS\\Breakout_Clone\\src\\main\\resources\\com\\example\\migrateFx\\sprite\\blue\\tile000\\paddle.png", new Point2D(ballPos.getX(), ballPos.getY())));
         //m_area = drawArea;
         this.setArea(drawArea);
 
@@ -265,7 +267,7 @@ public class Wall {
 
     public void makeBall(Point2D ballPos) {
         //m_ball = new Ball1(ballPos);
-        this.setBall(new RubberBall("D:\\Data\\Praket\\Nottingham\\Y2\\DMS\\Breakout_Clone\\src\\main\\resources\\com\\example\\breakout_clone_javafx\\sprite\\blue\\tile000\\ball0.png", ballPos));
+        this.setBall(new RubberBall("D:\\Data\\Praket\\Nottingham\\Y2\\DMS\\Breakout_Clone\\src\\main\\resources\\com\\example\\migrateFx\\sprite\\blue\\tile000\\ball0.png", ballPos));
     }
 
     public Brick[][] makeLevels(Rectangle drawArea, int brickCount, int lineCount, double brickDimensionRatio) {
@@ -280,7 +282,7 @@ public class Wall {
     }
 
     public void move() {
-        this.getPlayer().move();
+        this.getPlayer().getController().move();
         this.getBall().getController().move();
     }
 
@@ -298,7 +300,7 @@ public class Wall {
 //            m_ballCount--;
 //            m_ballLost = true;
 //        }
-        if (this.getPlayer().getPaddleFace().intersects(this.getBall().getView().getView().getBoundsInParent())) {
+        if (this.getPlayer().getView().getView().intersects(this.getBall().getView().getView().getBoundsInParent())) {
             this.getBall().getController().onImpact(0);
         } else if (impactWall()) {
             // for efficiency reverse is done into method impactWall because for
@@ -338,27 +340,36 @@ public class Wall {
                          .findImpact(this.getBall().getModel())) {
                     //Vertical Impact
                     case Impactable.UP -> {
-                        this.getBall().getController().onImpact(Impactable.UP);
+                        if (!this.getBall().getModel().isCollisions())
+                            this.getBall().getController().onImpact(Impactable.UP);
+                        this.getBall().getModel().setCollisions(true);
                         return true;
                     }
                     case Impactable.DOWN ->  {
-                        this.getBall().getController().onImpact(Impactable.DOWN);
+                        if (!this.getBall().getModel().isCollisions())
+                            this.getBall().getController().onImpact(Impactable.DOWN);
+                        this.getBall().getModel().setCollisions(true);
                         return true;
                     }
 
                     //Horizontal Impact
                     case Impactable.LEFT -> {
-                        this.getBall().getController().onImpact(Impactable.LEFT);
+                        if (!this.getBall().getModel().isCollisions())
+                            this.getBall().getController().onImpact(Impactable.LEFT);
+                        this.getBall().getModel().setCollisions(true);
                         return true;
                     }
                     case Impactable.RIGHT -> {
-                        this.getBall().getController().onImpact(Impactable.RIGHT);
+                        if (!this.getBall().getModel().isCollisions())
+                            this.getBall().getController().onImpact(Impactable.RIGHT);
+                        this.getBall().getModel().setCollisions(true);
                         return true;
                     }
                 }
             if (b.getController().isBroken())
                 b.getController().onBreak();
         }
+        this.getBall().getModel().setCollisions(false);
         return false;
     }
 
@@ -371,7 +382,7 @@ public class Wall {
     public void ballReset() {
 //        m_player.moveTo(m_startPoint);
 //        m_ball.moveTo(m_startPoint);
-        this.getPlayer().moveTo(this.getStartPoint());
+        this.getPlayer().getModel().setLocation(this.getStartPoint());
         this.getBall().getModel().setLocation(this.getStartPoint());
         int speedX, speedY;
         do {
@@ -423,7 +434,7 @@ public class Wall {
 
     private Brick makeBrick(Point2D point, Dimension2D size, int type) {
         return switch (type) {
-            case CLAY, STEEL, CEMENT -> new ClayBrick("D:\\Data\\Praket\\Nottingham\\Y2\\DMS\\Breakout_Clone\\src\\main\\resources\\com\\example\\breakout_clone_javafx\\sprite\\blue\\tile000\\clay0.png", point);
+            case CLAY, STEEL, CEMENT -> new ClayBrick("D:\\Data\\Praket\\Nottingham\\Y2\\DMS\\Breakout_Clone\\src\\main\\resources\\com\\example\\migrateFx\\sprite\\blue\\tile000\\clay0.png", point);
 //            case STEEL -> new ClayBrick(point);
 //            case CEMENT -> new ClayBrick(point);
             default -> throw new IllegalArgumentException(String.format("Unknown Type:%d\n", type));

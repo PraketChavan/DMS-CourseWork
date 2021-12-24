@@ -1,5 +1,6 @@
 package com.example.migrateFx.model;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
@@ -11,9 +12,30 @@ public class BallModel extends SpriteModel {
     private SimpleObjectProperty<Point2D> m_Right;
     private SimpleObjectProperty<Point2D> m_Center;
     private SimpleDoubleProperty m_Radius;
+    private SimpleBooleanProperty m_Collisions;
+
+    public SimpleBooleanProperty getCollisions() {
+        return m_Collisions;
+    }
+
+    public boolean isCollisions() {
+        return getCollisions().get();
+    }
+
+    public SimpleBooleanProperty collisionsProperty() {
+        return getCollisions();
+    }
+
+    public void setCollisions(boolean collisions) {
+        this.getCollisions().set(collisions);
+    }
 
     private Point2D getBottom() {
         return m_Bottom.get();
+    }
+
+    public void setCollisions(SimpleBooleanProperty collisions) {
+        m_Collisions = collisions;
     }
 
     private void setBottom(Point2D bottom) {
@@ -105,6 +127,7 @@ public class BallModel extends SpriteModel {
         initLeftProperty(new SimpleObjectProperty<>());
         initTopProperty(new SimpleObjectProperty<>());
         setRadius(new SimpleDoubleProperty(0));
+        setCollisions(new SimpleBooleanProperty(false));
     }
 
     private void initBottomProperty(
