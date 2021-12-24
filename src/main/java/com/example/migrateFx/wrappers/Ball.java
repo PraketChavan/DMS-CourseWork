@@ -26,7 +26,7 @@ public abstract class Ball {
         m_Model = new BallModel(location);
         m_View = new BallView(url, size, size);
         m_Controller = new BallController(getModel(), getView());
-        getController().initialize();
+//        getController().initialize();
 
     }
 }

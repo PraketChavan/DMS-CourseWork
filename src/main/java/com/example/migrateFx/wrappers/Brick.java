@@ -29,6 +29,5 @@ public abstract class Brick {
         m_Model = new BrickModel(location);
         m_View = new BrickView(url, BRICK_WIDTH, BRICK_HEIGHT);
         m_Controller = new BrickController(getModel(), getView());
-        getController().initialize();
     }
 }
