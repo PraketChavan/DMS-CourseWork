@@ -17,7 +17,7 @@ public class StartGame extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         GameFrame frame = new GameFrame();
-        Scene scene = new Scene(frame.getLayout(), 600, 450);
+        Scene scene = new Scene(frame.getLayout(), 640, 450);
         stage.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(

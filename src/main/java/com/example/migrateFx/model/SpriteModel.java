@@ -88,6 +88,11 @@ public abstract class SpriteModel {
         this.m_Location = new SimpleObjectProperty<>(location);
         this.m_Name = new SimpleStringProperty();
         this.m_Speed = new SimpleObjectProperty<>();
+
+        getLocationProperty().addListener((observableValue, point2D, t1) -> {
+            setXLocation(t1.getX());
+            setYLocation(t1.getY());
+        });
     }
 
     public void setXLocation(double XLocation) {

@@ -3,6 +3,7 @@ package com.example.migrateFx;
 import com.example.migrateFx.model.SpriteModel;
 import com.example.migrateFx.wrappers.Brick;
 import com.example.migrateFx.wrappers.Ball;
+import com.example.migrateFx.wrappers.Paddle;
 
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.SimpleObjectProperty;
@@ -17,6 +18,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
@@ -45,6 +47,7 @@ public class GameBoard extends Pane {
     private AnimationTimer m_gameTimer;
 
     private Wall m_wall;
+    private Line m_line = new Line();
 
     private String m_message;
     private boolean pause;
@@ -229,6 +232,8 @@ public class GameBoard extends Pane {
         //this.addMouseListener(this);
         this.setOnMouseMoved(this::mouseMoved);
 //        this.addMouseMotionListener(this);
+        this.getChildren().add(m_line);
+
     }
 
     public void paint() {
@@ -309,10 +314,8 @@ public class GameBoard extends Pane {
     }
 
     private void drawPlayer(Paddle p) {
-        Rectangle paddle = new Rectangle(40, 10);
-        this.getChildren().add(paddle);
-        paddle.setLayoutX(this.getWidth()/2 - 20);
-        paddle.setLayoutY(this.getHeight() - 20);
+        if (!this.getChildren().contains(p.getView().getView()))
+            p.getView().createView(this);
 //        Color tmp = (Color) g2d.getFill();
 //
 //        Shape s = p.getPaddleFace();
@@ -428,8 +431,8 @@ public class GameBoard extends Pane {
 
     public void keyPressed(KeyEvent e) {
         switch (e.getCode()){
-            case LEFT -> this.getWall().getPlayer().moveLeft();
-            case RIGHT -> this.getWall().getPlayer().movRight();
+            case LEFT -> this.getWall().getPlayer().getController().moveLeft();
+            case RIGHT -> this.getWall().getPlayer().getController().moveRight();
             case SPACE -> {
                 if (!this.isShowPauseMenu())
                     if (!pause)
@@ -452,7 +455,7 @@ public class GameBoard extends Pane {
     }
 
     public void keyReleased(KeyEvent keyEvent) {
-        this.getWall().getPlayer().stop();
+       this.getWall().getPlayer().getController().stop();
     }
 
 
@@ -509,6 +512,12 @@ public class GameBoard extends Pane {
         this.getWall().move();
 //        m_wall.findImpacts();
         this.getWall().findImpacts();
+//        m_line.setFill(Color.RED);
+//        m_line.setStartX(this.getWall().getBall().getModel().getXLocationProperty().get());
+//        m_line.setStartY(this.getWall().getBall().getModel().getYLocationProperty().get());
+//        m_line.setEndX(this.getWall().getBall().getModel().getXLocationProperty().get());
+//        m_line.setEndX(this.getWall().getBall().getModel().getYLocationProperty().get());
+
 //        m_message = String.format("Bricks: %d Balls %d", m_wall.getBrickCount(), m_wall
 //                .getBallCount());
         this.setMessage(String.format("Bricks: %d Balls %d",

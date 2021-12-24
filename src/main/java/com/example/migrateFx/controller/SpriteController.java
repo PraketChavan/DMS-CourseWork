@@ -26,6 +26,7 @@ public abstract class SpriteController {
     public SpriteController(SpriteModel model, SpriteView view) {
         this.setModel(model);
         this.setView(view);
+        this.initialize();
     }
 
     public abstract void initialize();
