@@ -41,7 +41,7 @@ public class GameFrame implements WindowFocusListener {
         super();
         this.setGaming(false);
         setLayout(new BorderPane());
-        m_gameBoard = new GameBoard(getLayout());
+        m_gameBoard = GameBoard.getGameBoardInstance(getLayout());
         getLayout().setCenter(this.getGameBoard());
         //gaming = false; /*Removed direct assignment*/
         //this.add(m_gameBoard, BorderLayout.CENTER); /*Removed the direct access and used getter method*/

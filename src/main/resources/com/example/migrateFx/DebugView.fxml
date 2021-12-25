@@ -4,16 +4,19 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.Pane?>
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="130.0"
-      prefWidth="300.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
+      prefWidth="300.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.migrateFx.controller.DebugController">
     <children>
-        <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" prefHeight="13.0" prefWidth="130.0"
-                text="Skip Level"/>
-        <Button layoutX="158.0" layoutY="14.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="130.0"
-                text="Reset Balls"/>
-        <Slider blockIncrement="1.0" layoutX="14.0" layoutY="58.0" majorTickUnit="1.0" max="5.0" minorTickCount="1"
-                prefHeight="37.0" prefWidth="130.0" showTickLabels="true" showTickMarks="true" snapToTicks="true"/>
-        <Slider blockIncrement="1.0" layoutX="158.0" layoutY="58.0" majorTickUnit="1.0" max="5.0" minorTickCount="1"
-                prefHeight="37.0" prefWidth="130.0" showTickLabels="true" showTickMarks="true" snapToTicks="true"/>
+        <Button fx:id="m_SkipLevel" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#skipLevel"
+                prefHeight="13.0" prefWidth="130.0" text="Skip Level"/>
+        <Button fx:id="m_ResetBalls" layoutX="158.0" layoutY="14.0" mnemonicParsing="false" onAction="#resetBall"
+                prefHeight="25.0" prefWidth="130.0" text="Reset Balls"/>
+        <Slider fx:id="m_BallXSpeed" blockIncrement="1.0" layoutX="14.0" layoutY="58.0" majorTickUnit="1.0" max="5.0"
+                minorTickCount="1" prefHeight="37.0" prefWidth="130.0" showTickLabels="true" showTickMarks="true"
+                snapToTicks="true"/>
+        <Slider fx:id="m_BallYSpeed" blockIncrement="1.0" layoutX="158.0" layoutY="58.0" majorTickUnit="1.0" max="5.0"
+                minorTickCount="1" prefHeight="37.0" prefWidth="130.0" showTickLabels="true" showTickMarks="true"
+                snapToTicks="true"/>
         <Label layoutX="46.0" layoutY="93.0" text="Ball X Speed"/>
         <Label layoutX="190.0" layoutY="93.0" text="Ball Y Speed"/>
     </children>

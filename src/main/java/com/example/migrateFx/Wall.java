@@ -1,6 +1,7 @@
 package com.example.migrateFx;
 
 import com.example.migrateFx.factory.LevelFactory;
+import com.example.migrateFx.model.GameModel;
 import com.example.migrateFx.model.SpriteModel;
 import com.example.migrateFx.wrappers.Brick;
 import com.example.migrateFx.wrappers.Ball;
@@ -15,9 +16,15 @@ import java.util.Random;
 
 public class Wall {
 
+    public static final int X = 300;
+    public static final int Y = 430;
+    public static final double BRICK_DIMENSION_RATIO = 6.0 / 2;
     public static final int LEVELS_COUNT = 4;
     public static final int X_SPEED_BOUND = 5;
-
+    public static final int BRICK_COUNT = 30; //added to remove magic number
+    public static final int LINE_COUNT = 3;
+    private static final int DEF_WIDTH = 640;
+    private static final int DEF_HEIGHT = 450;
     private static final int CLAY = 1;
     private static final int STEEL = 2;
     private static final int CEMENT = 3;
@@ -26,6 +33,7 @@ public class Wall {
     public static final int Y_SPEED_BOUND = 3;
     public static final int PADDLE_WIDTH = 150;
     public static final int PADDLE_HEIGHT = 10;
+    private static Wall m_WallInstance = null;
 
     private Brick[] m_bricks;
     private Ball m_ball;
@@ -35,15 +43,23 @@ public class Wall {
     private Brick[][] m_levels;
     private int m_level;
 
-    public SpriteModel getModel() {
-        return model;
+    private static Wall getM_WallInstance() {
+        return m_WallInstance;
     }
 
-    public void setModel(SpriteModel model) {
-        this.model = model;
+    public GameModel getModel() {
+        return m_model;
     }
 
-    private SpriteModel model;
+    private static void setM_WallInstance(Wall m_WallInstance) {
+        Wall.m_WallInstance = m_WallInstance;
+    }
+
+    public void setModel(GameModel model) {
+        this.m_model = model;
+    }
+
+    private GameModel m_model;
 
     private Point2D m_startPoint;
     private int m_brickCount;
@@ -141,8 +157,15 @@ public class Wall {
     public void setPlayer(Paddle player) {
         this.m_player = player;
     }
-
-    public Wall(Rectangle drawArea, int brickCount, int lineCount, double brickDimensionRatio, Point2D ballPos) {
+    public static Wall getWallInstance() {
+        if (getM_WallInstance() == null) {
+            setM_WallInstance(new Wall(new Rectangle(0, 0, DEF_WIDTH, DEF_HEIGHT),
+                                       BRICK_COUNT, LINE_COUNT, BRICK_DIMENSION_RATIO,
+                                       new Point2D(X, Y)));
+        }
+        return getM_WallInstance();
+    }
+    private Wall(Rectangle drawArea, int brickCount, int lineCount, double brickDimensionRatio, Point2D ballPos) {
 
         //this.m_startPoint = new Point(ballPos);
         this.setStartPoint(new Point2D(ballPos.getX(), ballPos.getY()));

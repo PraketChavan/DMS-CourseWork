@@ -1,40 +1,43 @@
 package com.example.migrateFx;
 
-import com.example.migrateFx.model.SpriteModel;
-import com.example.migrateFx.wrappers.Brick;
+import com.example.migrateFx.handler.ImpactHandler;
+import com.example.migrateFx.model.GameModel;
 import com.example.migrateFx.wrappers.Ball;
+import com.example.migrateFx.wrappers.Brick;
 import com.example.migrateFx.wrappers.Paddle;
-
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.geometry.Bounds;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Dimension2D;
+import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 
 public class GameBoard extends Pane {
 
     public static final int DELAY = 10;
-    public static final int BRICK_COUNT = 30; //added to remove magic number
-    public static final int LINE_COUNT = 3; //added to remove magic number
-    public static final int X = 300;
-    public static final int Y = 430;
-    public static final double BRICK_DIMENSION_RATIO = 6.0 / 2;
     private static final String CONTINUE = "Continue";
     private static final String RESTART = "Restart";
     private static final String EXIT = "Exit";
@@ -45,7 +48,7 @@ public class GameBoard extends Pane {
     private static final int DEF_HEIGHT = 450;
     private static final Color BG_COLOR = Color.WHITE;
     private AnimationTimer m_gameTimer;
-
+    private final ImpactHandler m_impactHandler;
     private Wall m_wall;
     private Line m_line = new Line();
 
@@ -59,8 +62,6 @@ public class GameBoard extends Pane {
     private Rectangle m_exitButtonRect;
     private Rectangle m_restartButtonRect;
     private int m_strLen;
-
-    private DebugConsole m_debugConsole;
 
     /*
     Added getters and setter for non final member variable
@@ -138,15 +139,24 @@ public class GameBoard extends Pane {
         this.m_strLen = strLen;
     }
 
-    public DebugConsole getDebugConsole() {
-        return m_debugConsole;
+    private static GameBoard m_GameBoardInstance;
+
+    public static GameBoard getGameBoardInstance(BorderPane parent) {
+        if (m_GameBoardInstance == null)
+            setGameBoardInstance(new GameBoard(parent));
+        return m_GameBoardInstance;
     }
 
-    public void setDebugConsole(DebugConsole debugConsole) {
-        this.m_debugConsole = debugConsole;
+    public static GameBoard getGameBoardInstance() {
+        return m_GameBoardInstance;
     }
 
-    public GameBoard(BorderPane parent) {
+    public static void setGameBoardInstance(
+            GameBoard m_GameBoardInstance) {
+        GameBoard.m_GameBoardInstance = m_GameBoardInstance;
+    }
+
+    private GameBoard(BorderPane parent) {
 
         //m_strLen = 0;
         this.setStrLen(0);
@@ -160,24 +170,15 @@ public class GameBoard extends Pane {
         this.initialize(parent);
         //m_message = "Press SPACE to start";
         this.setMessage("Press SPACE to start");
-        TestModel model = new TestModel(new Point2D(0, 0));
-        model.size = new SimpleObjectProperty<>(new Dimension2D(DEF_WIDTH, DEF_HEIGHT));
-        model.bounds = new SimpleObjectProperty<>(this.getBoundsInParent());
-        //m_wall = new Wall(new Rectangle(0, 0, DEF_WIDTH, DEF_HEIGHT), 30, 3, 6.0 / 2, new Point(300, 430));
-        this.setWall(new Wall(new Rectangle(0, 0, DEF_WIDTH, DEF_HEIGHT),
-                               BRICK_COUNT, LINE_COUNT, BRICK_DIMENSION_RATIO,
-                               new Point2D(X, Y)));
-        this.getWall().setModel(model);
+        GameModel model = GameModel.getGameInstance();
 
-        //m_debugConsole = new DebugConsole(owner, m_wall, this);
-        //this.setDebugConsole(new DebugConsole(owner, m_wall, this));
+        this.setWall(Wall.getWallInstance());
 
-        //initialize the first level
-        //m_wall.nextLevel();
         this.getWall().nextLevel();
+        m_impactHandler = new ImpactHandler(model);
+
         //  paint(this.getGraphicsContext2D());
         paint();
-
         /*m_gameTimer = new Timer(10, e -> {
             m_wall.move();
             m_wall.findImpacts();
@@ -257,7 +258,7 @@ public class GameBoard extends Pane {
         for (Brick b : this.getWall().getBricks()) {
             Arrays.stream(this.getWall().getBricks()).toList().forEach(
                     System.out::println);
-            if (!b.getModel().isBroken())
+            if (!b.getModel().checkBroken())
                 drawBrick(b);
         }
 
@@ -278,54 +279,27 @@ public class GameBoard extends Pane {
     }
 
     private void drawBrick(Brick brick) {
-//        Color tmp = (Color) g2d.getFill();
 
-//        g2d.setFill(brick.getInnerColor());
-//        g2d.fillRect(((Rectangle)brick.getBrickFace()).getX(), ((Rectangle) brick.getBrickFace()).getY(),
-//                     brick.getSize().getWidth(), brick.getSize().getHeight());
-
-//        g2d.setFill(brick.getBorderColor());
-//        g2d.strokeRect(((Rectangle)brick.getBrickFace()).getX(), ((Rectangle) brick.getBrickFace()).getY(),
-//                       brick.getSize().getWidth(), brick.getSize().getHeight());
-        if (!this.getChildren().contains(brick))
+        if (!this.getChildren().contains(brick)) {
+            getImpactHandler().addBrick(brick.getModel());
             brick.getView().createView(this);
-//        g2d.setFill(tmp);
+        }
     }
 
     private void drawBall(Ball ball) {
 //        Color tmp = (Color) g2d.getFill();
-        if (!this.getChildren().contains(ball))
+        if (!this.getChildren().contains(ball)) {
+            getImpactHandler().addBall(ball.getModel());
             ball.getView().createView(this);
-//        Shape s = ball.getBallFace();
-//        Bounds bou = ball.getBallFace().getBoundsInParent();
-//        g2d.setFill(ball.getInnerColor());
-//        g2d.fillOval(bou.getMinX(), bou.getMinY() ,bou.getWidth(),bou.getHeight());
-//
-//        g2d.setFill(ball.getBorderColor());
-//        g2d.strokeOval(bou.getMinX(), bou.getMinY() ,bou.getWidth(), bou.getHeight());
-//
-//        g2d.setFill(tmp);
-//
-//        g2d.strokeLine(bou.getMinX(), bou.getMinY(), bou.getMinX() + bou.getWidth(), bou.getMinY());
-//        g2d.strokeLine(bou.getMinX(), bou.getMinY(), bou.getMinX(), bou.getMinY() + bou.getHeight());
-//        g2d.strokeLine(bou.getMaxX(), bou.getMaxY(), bou.getMaxX() - bou.getWidth(), bou.getMaxY());
-//        g2d.strokeLine(bou.getMaxX(), bou.getMaxY(), bou.getMaxX(), bou.getMaxY() - bou.getHeight());
+        }
 
     }
 
     private void drawPlayer(Paddle p) {
-        if (!this.getChildren().contains(p.getView().getView()))
+        if (!this.getChildren().contains(p.getView().getView())) {
+            getImpactHandler().addPaddle(p.getModel());
             p.getView().createView(this);
-//        Color tmp = (Color) g2d.getFill();
-//
-//        Shape s = p.getPaddleFace();
-//        g2d.setFill(Paddle.INNER_COLOR);
-//        g2d.fillRect(((Rectangle)s).getX(), ((Rectangle) s).getY() , ((Rectangle) s).getWidth(), ((Rectangle) s).getHeight());
-//
-//        g2d.setFill(Paddle.BORDER_COLOR);
-//        g2d.strokeRect(((Rectangle)s).getX(), ((Rectangle) s).getY() , ((Rectangle) s).getWidth(), ((Rectangle) s).getHeight());
-//
-//        g2d.setFill(tmp);
+        }
     }
 
 //    private void drawMenu(GraphicsContext g2d) {
@@ -350,83 +324,22 @@ public class GameBoard extends Pane {
 //        g2d.setFill(tmpColor);
 //    }
 
-//    private void drawPauseMenu(GraphicsContext g2d) {
-//        final float HALF = 0.5f;
-//        final float TENTH = 0.1f;
-//        final float EIGTH = 0.125f;
-//        final float QUATER = 0.25f;
-//        final int DOUBLE = 2;
-//        final int TRIPLE = 3;
-//
-//
-//        Font tmpFont = g2d.getFont();
-//        Color tmpColor = (Color) g2d.getFill();
-//
-//
-//        g2d.setFont(this.getMenuFont());
-//        g2d.setFill(MENU_COLOR);
-//
-//        if (this.getStrLen() == 0) {
-////            FontRenderContext frc = g2d.getFontRenderContext();
-//            //m_strLen = m_menuFont.getStringBounds(PAUSE, frc).getBounds().width;
-//            this.setStrLen((int) this.getMenuFont().getSize());
-//                               //.getStringBounds(PAUSE, frc)
-//                               //.getBounds().width);
-//        }
-//
-//        int x = (int) ((this.getWidth() - this.getStrLen()) * HALF);
-//        int y = (int) (this.getHeight() * TENTH);
-//
-//        g2d.strokeText(PAUSE, x, y);
-//
-//        x = (int) (this.getWidth() * EIGTH);
-//        y = (int) (this.getHeight() * QUATER);
-//
-//
-//        //if (m_continueButtonRect == null) {
-//        if (this.getContinueButtonRect() == null) {
-//            //FontRenderContext frc = g2d.getFontRenderContext();
-//            //m_continueButtonRect = m_menuFont.getStringBounds(CONTINUE, frc).getBounds();
-//            //m_continueButtonRect.setLocation(x, y - m_continueButtonRect.height);
-//            this.setContinueButtonRect(g2d.g);
-////                                           .getStringBounds(CONTINUE, frc)
-////                                           .getBounds());
-//            this.getContinueButtonRect().setLocation(x, y - this.getContinueButtonRect().height);
-//        }
-//
-//        g2d.drawString(CONTINUE, x, y);
-//
-//        y *= DOUBLE;
-//
-////        if (m_restartButtonRect == null) {
-////            m_restartButtonRect = (Rectangle) m_continueButtonRect.clone();
-////            m_restartButtonRect.setLocation(x, y - m_restartButtonRect.height);
-////        }
-//        if (this.getRestartButtonRect() == null) {
-//            this.setRestartButtonRect((Rectangle) this.getContinueButtonRect()
-//                                                      .clone());
-//            this.getRestartButtonRect()
-//                .setLocation(x, y - this.getRestartButtonRect().height);
-//        }
-//
-//        g2d.drawString(RESTART, x, y);
-//
-//        y *= TRIPLE * HALF;
-//
-////        if (m_exitButtonRect == null) {
-////            m_exitButtonRect = (Rectangle) m_continueButtonRect.clone();
-////            m_exitButtonRect.setLocation(x, y - m_exitButtonRect.height);
-////        }
-//        if (this.getExitButtonRect() == null) {
-//            this.setExitButtonRect((Rectangle) this.getContinueButtonRect()
-//                                                   .clone());
-//            this.getExitButtonRect().setLocation(x, y - this.getExitButtonRect().height);
-//        }
-//
-//        g2d.drawString(EXIT, x, y);
-//
-//        g2d.setFont(tmpFont);
-//        g2d.setColor(tmpColor);
+    private void drawPauseMenu() {
+        getGameTimer().stop();
+        getParent().setEffect(new GaussianBlur());
+
+        Stage popupStage = new Stage(StageStyle.TRANSPARENT);
+        popupStage.initOwner(getParent().getScene().getWindow());
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("PauseView.fxml"));
+        try {
+            popupStage.setScene(new Scene(loader.load(), Color.TRANSPARENT));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        popupStage.show();
+    }
 //    }
 
     public void keyPressed(KeyEvent e) {
@@ -435,21 +348,36 @@ public class GameBoard extends Pane {
             case RIGHT -> this.getWall().getPlayer().getController().moveRight();
             case SPACE -> {
                 if (!this.isShowPauseMenu())
-                    if (!pause)
+                    if (!pause) {
                         this.getGameTimer().stop();
-                    else
+                        pause = true;
+                    }
+                    else {
                         this.getGameTimer().start();
+                        pause = false;
+                    }
             }
             case ESCAPE -> {
                 this.setShowPauseMenu(!this.isShowPauseMenu());
-                //repaint();
-                //m_gameTimer.stop();
+                drawPauseMenu();
                 this.getGameTimer().stop();
             }
             case F1 -> {
-                if (e.isAltDown() && e.isShiftDown())
+                if (e.isAltDown() && e.isShiftDown()){
+
+                    Stage stage = new Stage();
+                    FXMLLoader root;
+//                    Parent root = null;
+                    try {
+                        root = new FXMLLoader(getClass().getResource("/com/example/migrateFx/DebugView.fxml"));
+                        stage.setScene(new Scene(root.load()));
+                        stage.show();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
                     //m_debugConsole.setVisible(true);
-                    this.getDebugConsole().setVisible(true);
+
             }
         }
     }
@@ -466,18 +394,18 @@ public class GameBoard extends Pane {
         if (!this.isShowPauseMenu())
             return;
         //if (m_continueButtonRect.contains(p)) {
-        if (this.getContinueButtonRect().contains(p)) {
-            this.setShowPauseMenu(false);
-            //repaint();
-        } else if (this.getRestartButtonRect().contains(p)) {
-            this.setMessage("Restarting Game...");
-            this.getWall().ballReset();
-            this.getWall().wallReset();
-            this.setShowPauseMenu(false);
-            paint();
-        } else if (this.getExitButtonRect().contains(p)) {
-            System.exit(0);
-        }
+//        if (this.getContinueButtonRect().contains(p)) {
+//            this.setShowPauseMenu(false);
+//            //repaint();
+//        } else if (this.getRestartButtonRect().contains(p)) {
+//            this.setMessage("Restarting Game...");
+//            this.getWall().ballReset();
+//            this.getWall().wallReset();
+//            this.setShowPauseMenu(false);
+////            paint();
+//        } else if (this.getExitButtonRect().contains(p)) {
+//            System.exit(0);
+//        }
 
     }
 
@@ -504,14 +432,19 @@ public class GameBoard extends Pane {
         //this.getGameTimer().stop();
 //        m_message = "Focus Lost";
         this.setMessage("Focus Lost");
-        paint();
+//        paint();
+    }
+
+    public ImpactHandler getImpactHandler() {
+        return m_impactHandler;
     }
 
     private void timeActionListener() {
         //m_wall.move();
         this.getWall().move();
 //        m_wall.findImpacts();
-        this.getWall().findImpacts();
+//        this.getWall().findImpacts();
+        this.getImpactHandler().handleImpacts();
 //        m_line.setFill(Color.RED);
 //        m_line.setStartX(this.getWall().getBall().getModel().getXLocationProperty().get());
 //        m_line.setStartY(this.getWall().getBall().getModel().getYLocationProperty().get());
@@ -523,6 +456,7 @@ public class GameBoard extends Pane {
         this.setMessage(String.format("Bricks: %d Balls %d",
                                       this.getWall().getBrickCount(),
                                       this.getWall().getBallCount()));
+//        System.out.println(getMessage());
         if (this.getWall().isBallLost()) {
             if (this.getWall().ballEnd()) {
                 this.getWall().wallReset();
