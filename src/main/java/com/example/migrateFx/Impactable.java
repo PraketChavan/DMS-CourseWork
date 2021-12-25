@@ -9,6 +9,6 @@ public interface Impactable {
     int DOWN = 2;
     int LEFT = 3;
     int NO_IMPACT = -1;
-    int findImpact(SpriteModel parent);
+    int findImpact(Impactable parent);
     void onImpact(int side);
 }

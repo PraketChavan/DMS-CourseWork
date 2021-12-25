@@ -183,45 +183,6 @@ public class Wall {
 
     }
 
-    private Brick[] makeSingleTypeLevel(Rectangle drawArea, int brickCnt, int lineCnt, double brickSizeRatio, int type) {
-        final float HALF = 0.5f;
-        // if brickCount is not divisible by line count,brickCount is adjusted to
-        // the biggest multiple of lineCount smaller then brickCount
-        brickCnt -= brickCnt % lineCnt;
-        //30
-        int brickOnLine = brickCnt / lineCnt; //10
-
-        double brickLen = drawArea.getWidth() / brickOnLine;
-        double brickHgt = brickLen / brickSizeRatio;
-
-        brickCnt += lineCnt * HALF; //31
-
-        Brick[] tmp = new Brick[brickCnt];
-
-        Dimension2D brickSize = new Dimension2D((int) brickLen, (int) brickHgt);
-        Point2D p = new Point2D(0, 0);
-
-        int i;
-        for (i = 0; i < tmp.length; i++) {
-            int line = i / brickOnLine;
-            if (line == lineCnt)
-                break;
-            double x = (i % brickOnLine) * brickLen;
-            x = (line % 2 == 0) ? x : (x - (brickLen / 2));
-            double y = (line) * brickHgt;
-            p = new Point2D(x , y);
-            tmp[i] = makeBrick(p, brickSize, type);
-        }
-
-        for (double y = brickHgt; i < tmp.length; i++, y += 2 * brickHgt) {
-            double x = (brickOnLine * brickLen) - (brickLen / 2);
-            p = new Point2D(x, y);
-            tmp[i] = new ClayBrick("D:\\Data\\Praket\\Nottingham\\Y2\\DMS\\Breakout_Clone\\src\\main\\resources\\com\\example\\breakout_clone_javafx\\sprite\\blue\\tile000\\clay0.png", p);
-        }
-        return tmp;
-
-    }
-
     private Brick[] makeChessboardLevel(Rectangle drawArea, int brickCnt, int lineCnt, double brickSizeRatio, int typeA, int typeB) {
         // if brickCount is not divisible by line count, brickCount is adjusted
         // to the biggest multiple of lineCount smaller then brickCount
@@ -285,7 +246,7 @@ public class Wall {
         this.getPlayer().getController().move();
         this.getBall().getController().move();
     }
-
+/*
     public void findImpacts() {
 //        if (m_player.impact(m_ball)) {
 //            m_ball.reverseY();
@@ -307,14 +268,14 @@ public class Wall {
             // every brick program checks for horizontal and vertical impacts
             this.setBrickCount(this.getBrickCount() - 1);
         } else {
-            this.getBall().getController().findImpact(model);
+            this.getBall().getController().findImpact((Impactable) model);
 //            this.decrementBallCount();
 //            this.setBallLost(true);
         }
 
 
-    }
-
+    }*/
+/*
     public boolean impactWall() {
 //        for (Brick b : m_bricks) {
 //            switch (b.findImpact(m_ball)) {
@@ -336,42 +297,49 @@ public class Wall {
 //            }
 
         for (Brick b : this.getBricks()) {
-                switch (b.getController()
-                         .findImpact(this.getBall().getModel())) {
+                switch (b.getController().findImpact(this.getBall().getModel())) {
                     //Vertical Impact
                     case Impactable.UP -> {
-                        if (!this.getBall().getModel().isCollisions())
-                            this.getBall().getController().onImpact(Impactable.UP);
-                        this.getBall().getModel().setCollisions(true);
-                        return true;
+                        if (!this.getBall().getModel().isCollisions()) {
+                            this.getBall().getController()
+                                .onImpact(Impactable.UP);
+                            this.getBall().getModel().setCollisions(true);
+                            return true;
+                        }
                     }
                     case Impactable.DOWN ->  {
-                        if (!this.getBall().getModel().isCollisions())
-                            this.getBall().getController().onImpact(Impactable.DOWN);
-                        this.getBall().getModel().setCollisions(true);
-                        return true;
+                        if (!this.getBall().getModel().isCollisions()) {
+                            this.getBall().getController()
+                                .onImpact(Impactable.DOWN);
+                            this.getBall().getModel().setCollisions(true);
+                            return true;
+                        }
                     }
 
                     //Horizontal Impact
                     case Impactable.LEFT -> {
-                        if (!this.getBall().getModel().isCollisions())
-                            this.getBall().getController().onImpact(Impactable.LEFT);
-                        this.getBall().getModel().setCollisions(true);
-                        return true;
+                        if (!this.getBall().getModel().isCollisions()) {
+                            this.getBall().getController()
+                                .onImpact(Impactable.LEFT);
+                            this.getBall().getModel().setCollisions(true);
+                            return true;
+                        }
                     }
                     case Impactable.RIGHT -> {
-                        if (!this.getBall().getModel().isCollisions())
-                            this.getBall().getController().onImpact(Impactable.RIGHT);
-                        this.getBall().getModel().setCollisions(true);
-                        return true;
+                        if (!this.getBall().getModel().isCollisions()) {
+                            this.getBall().getController()
+                                .onImpact(Impactable.RIGHT);
+                            this.getBall().getModel().setCollisions(true);
+                            return true;
+                        }
                     }
                 }
-            if (b.getController().isBroken())
+            if (b.getController().checkBroken())
                 b.getController().onBreak();
         }
         this.getBall().getModel().setCollisions(false);
         return false;
-    }
+    }*/
 
 //    public boolean impactBorder() {
 //        Point2D p = this.getBall().getPosition();

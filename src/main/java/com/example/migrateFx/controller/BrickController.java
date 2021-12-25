@@ -8,21 +8,19 @@ import com.example.migrateFx.model.SpriteModel;
 import com.example.migrateFx.view.SpriteView;
 import javafx.scene.layout.Pane;
 
-public class BrickController extends SpriteController implements Breakable, Impactable {
+public class BrickController extends SpriteController {
 
     public BrickController(SpriteModel model,
                            SpriteView view) {
         super(model, view);
     }
 
-    @Override
-    public boolean isBroken() {
+    public boolean checkBroken() {
         return ((BrickModel)getModel()).getStrength() <= 0;
     }
 
-    @Override
     public void onBreak() {
-        ((BrickModel)getModel()).setBroken(true);
+        ((BrickModel)getModel()).onBreak();
         if (getView().getView().getParent() != null)
             ((Pane)getView().getView().getParent()).getChildren()
                  .remove(getView().getView());
@@ -33,40 +31,15 @@ public class BrickController extends SpriteController implements Breakable, Impa
         getView().getView().xProperty().bind(getModel().getXLocationProperty());
         getView().getView().yProperty().bind(getModel().getYLocationProperty());
         getView().getView().visibleProperty().bind(((BrickModel)getModel()).brokenProperty().not());
+        getModel().boundsProperty().bind(getView().getView()
+                                                  .boundsInParentProperty());
     }
 
-    @Override
-    public int findImpact(SpriteModel parent) {
-        if (!((BrickModel)getModel()).isBroken()) {
-            BallModel ball = (BallModel) parent;
-            if (this.getView().getView().contains(ball.rightProperty().get())) {
-                onImpact(LEFT);
-                ((BrickModel)getModel()).decreaseStrength();
-                return LEFT;
-            }
-            if (this.getView().getView().contains(ball.leftProperty().get())) {
-                onImpact(RIGHT);
-                ((BrickModel)getModel()).decreaseStrength();
-                return RIGHT;
-            }
-            if (this.getView().getView().contains(ball.topProperty().get())) {
-                onImpact(DOWN);
-                ((BrickModel)getModel()).decreaseStrength();
-                return DOWN;
-            }
-            if (this.getView().getView()
-                    .contains(ball.bottomProperty().get())) {
-                onImpact(UP);
-                ((BrickModel)getModel()).decreaseStrength();
-                return UP;
-            }
-        }
-        return -1;
+    public int findImpact(Impactable parent) {
+        return ((Impactable)getModel()).findImpact(parent);
     }
 
-    @Override
+
     public void onImpact(int side) {
-        BrickModel model = (BrickModel) getModel();
-        model.setStrength(model.getStrength() - 1);
     }
 }

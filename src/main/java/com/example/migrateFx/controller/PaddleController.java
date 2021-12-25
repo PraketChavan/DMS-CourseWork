@@ -33,5 +33,7 @@ public class PaddleController extends SpriteController implements Movable {
     public void initialize() {
         getView().getView().xProperty().bind(getModel().getXLocationProperty());
         getView().getView().yProperty().bind(getModel().getYLocationProperty());
+        getModel().boundsProperty().bind(getView().getView()
+                                                  .boundsInParentProperty());
     }
 }

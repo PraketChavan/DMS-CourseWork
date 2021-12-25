@@ -1,14 +1,59 @@
 package com.example.migrateFx.model;
 
+import com.example.migrateFx.Impactable;
+import com.example.migrateFx.Movable;
+import com.example.migrateFx.TestModel;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 
-public class BallModel extends SpriteModel {
+public class BallModel extends SpriteModel implements Movable, Impactable {
     private SimpleObjectProperty<Point2D> m_Top;
     private SimpleObjectProperty<Point2D> m_Bottom;
     private SimpleObjectProperty<Point2D> m_Left;
+
+    @Override
+    public int findImpact(Impactable parent) {
+        Bounds bound = ((TestModel)parent).bounds.get();
+        if (bottomProperty().get().getY() >= bound.getMaxY()) {
+            onImpact(DOWN);
+            return DOWN;
+        }
+        if (topProperty().get().getY() <= 0) {
+            onImpact(UP);
+            return UP;
+        }
+        if (leftProperty().get().getX() <= 0) {
+            onImpact(LEFT);
+            return LEFT;
+        }
+        if (rightProperty().get().getX() >= bound.getMaxX()) {
+            onImpact(RIGHT);
+            return RIGHT;
+        }
+
+        return -1;
+    }
+
+    @Override
+    public void onImpact(int side) {
+        switch (side) {
+            case UP, DOWN -> setSpeed(new Point2D(getSpeed().getX(),
+                                                  -getSpeed().getY()));
+            case LEFT, RIGHT -> setSpeed(new Point2D(-getSpeed().getX(),
+                                                     getSpeed().getY()));
+        }
+    }
+
+    @Override
+    public void move() {
+        setLocation(getLocation().add(getSpeed()));
+        centerProperty().set(centerProperty().get().add(getSpeed()));
+        updateLocations();
+    }
+
     private SimpleObjectProperty<Point2D> m_Right;
     private SimpleObjectProperty<Point2D> m_Center;
     private SimpleDoubleProperty m_Radius;
@@ -42,7 +87,7 @@ public class BallModel extends SpriteModel {
         this.m_Bottom.set(bottom);
     }
 
-    private Point2D getCenter() {
+    public Point2D getCenter() {
         return m_Center.get();
     }
 

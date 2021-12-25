@@ -3,9 +3,8 @@ package com.example.migrateFx.model;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
-
-import java.awt.*;
 
 public abstract class SpriteModel {
     private SimpleStringProperty m_Name;
@@ -13,6 +12,15 @@ public abstract class SpriteModel {
     private SimpleDoubleProperty m_XLocation;
     private SimpleDoubleProperty m_YLocation;
     private SimpleObjectProperty<Point2D> m_Speed;
+    private SimpleObjectProperty<Bounds> m_Bounds;
+
+    public Bounds getBounds() {
+        return m_Bounds.get();
+    }
+
+    public void setBounds(Bounds bounds) {
+        this.m_Bounds.set(bounds);
+    }
 
     public Point2D getLocation() {
         return m_Location.get();
@@ -88,11 +96,15 @@ public abstract class SpriteModel {
         this.m_Location = new SimpleObjectProperty<>(location);
         this.m_Name = new SimpleStringProperty();
         this.m_Speed = new SimpleObjectProperty<>();
-
+        this.m_Bounds = new SimpleObjectProperty<>();
         getLocationProperty().addListener((observableValue, point2D, t1) -> {
             setXLocation(t1.getX());
             setYLocation(t1.getY());
         });
+    }
+
+    public SimpleObjectProperty<Bounds> boundsProperty() {
+        return m_Bounds;
     }
 
     public void setXLocation(double XLocation) {

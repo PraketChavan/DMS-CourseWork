@@ -1,23 +1,25 @@
 package com.example.migrateFx.model;
 
+import com.example.migrateFx.Breakable;
+import com.example.migrateFx.Impactable;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 
-public class BrickModel extends SpriteModel {
+public class BrickModel extends SpriteModel implements Breakable, Impactable {
     private static final int BRICK_WIDTH = 60;
     private static final int BRICK_HEIGHT = 12;
     private final SimpleObjectProperty<Dimension2D> m_Size;
     private final SimpleIntegerProperty m_FullStrength;
     private final SimpleIntegerProperty m_Strength;
-    private final SimpleBooleanProperty m_Broken;
 
-    public SimpleObjectProperty<Dimension2D> sizeProperty() {
-        return m_Size;
+    public boolean isBroken() {
+        return m_Broken.get();
     }
 
+    private final SimpleBooleanProperty m_Broken;
 
     public int getFullStrength() {
         return m_FullStrength.get();
@@ -29,10 +31,6 @@ public class BrickModel extends SpriteModel {
 
     private Dimension2D getSize() {
         return m_Size.get();
-    }
-
-    public void decreaseStrength() {
-        setStrength(getStrength() - 1);
     }
 
     private void setSize(Dimension2D size) {
@@ -51,14 +49,6 @@ public class BrickModel extends SpriteModel {
         this.m_Strength.set(strength);
     }
 
-    public boolean isBroken() {
-        return m_Broken.get();
-    }
-
-    public void setBroken(boolean broken) {
-        this.m_Broken.set(broken);
-    }
-
     public BrickModel(Point2D location) {
         super(location);
         m_Broken = new SimpleBooleanProperty();
@@ -68,13 +58,12 @@ public class BrickModel extends SpriteModel {
         initializeProperties();
     }
 
-    private void initializeProperties() {
-        setBroken(false);
-        setSize(new Dimension2D(BRICK_WIDTH, BRICK_HEIGHT));
-        setFullStrength(1);
-        setStrength(getFullStrength());
-        setXLocation(getLocation().getX());
-        setYLocation(getLocation().getY());
+    public SimpleObjectProperty<Dimension2D> sizeProperty() {
+        return m_Size;
+    }
+
+    public void decreaseStrength() {
+        setStrength(getStrength() - 1);
     }
 
     public SimpleIntegerProperty fullStrengthProperty() {
@@ -87,5 +76,61 @@ public class BrickModel extends SpriteModel {
 
     public SimpleBooleanProperty brokenProperty() {
         return m_Broken;
+    }
+
+    @Override
+    public int findImpact(Impactable parent) {
+        if (!checkBroken()) {
+            BallModel ball = (BallModel) parent;
+            if (getBounds().contains(ball.rightProperty().get())) {
+                onImpact(LEFT);
+                decreaseStrength();
+                return LEFT;
+            }
+            if (getBounds().contains(ball.leftProperty().get())) {
+                onImpact(RIGHT);
+                decreaseStrength();
+                return RIGHT;
+            }
+            if (getBounds().contains(ball.topProperty().get())) {
+                onImpact(DOWN);
+                decreaseStrength();
+                return DOWN;
+            }
+            if (getBounds().contains(ball.bottomProperty().get())) {
+                onImpact(UP);
+                decreaseStrength();
+                return UP;
+            }
+        }
+        return NO_IMPACT;
+    }
+
+    @Override
+    public void onImpact(int side) {
+        setStrength(getStrength() - 1);
+    }
+
+    @Override
+    public boolean checkBroken() {
+        return getStrength() <= 0;
+    }
+
+    @Override
+    public void onBreak() {
+        setBroken(true);
+    }
+
+    public void setBroken(boolean broken) {
+        this.m_Broken.set(broken);
+    }
+
+    private void initializeProperties() {
+        setBroken(false);
+        setSize(new Dimension2D(BRICK_WIDTH, BRICK_HEIGHT));
+        setFullStrength(1);
+        setStrength(getFullStrength());
+        setXLocation(getLocation().getX());
+        setYLocation(getLocation().getY());
     }
 }
