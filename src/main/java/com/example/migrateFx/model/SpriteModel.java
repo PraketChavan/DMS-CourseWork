@@ -114,4 +114,6 @@ public abstract class SpriteModel {
     public void setYLocation(double YLocation) {
         this.m_YLocation.set(YLocation);
     }
+
+    public abstract void reset();
 }

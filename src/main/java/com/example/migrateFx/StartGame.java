@@ -3,6 +3,7 @@ package com.example.migrateFx;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -16,21 +17,24 @@ public class StartGame extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        GameFrame frame = new GameFrame();
-        Scene scene = new Scene(frame.getLayout(), 640, 450);
-        stage.focusedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(
-                    ObservableValue<? extends Boolean> observableValue,
-                    Boolean aBoolean, Boolean t1) {
-                if (aBoolean)
-                    frame.windowGainedFocus(null);
-                if (t1)
-                    frame.windowLostFocus(null);
-            }
-        });
+//        GameFrame frame = new GameFrame();
+//        Scene scene = new Scene(frame.getLayout(), 640, 450);
+//        stage.focusedProperty().addListener(new ChangeListener<Boolean>() {
+//            @Override
+//            public void changed(
+//                    ObservableValue<? extends Boolean> observableValue,
+//                    Boolean aBoolean, Boolean t1) {
+//                if (aBoolean)
+//                    frame.windowGainedFocus(null);
+//                if (t1)
+//                    frame.windowLostFocus(null);
+//            }
+//        });
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("GameView.fxml"));
+        Scene root = new Scene(fxmlLoader.load());
         stage.setTitle((GameFrame.getDefTitle()));
-        stage.setScene(scene);
+        stage.setScene(root);
+        root.getRoot().requestFocus();
         stage.show();
     }
     // use [space] to start/pause the game

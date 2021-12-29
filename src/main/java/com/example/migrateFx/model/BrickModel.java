@@ -8,12 +8,27 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 
+import java.util.Random;
+
 public class BrickModel extends SpriteModel implements Breakable, Impactable {
     private static final int BRICK_WIDTH = 60;
     private static final int BRICK_HEIGHT = 12;
     private final SimpleObjectProperty<Dimension2D> m_Size;
     private final SimpleIntegerProperty m_FullStrength;
     private final SimpleIntegerProperty m_Strength;
+    private final SimpleBooleanProperty m_Special;
+
+    public boolean isSpecial() {
+        return m_Special.get();
+    }
+
+    public SimpleBooleanProperty specialProperty() {
+        return m_Special;
+    }
+
+    public void setSpecial(boolean special) {
+        this.m_Special.set(special);
+    }
 
     public boolean isBroken() {
         return m_Broken.get();
@@ -49,13 +64,20 @@ public class BrickModel extends SpriteModel implements Breakable, Impactable {
         this.m_Strength.set(strength);
     }
 
-    public BrickModel(Point2D location) {
+    public BrickModel(Point2D location, boolean isSpec) {
         super(location);
+        m_Special = new SimpleBooleanProperty(isSpec);
         m_Broken = new SimpleBooleanProperty();
         m_Size = new SimpleObjectProperty<>();
         m_Strength = new SimpleIntegerProperty();
         m_FullStrength = new SimpleIntegerProperty();
         initializeProperties();
+    }
+
+    @Override
+    public void reset() {
+        setStrength(getFullStrength());
+        setBroken(false);
     }
 
     public SimpleObjectProperty<Dimension2D> sizeProperty() {
@@ -118,6 +140,8 @@ public class BrickModel extends SpriteModel implements Breakable, Impactable {
 
     @Override
     public void onBreak() {
+        if (isSpecial() && new Random().nextBoolean())
+            System.out.println("power");
         setBroken(true);
     }
 

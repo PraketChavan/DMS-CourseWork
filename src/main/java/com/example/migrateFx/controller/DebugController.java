@@ -68,11 +68,11 @@ public class DebugController {
 
     @FXML
     private void resetBall() {
-        getModel().resetBall();
+        getModel().gameReset();
     }
 
     @FXML
     private void skipLevel() {
-        getModel().skipLevel();
+        getModel().nextLevel();
     }
 }

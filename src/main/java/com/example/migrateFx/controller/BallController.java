@@ -29,6 +29,18 @@ public class BallController extends SpriteController {
     public int findImpact(Impactable parent) {
         return ((BallModel)getModel()).findImpact(parent);
     }
+    public void setXSpeed(double xSpeed) {
+        getModel().setSpeed(new Point2D(xSpeed, getModel().getSpeed().getY()));
+    }
+    public void setYSpeed(double ySpeed) {
+        getModel().setSpeed(new Point2D(getModel().getSpeed().getX(), ySpeed));
+    }
+    public void setSpeed(Point2D speed) {
+        getModel().setSpeed(speed);
+    }
+    public void reset() {
+        getModel().reset();
+    }
 
     public void onImpact(int side) {
         ((BallModel)getModel()).onImpact(side);

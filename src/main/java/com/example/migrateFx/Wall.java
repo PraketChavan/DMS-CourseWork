@@ -258,7 +258,7 @@ public class Wall {
         Brick[][] tmp = new Brick[LEVELS_COUNT][];
         LevelFactory factory = new LevelFactory();
 
-        tmp[0] = factory.createLevel(1, 3);
+        tmp[0] = factory.createLevel(1, 3).createLevel();
         tmp[1] = makeChessboardLevel(drawArea, brickCount, lineCount, brickDimensionRatio, CLAY, CEMENT);
         tmp[2] = makeChessboardLevel(drawArea, brickCount, lineCount, brickDimensionRatio, CLAY, STEEL);
         tmp[3] = makeChessboardLevel(drawArea, brickCount, lineCount, brickDimensionRatio, STEEL, CEMENT);
@@ -425,7 +425,7 @@ public class Wall {
 
     private Brick makeBrick(Point2D point, Dimension2D size, int type) {
         return switch (type) {
-            case CLAY, STEEL, CEMENT -> new ClayBrick("D:\\Data\\Praket\\Nottingham\\Y2\\DMS\\Breakout_Clone\\src\\main\\resources\\com\\example\\migrateFx\\sprite\\blue\\tile000\\clay0.png", point);
+            case CLAY, STEEL, CEMENT -> new ClayBrick("D:\\Data\\Praket\\Nottingham\\Y2\\DMS\\Breakout_Clone\\src\\main\\resources\\com\\example\\migrateFx\\sprite\\blue\\tile000\\clay0.png", point, false);
 //            case STEEL -> new ClayBrick(point);
 //            case CEMENT -> new ClayBrick(point);
             default -> throw new IllegalArgumentException(String.format("Unknown Type:%d\n", type));

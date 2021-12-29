@@ -12,7 +12,7 @@ import javax.swing.text.View;
 
 public class ClayBrick extends Brick{
 
-    public ClayBrick(String url, Point2D location) {
-        super(url, location);
+    public ClayBrick(String url, Point2D location, boolean isSpec) {
+        super(url, location, isSpec);
     }
 }

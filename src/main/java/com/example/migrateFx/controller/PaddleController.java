@@ -29,6 +29,12 @@ public class PaddleController extends SpriteController implements Movable {
     public void stop() {
         getModel().setSpeed(new Point2D(0, 0));
     }
+
+    public void reset() {
+        getModel().reset();
+    }
+
+
     @Override
     public void initialize() {
         getView().getView().xProperty().bind(getModel().getXLocationProperty());

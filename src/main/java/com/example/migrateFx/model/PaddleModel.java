@@ -5,10 +5,16 @@ import com.example.migrateFx.Impactable;
 import javafx.geometry.Point2D;
 
 public class PaddleModel extends SpriteModel implements Impactable {
-
+    private final Point2D START_LOCATION;
     public PaddleModel(Point2D location) {
         super(location);
+        START_LOCATION = location;
         setSpeed(new Point2D(0, 0));
+    }
+
+    @Override
+    public void reset() {
+        setLocation(START_LOCATION);
     }
 
     @Override

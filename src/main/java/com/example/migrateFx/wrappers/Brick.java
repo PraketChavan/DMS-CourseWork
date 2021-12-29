@@ -25,8 +25,8 @@ public abstract class Brick extends Sprite{
         return (BrickView) super.getView();//m_View;
     }
 
-    public Brick(String url, Point2D location) {
-        setModel(new BrickModel(location));
+    public Brick(String url, Point2D location, boolean isSpec) {
+        setModel(new BrickModel(location, isSpec));
         setView(new BrickView(url, BRICK_WIDTH, BRICK_HEIGHT));
         setController(new BrickController(getModel(), getView()));
     }

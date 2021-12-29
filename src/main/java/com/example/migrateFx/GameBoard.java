@@ -1,7 +1,6 @@
 package com.example.migrateFx;
 
 import com.example.migrateFx.handler.ImpactHandler;
-import com.example.migrateFx.model.GameModel;
 import com.example.migrateFx.wrappers.Ball;
 import com.example.migrateFx.wrappers.Brick;
 import com.example.migrateFx.wrappers.Paddle;
@@ -170,7 +169,10 @@ public class GameBoard extends Pane {
         this.initialize(parent);
         //m_message = "Press SPACE to start";
         this.setMessage("Press SPACE to start");
-        GameModel model = GameModel.getGameInstance();
+        TestModel model = new TestModel(new Point2D(0, 0));
+
+        model.size = new SimpleObjectProperty<>(new Dimension2D(DEF_WIDTH, DEF_HEIGHT));
+        model.bounds = new SimpleObjectProperty<>(this.getBoundsInParent());
 
         this.setWall(Wall.getWallInstance());
 
