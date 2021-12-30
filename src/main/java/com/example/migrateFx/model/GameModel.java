@@ -5,10 +5,7 @@ import com.example.migrateFx.Levels.Level;
 import com.example.migrateFx.factory.LevelFactory;
 import com.example.migrateFx.handler.ImpactHandler;
 import com.example.migrateFx.handler.ResourceHandler;
-import com.example.migrateFx.wrappers.Ball;
-import com.example.migrateFx.wrappers.Brick;
-import com.example.migrateFx.wrappers.Paddle;
-import com.example.migrateFx.wrappers.RubberBall;
+import com.example.migrateFx.wrappers.*;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -20,41 +17,37 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class GameModel implements Impactable {
 
     private static final double PLAYER_START_X = 300;
     private static final double PLAYER_START_Y = 480;
+    private static final double BALL_START_X = PLAYER_START_X;
+    private static final double BALL_START_Y = PLAYER_START_X - 50;
     private static GameModel m_GameInstance;
     private final SimpleIntegerProperty m_ballCount;
     private final SimpleIntegerProperty m_scoreCount;
     private final SimpleIntegerProperty m_brickCount;
     private final SimpleObjectProperty<Bounds> m_gameBounds;
     private final SimpleBooleanProperty m_pause;
-    private final AnimationTimer m_gameTimer;
     private final Paddle m_player;
     private final ImpactHandler m_impactHandler;
     private final SimpleBooleanProperty m_focus;
     private final SimpleBooleanProperty m_ballLost;
     private final SimpleStringProperty m_message;
-
-    private void setBricks(ObservableList<Brick> bricks) {
-        for (Brick brick : bricks) {
-            getBricks().add(brick);
-        }
-    }
-
-    private ObservableList<Brick> m_bricks;
+    private final ObservableList<Brick> m_bricks;
     private final ObservableList<Ball> m_balls;
+    private final ObservableList<PowerUp> m_powerUps;
     private final Queue<Level> m_levels;
-
-    public Queue<Level> getLevels() {
-        return m_levels;
-    }
+    private final SimpleIntegerProperty m_LevelNumber;
+    private AnimationTimer m_gameTimer;
+    private MediaPlayer m_levelSound;
 
     public int getBallCount() {
         return m_ballCount.get();
@@ -80,6 +73,12 @@ public class GameModel implements Impactable {
         return m_bricks;
     }
 
+    private void setBricks(ObservableList<Brick> bricks) {
+        for (Brick brick : bricks) {
+            getBricks().add(brick);
+        }
+    }
+
     public Bounds getGameBounds() {
         return m_gameBounds.get();
     }
@@ -103,8 +102,32 @@ public class GameModel implements Impactable {
         return m_gameTimer;
     }
 
+    public void setGameTimer(AnimationTimer gameTimer) {
+        m_gameTimer = gameTimer;
+    }
+
     public ImpactHandler getImpactHandler() {
         return m_impactHandler;
+    }
+
+    public int getLevelNumber() {
+        return m_LevelNumber.get();
+    }
+
+    public void setLevelNumber(int levelNumber) {
+        this.m_LevelNumber.set(levelNumber);
+    }
+
+    public MediaPlayer getLevelSound() {
+        return m_levelSound;
+    }
+
+    public void setLevelSound(MediaPlayer levelSound) {
+        m_levelSound = levelSound;
+    }
+
+    public Queue<Level> getLevels() {
+        return m_levels;
     }
 
     public String getMessage() {
@@ -117,6 +140,10 @@ public class GameModel implements Impactable {
 
     public Paddle getPlayer() {
         return m_player;
+    }
+
+    public ObservableList<PowerUp> getPowerUps() {
+        return m_powerUps;
     }
 
     public int getScoreCount() {
@@ -158,7 +185,7 @@ public class GameModel implements Impactable {
     private GameModel() {
         m_brickCount = new SimpleIntegerProperty();
         m_scoreCount = new SimpleIntegerProperty();
-        m_ballCount = new SimpleIntegerProperty();
+        m_ballCount = new SimpleIntegerProperty(0);
         m_gameBounds = new SimpleObjectProperty<>();
         m_pause = new SimpleBooleanProperty(true);
         m_focus = new SimpleBooleanProperty(true);
@@ -169,20 +196,28 @@ public class GameModel implements Impactable {
         m_bricks = FXCollections.observableArrayList();
         m_balls = FXCollections.observableArrayList();
         m_levels = new LinkedList<>();
-        m_gameTimer = new AnimationTimer() {
-            @Override
-            public void handle(long l) {
-                gameTimer();
-            }
-        };
-//        startTimer();
+        m_LevelNumber = new SimpleIntegerProperty(0);
+        m_powerUps = FXCollections.observableArrayList();
+    }
+
+    public void createPowerUp(PowerUp power) {
+        getPowerUps().add(power);
+        getImpactHandler().addPower(power);
+    }
+
+    public boolean hasNextLevel() {
+        return !getLevels().isEmpty();
     }
 
     public void initialize() {
-        createLevel();
-        nextLevel();
+        createLevel(2);
+        createLevel(1);
+//        nextLevel();
 //        createPlayer();
         createBall();
+        for (Ball ball : getBalls()) {
+            ballLostProperty().bind(ball.getModel().lostProperty());
+        }
     }
 
     public SimpleBooleanProperty ballLostProperty() {
@@ -235,7 +270,6 @@ public class GameModel implements Impactable {
         else
             stopTimer();
 
-        setPause(!isPause());
     }
 
     public void escapeKeyPressed() {
@@ -247,10 +281,13 @@ public class GameModel implements Impactable {
     }
 
     public void startTimer() {
+
+        setPause(false);
         getGameTimer().start();
     }
 
     public void stopTimer() {
+        setPause(true);
         getGameTimer().stop();
     }
 
@@ -266,96 +303,30 @@ public class GameModel implements Impactable {
         stopPlayer();
     }
 
-    @Override
-    public int findImpact(Impactable parent) {
-        return 0;
-    }
-
-    @Override
-    public void onImpact(int side) {
-
-    }
-
-    private Paddle createPlayer() {
-        Paddle player = new Paddle(ResourceHandler.getResource("paddle"),
-                new Point2D(PLAYER_START_X, PLAYER_START_Y));
-        getImpactHandler().addPaddle(player.getModel());
-        return player;
-    }
-
     public void gameReset() {
         getBalls().get(0).getController().reset();
         getPlayer().getController().reset();
+        getBalls().forEach(ball -> ball.getModel().setLost(false));
         stopTimer();
         setPause(true);
     }
 
-    private void createBall() {
-        Ball ball = new RubberBall(ResourceHandler.getResource("ball0"),
-                                   new Point2D(PLAYER_START_X, PLAYER_START_Y));
-
-        getBalls().add(ball);
-//            ball.getController().setYSpeed(2);
-        ball.getController().setSpeed(new Point2D(2, 2));
-        getImpactHandler().addBall(ball.getModel());
-    }
-
-    private void createLevel(){
-        LevelFactory factory = new LevelFactory();
-        getLevels().add(factory.createLevel(1, 5));
+    public SimpleIntegerProperty levelNumberProperty() {
+        return m_LevelNumber;
     }
 
     public void nextLevel() {
         Level level = getLevels().remove();
+        getBricks().clear();
         setBricks(FXCollections.observableArrayList(level.createLevel()));
+        getImpactHandler().getBricks().clear();
+        getImpactHandler().getPowerUp().clear();
+        getPowerUps().clear();
         getBricks().forEach(brick -> {
             getImpactHandler().addBrick(brick.getModel());
         });
-    }
-    private void move() {
-        getPlayer().getController().move();
-        getBalls().forEach(ball -> ball.getController().move());
-    }
-
-    private void gameTimer() {
-        //m_wall.move();
-        move();
-//        m_wall.findImpacts();
-//        this.getWall().findImpacts();
-        getImpactHandler().handleImpacts();
-//        m_line.setFill(Color.RED);
-//        m_line.setStartX(this.getWall().getBall().getModel().getXLocationProperty().get());
-//        m_line.setStartY(this.getWall().getBall().getModel().getYLocationProperty().get());
-//        m_line.setEndX(this.getWall().getBall().getModel().getXLocationProperty().get());
-//        m_line.setEndX(this.getWall().getBall().getModel().getYLocationProperty().get());
-
-//        m_message = String.format("Bricks: %d Balls %d", m_wall.getBrickCount(), m_wall
-//                .getBallCount());
-//        System.out.println(getMessage());
-        if (isBallLost()) {
-            onBallLost();
-        } else if (islevelComplete()) {
-            nextLevel();
-//            if (this.getWall().hasLevel()) {
-//                this.setMessage("Go to Next Level");
-//                this.getGameTimer().stop();
-//                this.getWall().ballReset();
-//                this.getWall().wallReset();
-//                this.getWall().nextLevel();
-//            } else {
-//                this.setMessage("ALL WALLS DESTROYED");
-//                this.getGameTimer().stop();
-//            }
-        }
-    }
-
-    private void onBallLost() {
-        setMessage("Ball Lost");
-        gameReset();
-    }
-
-    private boolean islevelComplete() {
-        return getBricks().size() == 0;
+        countBricks();
+        setLevelNumber(getLevelNumber() + 1);
     }
 
     public void setBallXSpeed(double xSpeed) {
@@ -368,9 +339,10 @@ public class GameModel implements Impactable {
     }
 
     public void onContinueClick() {
-        Stage.getWindows().stream().filter(Window::isShowing).forEach(window -> {
-            window.getScene().getRoot().setEffect(null);
-        });
+        Stage.getWindows().stream().filter(Window::isShowing)
+             .forEach(window -> {
+                 window.getScene().getRoot().setEffect(null);
+             });
         startTimer();
     }
 
@@ -381,5 +353,83 @@ public class GameModel implements Impactable {
     public void onRestartClick() {
         stopTimer();
         System.out.println("Restarting");
+    }
+
+    public boolean islevelComplete() {
+        return getBricks().size() == 0;
+    }
+
+    public void move() {
+        getBalls().forEach(ball -> ball.getController().move());
+        getPlayer().getController().move();
+        getPowerUps().forEach(powerUp -> powerUp.getModel().move());
+    }
+
+    public void onBallLost() {
+        setMessage("Ball Lost");
+        setBallCount(getBallCount() - 1);
+        gameReset();
+    }
+
+    public void updateBrickCount() {
+        setBrickCount((int) getBricks().stream().filter(
+                brick -> !brick.getController().isBroken() &&
+                        brick.getModel().getName().compareTo("Unbreakable") != 0
+        ).count());
+    }
+
+    public void addScore(int num) {
+        setScoreCount(getScoreCount() + num);
+    }
+
+    public void clearLevel() {
+        getBricks().clear();
+    }
+
+    public void addLife() {
+        setBallCount(getBallCount() + 1);
+    }
+
+    @Override
+    public int findImpact(Impactable parent) {
+        return 0;
+    }
+
+    @Override
+    public void onImpact(int side) {
+
+    }
+
+    private void countBricks() {
+        setBrickCount(
+                (int) getBricks()
+                        .stream()
+                        .filter(brick -> brick
+                                .getModel()
+                                .getName().compareTo("Unbreakable") != 0)
+                        .count());
+    }
+
+    private void createBall() {
+        Ball ball = new RubberBall(ResourceHandler.getResource("ball0"),
+                                   new Point2D(BALL_START_X, BALL_START_Y));
+
+        getBalls().add(ball);
+//            ball.getController().setYSpeed(2);
+        ball.getController().setSpeed(new Point2D(2, 2));
+        getImpactHandler().addBall(ball.getModel());
+    }
+
+    private void createLevel(int level) {
+        LevelFactory factory = new LevelFactory();
+        getLevels().add(factory.createLevel(level, 5));
+    }
+
+    private Paddle createPlayer() {
+        Paddle player = new Paddle(ResourceHandler.getResource("paddle"),
+                                   new Point2D(PLAYER_START_X, PLAYER_START_Y),
+                                   gameBoundsProperty());
+        getImpactHandler().addPaddle(player.getModel());
+        return player;
     }
 }

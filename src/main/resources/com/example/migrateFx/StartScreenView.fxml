@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="740.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.migrateFx.controller.StartScreenController">
+    <center>
+        <Pane prefHeight="500.0" prefWidth="740.0" BorderPane.alignment="CENTER">
+            <children>
+                <Label fx:id="m_title" alignment="CENTER" layoutX="164.0" layoutY="75.0" style="-fx-font-weight: bold;" text="BREAKOUT GAME" textAlignment="CENTER">
+                    <font>
+                        <Font size="49.0" />
+                    </font>
+                </Label>
+                <ChoiceBox fx:id="m_themeChoice" layoutX="296.0" layoutY="341.0" onAction="#onThemeSelected" prefWidth="150.0" value="Blue">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Blue" />
+                            <String fx:value="Cream" />
+                            <String fx:value="Gold" />
+                            <String fx:value="Green" />
+                            <String fx:value="Grey" />
+                            <String fx:value="Orange" />
+                            <String fx:value="Pink" />
+                            <String fx:value="Purple" />
+                        </FXCollections>
+                    </items>
+                </ChoiceBox>
+                <Button fx:id="m_start" layoutX="328.0" layoutY="228.0" mnemonicParsing="false" onAction="#onStartClick" style="-fx-alignment: center; -fx-background-color: #50ff50; -fx-border-color: BLACK;" text="START">
+                    <font>
+                        <Font size="20.0" />
+                    </font>
+                </Button>
+                <Button fx:id="m_HighScore" layoutX="323.0" layoutY="427.0" mnemonicParsing="false" onAction="#onHighScoreClick" style="-fx-alignment: center;" text="HIGHSCORE">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Button>
+                <Label layoutX="240.0" layoutY="345.0" text="Theme:">
+                    <font>
+                        <Font size="15.0" />
+                    </font>
+                </Label>
+            </children>
+        </Pane>
+    </center>
+</BorderPane>

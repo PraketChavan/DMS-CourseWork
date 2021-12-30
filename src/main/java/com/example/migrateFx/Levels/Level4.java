@@ -1,15 +1,18 @@
 package com.example.migrateFx.Levels;
 
 import com.example.migrateFx.wrappers.Brick;
-import com.example.migrateFx.wrappers.ClayBrick;
 import javafx.geometry.Point2D;
 
 import java.util.Random;
 
-public class Level1 extends Level {
+public class Level4 extends Level{
     private static final int BRICK_ON_LINE = 8;
+    private static final int TEN = 10;
+    private static final int TWO = 2;
+    private static final int EIGHT = 8;
+    private static final int THREE = 3;
 
-    public Level1(int difficulty) {
+    public Level4(int difficulty) {
         super(difficulty);
     }
 
@@ -29,9 +32,12 @@ public class Level1 extends Level {
             double x = (i % BRICK_ON_LINE) * BRICK_WIDTH;
             double y = (line) * BRICK_HEIGHT;
             p = new Point2D(x, y);
-            temp[i] = BRICK_FACTORY.createBrick(1, p);
+            if (rand.nextInt(TEN) > EIGHT && i % TWO == 0)
+                temp[i] = BRICK_FACTORY.createBrick(THREE, p);
+            else
+                temp[i] = BRICK_FACTORY.createBrick(1, p);
+
         }
         return temp;
-
     }
 }

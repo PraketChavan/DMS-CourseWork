@@ -7,5 +7,6 @@ public class SteelBrick extends Brick{
         super(url, location, false);
         getModel().setFullStrength(2);
         getModel().setStrength(2);
+        getModel().setName("Steel");
     }
 }

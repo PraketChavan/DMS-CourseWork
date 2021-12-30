@@ -2,7 +2,6 @@ package com.example.migrateFx.model;
 
 import com.example.migrateFx.Impactable;
 import com.example.migrateFx.Movable;
-import com.example.migrateFx.TestModel;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -18,6 +17,19 @@ public class BallModel extends SpriteModel implements Movable, Impactable {
     private SimpleObjectProperty<Point2D> m_Center;
     private SimpleDoubleProperty m_Radius;
     private SimpleBooleanProperty m_Collisions;
+    private SimpleBooleanProperty m_lost;
+
+    public boolean isLost() {
+        return m_lost.get();
+    }
+
+    public SimpleBooleanProperty lostProperty() {
+        return m_lost;
+    }
+
+    public void setLost(boolean lost) {
+        this.m_lost.set(lost);
+    }
 
     private Point2D getBottom() {
         return m_Bottom.get();
@@ -136,32 +148,36 @@ public class BallModel extends SpriteModel implements Movable, Impactable {
     public int findImpact(Impactable parent) {
         Bounds bound = ((GameModel) parent).getGameBounds();
         if (bottomProperty().get().getY() >= bound.getMaxY()) {
-            onImpact(DOWN);
-            return DOWN;
+           setLost(true);
         }
         if (topProperty().get().getY() <= 0) {
             onImpact(UP);
+            setCollisions(true);
             return UP;
         }
         if (leftProperty().get().getX() <= 0) {
             onImpact(LEFT);
+            setCollisions(true);
             return LEFT;
         }
         if (rightProperty().get().getX() >= bound.getMaxX()) {
             onImpact(RIGHT);
+            setCollisions(true);
             return RIGHT;
         }
-
+        setCollisions(false);
         return -1;
     }
 
     @Override
     public void onImpact(int side) {
-        switch (side) {
-            case UP, DOWN -> setSpeed(new Point2D(getSpeed().getX(),
-                                                  -getSpeed().getY()));
-            case LEFT, RIGHT -> setSpeed(new Point2D(-getSpeed().getX(),
-                                                     getSpeed().getY()));
+        if (!isCollisions()) {
+            switch (side) {
+                case UP, DOWN -> setSpeed(new Point2D(getSpeed().getX(),
+                                                      -getSpeed().getY()));
+                case LEFT, RIGHT -> setSpeed(new Point2D(-getSpeed().getX(),
+                                                         getSpeed().getY()));
+            }
         }
     }
 
@@ -175,6 +191,8 @@ public class BallModel extends SpriteModel implements Movable, Impactable {
     @Override
     public void reset() {
         setLocation(START_LOCATION);
+        centerProperty().set(START_LOCATION.add(getRadius(), getRadius()));
+        updateLocations();
     }
 
     private void initBottomProperty(
@@ -223,6 +241,11 @@ public class BallModel extends SpriteModel implements Movable, Impactable {
         initTopProperty(new SimpleObjectProperty<>());
         setRadius(new SimpleDoubleProperty(0));
         setCollisions(new SimpleBooleanProperty(false));
+        setLostProperty(new SimpleBooleanProperty(false));
+    }
+
+    private void setLostProperty(SimpleBooleanProperty prop) {
+        m_lost = prop;
     }
 
 }

@@ -14,19 +14,19 @@ public class ResourceHandler {
     private static Properties properties = new Properties();
     static  {
         try {
-            RESOURSE = new FileInputStream("D:\\Data\\Praket\\" +
-                                                   "Nottingham\\Y2\\DMS\\" +
-                                                   "Breakout_Clone\\src\\main\\" +
-                                                   "resources\\theme.properties");
+            RESOURSE = new FileInputStream(
+                    ResourceHandler.class
+                            .getResource("/theme.properties").getFile());
             properties.load(RESOURSE);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
     public static String getResource(String resource) {
-
         String theme = properties.getProperty("theme");
         return String.format("%s%s/tile000/%s.png", RESOURCE_URL.toString(), theme, resource);
-
+    }
+    public static String getSoundResource(String resource) {
+        return ResourceHandler.class.getResource("/" + resource).toExternalForm();
     }
 }

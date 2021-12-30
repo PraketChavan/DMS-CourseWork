@@ -30,9 +30,15 @@ public class StartGame extends Application {
 //                    frame.windowLostFocus(null);
 //            }
 //        });
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("GameView.fxml"));
-        Scene root = new Scene(fxmlLoader.load());
-        stage.setTitle((GameFrame.getDefTitle()));
+//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("GameView.fxml"));
+//        Scene root = new Scene(fxmlLoader.load());
+//        stage.setTitle((GameFrame.getDefTitle()));
+//        stage.setScene(root);
+//        root.getRoot().requestFocus();
+//        stage.show();
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("StartScreenView.fxml"));
+        Scene root = new Scene(fxmlLoader.load(), 740, 500);
+        stage.setTitle("BREAKOUT GAME!!");
         stage.setScene(root);
         root.getRoot().requestFocus();
         stage.show();

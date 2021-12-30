@@ -7,5 +7,6 @@ public class UnbreakableBrick extends Brick{
         super(url, location, false);
         getModel().setFullStrength(Integer.MAX_VALUE);
         getModel().setStrength(Integer.MAX_VALUE);
+        getModel().setName("Unbreakable");
     }
 }

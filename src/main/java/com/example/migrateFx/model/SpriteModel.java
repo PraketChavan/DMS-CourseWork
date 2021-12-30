@@ -7,12 +7,14 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 
 public abstract class SpriteModel {
-    private SimpleStringProperty m_Name;
-    private SimpleObjectProperty<Point2D> m_Location;
-    private SimpleDoubleProperty m_XLocation;
-    private SimpleDoubleProperty m_YLocation;
-    private SimpleObjectProperty<Point2D> m_Speed;
-    private SimpleObjectProperty<Bounds> m_Bounds;
+    private final SimpleStringProperty m_Name;
+    private final SimpleObjectProperty<Point2D> m_Location;
+    private final SimpleDoubleProperty m_XLocation;
+    private final SimpleDoubleProperty m_YLocation;
+    private final SimpleObjectProperty<Point2D> m_Speed;
+    private final SimpleObjectProperty<Bounds> m_Bounds;
+    private final SimpleDoubleProperty m_width;
+    private final SimpleDoubleProperty m_heigth;
 
     public Bounds getBounds() {
         return m_Bounds.get();
@@ -36,11 +38,6 @@ public abstract class SpriteModel {
         return m_Location;
     }
 
-    public void setLocationProperty(
-            SimpleObjectProperty<Point2D> location) {
-        m_Location = location;
-    }
-
     public String getName() {
         return m_Name.get();
     }
@@ -53,9 +50,6 @@ public abstract class SpriteModel {
         return m_Name;
     }
 
-    public void setNameProperty(SimpleStringProperty name) {
-        m_Name = name;
-    }
 
     public Point2D getSpeed() {
         return m_Speed.get();
@@ -69,26 +63,16 @@ public abstract class SpriteModel {
         return m_Speed;
     }
 
-    public void setSpeedProperty(
-            SimpleObjectProperty<Point2D> speed) {
-        m_Speed = speed;
-    }
 
     public SimpleDoubleProperty getXLocationProperty() {
         return m_XLocation;
     }
 
-    public void setXLocationProperty(SimpleDoubleProperty XLocation) {
-        m_XLocation = XLocation;
-    }
 
     public SimpleDoubleProperty getYLocationProperty() {
         return m_YLocation;
     }
 
-    public void setYLocationProperty(SimpleDoubleProperty YLocation) {
-        m_YLocation = YLocation;
-    }
 
     public SpriteModel(Point2D location) {
         this.m_YLocation = new SimpleDoubleProperty();
@@ -97,6 +81,9 @@ public abstract class SpriteModel {
         this.m_Name = new SimpleStringProperty();
         this.m_Speed = new SimpleObjectProperty<>();
         this.m_Bounds = new SimpleObjectProperty<>();
+        this.m_width = new SimpleDoubleProperty();
+        this.m_heigth = new SimpleDoubleProperty();
+
         getLocationProperty().addListener((observableValue, point2D, t1) -> {
             setXLocation(t1.getX());
             setYLocation(t1.getY());
@@ -105,6 +92,30 @@ public abstract class SpriteModel {
 
     public SimpleObjectProperty<Bounds> boundsProperty() {
         return m_Bounds;
+    }
+
+    public double getWidth() {
+        return m_width.get();
+    }
+
+    public SimpleDoubleProperty widthProperty() {
+        return m_width;
+    }
+
+    public void setWidth(double width) {
+        this.m_width.set(width);
+    }
+
+    public double getHeigth() {
+        return m_heigth.get();
+    }
+
+    public SimpleDoubleProperty heigthProperty() {
+        return m_heigth;
+    }
+
+    public void setHeigth(double heigth) {
+        this.m_heigth.set(heigth);
     }
 
     public void setXLocation(double XLocation) {

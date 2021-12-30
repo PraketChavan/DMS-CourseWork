@@ -5,15 +5,14 @@ import com.example.migrateFx.model.SpriteModel;
 import com.example.migrateFx.view.SpriteView;
 import javafx.geometry.Point2D;
 
-public class PaddleController extends SpriteController implements Movable {
+public class PaddleController extends SpriteController {
     public PaddleController(SpriteModel model,
                             SpriteView view) {
         super(model, view);
     }
 
-    @Override
     public void move() {
-        getModel().setLocation(getModel().getLocation().add(getModel().getSpeed()));
+        ((Movable)getModel()).move();
     }
 
     public void moveLeft() {

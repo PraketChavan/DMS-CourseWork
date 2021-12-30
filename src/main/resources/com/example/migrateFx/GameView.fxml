@@ -3,6 +3,7 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" onKeyPressed="#onKeyPressed" onKeyReleased="#onKeyReleased" prefHeight="500.0" prefWidth="740.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.migrateFx.controller.GameController">
     <right>
@@ -35,7 +36,16 @@
     <center>
         <Pane fx:id="m_gamePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="640.0" style="-fx-border-color: BLACK; -fx-border-width: 2;" BorderPane.alignment="CENTER">
          <children>
-            <Label fx:id="m_messageText" layoutX="306.0" layoutY="191.0" text="Focus Lost" />
+            <Label fx:id="m_levelComplete" layoutX="205.0" layoutY="228.0" style="-fx-font-weight: BOLD;" text="LEVEL COMPLETE" textFill="#00ff22">
+               <font>
+                  <Font name="Arial" size="30.0" />
+               </font>
+            </Label>
+            <HBox alignment="CENTER" layoutX="220.0" layoutY="287.0" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label fx:id="m_messageText" text="Focus Lost" />
+               </children>
+            </HBox>
          </children></Pane>
     </center>
 </BorderPane>

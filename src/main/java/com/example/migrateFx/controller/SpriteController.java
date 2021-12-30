@@ -26,6 +26,9 @@ public abstract class SpriteController {
     public SpriteController(SpriteModel model, SpriteView view) {
         this.setModel(model);
         this.setView(view);
+        getModel().boundsProperty().bind(getView().getView().boundsInParentProperty());
+        getModel().widthProperty().bind(getView().getView().getImage().widthProperty());
+        getModel().heigthProperty().bind(getView().getView().getImage().heightProperty());
         this.initialize();
     }
 

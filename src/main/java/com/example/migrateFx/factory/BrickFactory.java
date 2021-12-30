@@ -15,7 +15,7 @@ public class BrickFactory {
         switch (type) {
             case 1 -> {
                 int i = m_random.nextInt(100);
-                int m = m_random.nextInt(10);
+                int m = m_random.nextInt(100);
                 if (i <= 25)
                     return new ClayBrick(ResourceHandler.getResource(m < 8 ? "clay0" : "claySpec0"),
                                          location, m >= 8);

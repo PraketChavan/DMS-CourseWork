@@ -2,6 +2,8 @@ package com.example.migrateFx.model;
 
 import com.example.migrateFx.Breakable;
 import com.example.migrateFx.Impactable;
+import com.example.migrateFx.factory.PowerUpFactory;
+import com.example.migrateFx.wrappers.PowerUp;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -106,22 +108,18 @@ public class BrickModel extends SpriteModel implements Breakable, Impactable {
             BallModel ball = (BallModel) parent;
             if (getBounds().contains(ball.rightProperty().get())) {
                 onImpact(LEFT);
-                decreaseStrength();
                 return LEFT;
             }
             if (getBounds().contains(ball.leftProperty().get())) {
                 onImpact(RIGHT);
-                decreaseStrength();
                 return RIGHT;
             }
             if (getBounds().contains(ball.topProperty().get())) {
                 onImpact(DOWN);
-                decreaseStrength();
                 return DOWN;
             }
             if (getBounds().contains(ball.bottomProperty().get())) {
                 onImpact(UP);
-                decreaseStrength();
                 return UP;
             }
         }
@@ -130,7 +128,7 @@ public class BrickModel extends SpriteModel implements Breakable, Impactable {
 
     @Override
     public void onImpact(int side) {
-        setStrength(getStrength() - 1);
+        decreaseStrength();
     }
 
     @Override
@@ -139,14 +137,18 @@ public class BrickModel extends SpriteModel implements Breakable, Impactable {
     }
 
     @Override
-    public void onBreak() {
-        if (isSpecial() && new Random().nextBoolean())
-            System.out.println("power");
+    public int onBreak() {
+        if (isSpecial() && new Random().nextBoolean()) {
+            PowerUpFactory.setLocation(getLocation().add(getWidth() / 2, 0));
+            setBroken(true);
+            return SPECIAL_BREAK;
+        }
         setBroken(true);
+        return NORMAL_BREAK;
     }
 
     public void setBroken(boolean broken) {
-        this.m_Broken.set(broken);
+        this.brokenProperty().set(broken);
     }
 
     private void initializeProperties() {

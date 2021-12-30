@@ -1,41 +1,57 @@
 package com.example.migrateFx.handler;
 
-import com.example.migrateFx.Ball;
 import com.example.migrateFx.Breakable;
 import com.example.migrateFx.Impactable;
-import com.example.migrateFx.controller.BallController;
 import com.example.migrateFx.model.BallModel;
+import com.example.migrateFx.model.SpriteModel;
+import com.example.migrateFx.wrappers.PowerUp;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.media.AudioClip;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class ImpactHandler {
-    private final List<Impactable> m_Bricks;
-    private final List<Impactable> m_Balls;
-    private final List<Impactable> m_Paddle;
+    public static final int SPECIAL_BRICK_BROKEN = -2;
+    public static final int NORMAL_BRICK_BROKEN = -1;
+    public static final int NO_IMPACT = 0;
+    public static final int NORMAL_WALL_IMPACT = 1;
+    private final ObservableList<Impactable> m_Bricks;
+    private final ObservableList<Impactable> m_Balls;
+    private final ObservableList<Impactable> m_PowerUp;
     private final Impactable m_Border;
+    private Impactable m_Paddle;
 
-    public List<Impactable> getBalls() {
+    public ObservableList<Impactable> getBalls() {
         return m_Balls;
-    }
-
-    public List<Impactable> getBricks() {
-        return m_Bricks;
-    }
-
-    public List<Impactable> getPaddle() {
-        return m_Paddle;
     }
 
     public Impactable getBorder() {
         return m_Border;
     }
 
+    public ObservableList<Impactable> getBricks() {
+        return m_Bricks;
+    }
+
+    public Impactable getPaddle() {
+        return m_Paddle;
+    }
+
     public ImpactHandler(Impactable border) {
-        m_Bricks = new LinkedList<>();
-        m_Balls = new LinkedList<>();
-        m_Paddle = new LinkedList<>();
+        m_Bricks = FXCollections.observableArrayList();
+        m_Balls = FXCollections.observableArrayList();
         m_Border = border;
+        m_PowerUp = FXCollections.observableArrayList();
+    }
+
+    public ObservableList<Impactable> getPowerUp() {
+        return m_PowerUp;
+    }
+    public void addPower(PowerUp power) {
+        getPowerUp().add(power.getModel());
     }
 
     public void addBrick(Impactable brick) {
@@ -43,78 +59,121 @@ public class ImpactHandler {
     }
 
     public void addPaddle(Impactable paddle) {
-        getPaddle().add(paddle);
+        m_Paddle = paddle;
     }
 
     public void addBall(Impactable ball) {
         getBalls().add(ball);
     }
 
-    public void handleImpacts() {
-        if (!handleBrickImpact())
-            if (!handleBallPaddleImpacts())
-                if(!handleWallImpacts())
-                    handlePaddleWallImpacts();
+    public int handleImpacts() {
+            if (!handleBallPaddleImpacts()) {
+                int impact = handleBrickImpact();
+                if (impact == SPECIAL_BRICK_BROKEN)
+                    return SPECIAL_BRICK_BROKEN;
+                else if (impact == NORMAL_BRICK_BROKEN)
+                    return NORMAL_BRICK_BROKEN;
+                else if (impact == NO_IMPACT) {
+                    if (handlePowerUpImpact()) {
+
+                    }
+                    else if (handleWallImpacts())
+                        return NORMAL_WALL_IMPACT;
+                }
+            }
+            return NO_IMPACT;
     }
 
-    private boolean handleBrickImpact() {
+    private boolean handlePowerUpImpact() {
+        List<Impactable> toRemove = new LinkedList<>();
+        for (Impactable powerUp: getPowerUp()) {
+            if (powerUp.findImpact(getPaddle()) == Impactable.UP)
+                toRemove.add(powerUp);
+        }
+        getPowerUp().removeAll(toRemove);
+        return false;
+    }
+
+    private boolean handleBallPaddleImpacts() {
+        for (Impactable ball : getBalls())
+            getPaddle().findImpact(ball);
+        return false;
+    }
+
+    private int handleBrickImpact() {
+        ArrayList<Impactable> broken = new ArrayList<>();
+        boolean specialBreak = false;
+        boolean impact = false;
         for (Impactable ball : getBalls()) {
             for (Impactable brick : getBricks()) {
                 switch (brick.findImpact(ball)) {
                     //Vertical Impact
                     case Impactable.UP -> {
-                        if (!((BallModel)ball).isCollisions()) {
-                            ball.onImpact(Impactable.UP);
-                            ((BallModel)ball).setCollisions(true);
-                            return true;
-                        }
+                        ball.onImpact(Impactable.UP);
+                        ((BallModel) ball).setCollisions(true);
+                        impact = true;
                     }
                     case Impactable.DOWN -> {
-                        if (!((BallModel)ball).isCollisions()) {
-                            ball.onImpact(Impactable.DOWN);
-                            ((BallModel)ball).setCollisions(true);
-                            return true;
-                        }
+                        ball.onImpact(Impactable.DOWN);
+                        ((BallModel) ball).setCollisions(true);
+                        impact = true;
                     }
 
                     //Horizontal Impact
                     case Impactable.LEFT -> {
-                        if (!((BallModel)ball).isCollisions()) {
-                            ball.onImpact(Impactable.LEFT);
-                            ((BallModel)ball).setCollisions(true);
-                            return true;
-                        }
+                        ball.onImpact(Impactable.LEFT);
+                        ((BallModel) ball).setCollisions(true);
+                        impact = true;
                     }
                     case Impactable.RIGHT -> {
-                        if (!((BallModel)ball).isCollisions()) {
-                            ball.onImpact(Impactable.RIGHT);
-                            ((BallModel)ball).setCollisions(true);
-                            return true;
-                        }
+                        ball.onImpact(Impactable.RIGHT);
+                        ((BallModel) ball).setCollisions(true);
+                        impact = true;
                     }
                 }
-                if (((Breakable)brick).checkBroken())
-                    ((Breakable)brick).onBreak();
+                if (((Breakable) brick).checkBroken()) {
+                    specialBreak = ((Breakable) brick).onBreak() == 1;
+                    broken.add(brick);
+                }
+                if (impact) {
+                    AudioClip impactSound = null;
+                    switch (((SpriteModel)brick).getName()) {
+                        case "Clay" -> {
+                            impactSound = new AudioClip(
+                                    ResourceHandler.getSoundResource(
+                                            "ClayBrick.mp3"));
+                        }
+                        case "Steel" -> {
+                            impactSound = new AudioClip(
+                                    ResourceHandler.getSoundResource(
+                                            "Steel.mp3"));
+                        }
+                        case "Unbreakable" -> {
+                            impactSound = new AudioClip(
+                                    ResourceHandler.getSoundResource(
+                                            "Unbreakable.mp3"));
+                        }
+                    }
+                    impactSound.play();
+                }
             }
-            ((BallModel)ball).setCollisions(false);
-            return false;
+            getBricks().removeAll(broken);
+            ((BallModel) ball).setCollisions(false);
+
         }
-        return false;
+
+        if (specialBreak)
+            return SPECIAL_BRICK_BROKEN;
+        else if (impact)
+            return NORMAL_BRICK_BROKEN;
+        else
+            return NO_IMPACT;
     }
+
 
     private boolean handleWallImpacts() {
-        for (Impactable ball: getBalls())
-             ball.findImpact(getBorder());
-        return false;
-    }
-
-    private boolean handlePaddleWallImpacts() {
-        return false;
-    }
-
-    private boolean handleBallPaddleImpacts() {
-        for (Impactable ball: getBalls())
-            getPaddle().get(0).findImpact(ball);
+        for (Impactable ball : getBalls())
+            ball.findImpact(getBorder());
         return false;
     }
 

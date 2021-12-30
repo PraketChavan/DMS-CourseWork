@@ -1,9 +1,19 @@
 package com.example.migrateFx.controller;
 
+import com.example.migrateFx.handler.ResourceHandler;
 import com.example.migrateFx.model.GameModel;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.stage.Stage;
+import javafx.stage.Window;
+
+import java.io.IOException;
+import java.io.Writer;
 
 public class DebugController {
     private GameModel m_Model;
@@ -15,6 +25,8 @@ public class DebugController {
     private Slider m_BallXSpeed;
     @FXML
     private Slider m_BallYSpeed;
+    @FXML
+    private Button m_CompleteGame;
 
     public Slider getBallXSpeed() {
         return m_BallXSpeed;
@@ -22,6 +34,10 @@ public class DebugController {
 
     public Slider getBallYSpeed() {
         return m_BallYSpeed;
+    }
+
+    public Button getCompleteGame() {
+        return m_CompleteGame;
     }
 
     public GameModel getModel() {
@@ -55,15 +71,18 @@ public class DebugController {
 
     }
 
-    @FXML
-    private void setBallXSpeed() {
-        getModel().setBallXSpeed((int) getBallXSpeed().getValue());
-    }
-
-
-    @FXML
-    private void setBallYSpeed() {
-        getModel().setBallYSpeed((int) getBallYSpeed().getValue());
+    private void onGameComplete() {
+        getCompleteGame().getScene().getWindow().hide();
+        getModel().stopTimer();
+        FXMLLoader root = new FXMLLoader(getClass().getResource(
+                "/com/example/migrateFx/GameCompleteView.fxml"));
+        try {
+            Scene scene = new Scene(root.load());
+            Stage.getWindows().stream().filter(Window::isShowing)
+                 .forEach(stage -> ((Stage)stage).setScene(scene));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -72,7 +91,32 @@ public class DebugController {
     }
 
     @FXML
+    private void setBallXSpeed() {
+        getModel().setBallXSpeed((int) getBallXSpeed().getValue());
+    }
+
+    @FXML
+    private void setBallYSpeed() {
+        getModel().setBallYSpeed((int) getBallYSpeed().getValue());
+    }
+
+    @FXML
     private void skipLevel() {
-        getModel().nextLevel();
+        if (getModel().hasNextLevel()) {
+            if (getModel().getLevelSound() != null)
+                getModel().getLevelSound().stop();
+            Media media = new Media(
+                    ResourceHandler.getSoundResource(
+                            "Phase " + getModel().getLevelNumber() + ".mp3"));
+            getModel().setLevelSound(new MediaPlayer(media));
+            getModel().nextLevel();
+            getModel().getLevelSound().play();
+            getModel().getLevelSound().setCycleCount(MediaPlayer.INDEFINITE);
+        }
+    }
+
+    @FXML
+    private void onCompleteClick() {
+        onGameComplete();
     }
 }
