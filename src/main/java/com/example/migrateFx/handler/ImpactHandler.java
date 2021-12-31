@@ -1,10 +1,10 @@
 package com.example.migrateFx.handler;
 
-import com.example.migrateFx.Breakable;
-import com.example.migrateFx.Impactable;
-import com.example.migrateFx.model.BallModel;
-import com.example.migrateFx.model.SpriteModel;
-import com.example.migrateFx.wrappers.PowerUp;
+import com.example.migrateFx.model.sprite.BallModel;
+import com.example.migrateFx.model.sprite.SpriteModel;
+import com.example.migrateFx.util.Breakable;
+import com.example.migrateFx.util.Impactable;
+import com.example.migrateFx.wrappers.powerup.PowerUp;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.media.AudioClip;
@@ -21,15 +21,10 @@ public class ImpactHandler {
     private final ObservableList<Impactable> m_Bricks;
     private final ObservableList<Impactable> m_Balls;
     private final ObservableList<Impactable> m_PowerUp;
-    private final Impactable m_Border;
     private Impactable m_Paddle;
 
     public ObservableList<Impactable> getBalls() {
         return m_Balls;
-    }
-
-    public Impactable getBorder() {
-        return m_Border;
     }
 
     public ObservableList<Impactable> getBricks() {
@@ -40,16 +35,16 @@ public class ImpactHandler {
         return m_Paddle;
     }
 
-    public ImpactHandler(Impactable border) {
-        m_Bricks = FXCollections.observableArrayList();
-        m_Balls = FXCollections.observableArrayList();
-        m_Border = border;
-        m_PowerUp = FXCollections.observableArrayList();
-    }
-
     public ObservableList<Impactable> getPowerUp() {
         return m_PowerUp;
     }
+
+    public ImpactHandler(Impactable border) {
+        m_Bricks = FXCollections.observableArrayList();
+        m_Balls = FXCollections.observableArrayList();
+        m_PowerUp = FXCollections.observableArrayList();
+    }
+
     public void addPower(PowerUp power) {
         getPowerUp().add(power.getModel());
     }
@@ -67,21 +62,15 @@ public class ImpactHandler {
     }
 
     public int handleImpacts() {
-            if (!handleBallPaddleImpacts()) {
-                int impact = handleBrickImpact();
-                if (impact == SPECIAL_BRICK_BROKEN)
-                    return SPECIAL_BRICK_BROKEN;
-                else if (impact == NORMAL_BRICK_BROKEN)
-                    return NORMAL_BRICK_BROKEN;
-                else if (impact == NO_IMPACT) {
-                    if (handlePowerUpImpact()) {
-
-                    }
-                    else if (handleWallImpacts())
-                        return NORMAL_WALL_IMPACT;
-                }
-            }
-            return NO_IMPACT;
+        handleBallPaddleImpacts();
+        handlePowerUpImpact();
+        handleWallImpacts();
+        int impact = handleBrickImpact();
+        if (impact == SPECIAL_BRICK_BROKEN)
+            return SPECIAL_BRICK_BROKEN;
+        else if (impact == NORMAL_BRICK_BROKEN)
+            return NORMAL_BRICK_BROKEN;
+        return NO_IMPACT;
     }
 
     private boolean handlePowerUpImpact() {
@@ -96,7 +85,7 @@ public class ImpactHandler {
 
     private boolean handleBallPaddleImpacts() {
         for (Impactable ball : getBalls())
-            getPaddle().findImpact(ball);
+            ball.onImpact(getPaddle().findImpact(ball));
         return false;
     }
 
@@ -137,29 +126,22 @@ public class ImpactHandler {
                 }
                 if (impact) {
                     AudioClip impactSound = null;
-                    switch (((SpriteModel)brick).getName()) {
-                        case "Clay" -> {
-                            impactSound = new AudioClip(
-                                    ResourceHandler.getSoundResource(
-                                            "ClayBrick.mp3"));
-                        }
-                        case "Steel" -> {
-                            impactSound = new AudioClip(
-                                    ResourceHandler.getSoundResource(
-                                            "Steel.mp3"));
-                        }
-                        case "Unbreakable" -> {
-                            impactSound = new AudioClip(
-                                    ResourceHandler.getSoundResource(
-                                            "Unbreakable.mp3"));
-                        }
+                    switch (((SpriteModel) brick).getName()) {
+                        case "Clay" -> impactSound = new AudioClip(
+                                ResourceHandler.getSoundResource(
+                                        "ClayBrick.mp3"));
+                        case "Steel" -> impactSound = new AudioClip(
+                                ResourceHandler.getSoundResource(
+                                        "Steel.mp3"));
+                        case "Unbreakable" -> impactSound = new AudioClip(
+                                ResourceHandler.getSoundResource(
+                                        "Unbreakable.mp3"));
                     }
                     impactSound.play();
                 }
             }
             getBricks().removeAll(broken);
             ((BallModel) ball).setCollisions(false);
-
         }
 
         if (specialBreak)
@@ -171,10 +153,9 @@ public class ImpactHandler {
     }
 
 
-    private boolean handleWallImpacts() {
+    private void handleWallImpacts() {
         for (Impactable ball : getBalls())
-            ball.findImpact(getBorder());
-        return false;
+            ball.findImpact(null);
     }
 
 

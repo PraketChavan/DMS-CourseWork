@@ -1,43 +1,24 @@
 package com.example.migrateFx;
 
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.awt.*;
-
 public class StartGame extends Application {
 
-    public static void main(String[] args){
+    private static final int SCREEN_WIDTH = 740;
+    private static final int SCREEN_HEIGHT = 500;
+    public static void main(String[] args) {
         launch(args);
     }
 
     @Override
     public void start(Stage stage) throws Exception {
-//        GameFrame frame = new GameFrame();
-//        Scene scene = new Scene(frame.getLayout(), 640, 450);
-//        stage.focusedProperty().addListener(new ChangeListener<Boolean>() {
-//            @Override
-//            public void changed(
-//                    ObservableValue<? extends Boolean> observableValue,
-//                    Boolean aBoolean, Boolean t1) {
-//                if (aBoolean)
-//                    frame.windowGainedFocus(null);
-//                if (t1)
-//                    frame.windowLostFocus(null);
-//            }
-//        });
-//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("GameView.fxml"));
-//        Scene root = new Scene(fxmlLoader.load());
-//        stage.setTitle((GameFrame.getDefTitle()));
-//        stage.setScene(root);
-//        root.getRoot().requestFocus();
-//        stage.show();
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("StartScreenView.fxml"));
-        Scene root = new Scene(fxmlLoader.load(), 740, 500);
+        FXMLLoader fxmlLoader = new FXMLLoader(
+                getClass().getResource("StartScreenView.fxml"));
+        Scene root = new Scene(fxmlLoader.load(), SCREEN_WIDTH,
+                               SCREEN_HEIGHT);
         stage.setTitle("BREAKOUT GAME!!");
         stage.setScene(root);
         root.getRoot().requestFocus();

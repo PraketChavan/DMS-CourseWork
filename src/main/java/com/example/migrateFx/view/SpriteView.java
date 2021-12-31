@@ -11,6 +11,10 @@ public abstract class SpriteView {
         return m_View;
     }
 
+    public void setView(ImageView view) {
+        m_View = view;
+    }
+
     public SpriteView(String url) {
         setView(new ImageView(url));
     }
@@ -20,8 +24,4 @@ public abstract class SpriteView {
     }
 
     public abstract void createView(Pane parent);
-
-    public void setView(ImageView view) {
-        m_View = view;
-    }
 }

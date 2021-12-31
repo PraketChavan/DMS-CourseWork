@@ -2,7 +2,7 @@ package com.example.migrateFx.view;
 
 import javafx.scene.layout.Pane;
 
-public class BrickView extends SpriteView{
+public class BrickView extends SpriteView {
 
 
     public BrickView(String url) {

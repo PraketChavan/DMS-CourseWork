@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.migrateFx.controller.GameEndController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.migrateFx.controller.game.GameEndController">
    <top>
       <Label style="-fx-font-weight: 500;" text="GAME OVER" textFill="RED" BorderPane.alignment="CENTER">
          <font>
@@ -17,34 +17,35 @@
       <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
    </padding>
    <center>
-      <VBox alignment="CENTER" BorderPane.alignment="CENTER">
-         <children>
-            <Label text="HIGHSCORE">
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </Label>
-            <TableView fx:id="m_HighScore" prefHeight="200.0" prefWidth="540.0">
-              <columns>
-                <TableColumn fx:id="m_PlayerName" prefWidth="413.20000302791595" text="C1" />
-                <TableColumn fx:id="m_PlayerScore" prefWidth="125.199951171875" text="C2" />
-              </columns>
-            </TableView>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
-               <children>
-                  <TextField promptText="Enter Name" fx:id="m_Name"/>
-                  <Button mnemonicParsing="false" text="Submit" fx:id="m_Submit" onAction="#onSubmitClick"/>
-               </children>
-            </HBox>
-         </children>
-      </VBox>
+       <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+           <Label text="HIGHSCORE">
+              <font>
+                  <Font size="16.0"/>
+              </font>
+           </Label>
+           <TableView fx:id="m_HighScore" prefHeight="200.0" prefWidth="540.0">
+               <columns>
+                   <TableColumn fx:id="m_PlayerName"
+                                prefWidth="413.20000302791595" text="C1"/>
+                   <TableColumn fx:id="m_PlayerScore"
+                                prefWidth="125.199951171875" text="C2"/>
+               </columns>
+           </TableView>
+           <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0"
+                 spacing="10.0">
+               <TextField promptText="Enter Name" fx:id="m_Name"/>
+               <Button mnemonicParsing="false" text="Submit" fx:id="m_Submit"
+                       onAction="#onSubmitClick"/>
+           </HBox>
+       </VBox>
    </center>
    <bottom>
-      <HBox alignment="CENTER" prefHeight="48.0" prefWidth="540.0" spacing="100.0" BorderPane.alignment="CENTER">
-         <children>
-            <Button fx:id="m_Restart" mnemonicParsing="false" onAction="#onRestartClick" text="Restart" />
-            <Button fx:id="m_Exit" mnemonicParsing="false" onAction="#onExitClick" prefWidth="53.6" text="Exit" />
-         </children>
-      </HBox>
+       <HBox alignment="CENTER" prefHeight="48.0" prefWidth="540.0"
+             spacing="100.0" BorderPane.alignment="CENTER">
+           <Button fx:id="m_Restart" mnemonicParsing="false"
+                   onAction="#onRestartClick" text="Restart"/>
+           <Button fx:id="m_Exit" mnemonicParsing="false"
+                   onAction="#onExitClick" prefWidth="53.6" text="Exit"/>
+       </HBox>
    </bottom>
 </BorderPane>

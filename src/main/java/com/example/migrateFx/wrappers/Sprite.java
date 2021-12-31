@@ -1,7 +1,7 @@
 package com.example.migrateFx.wrappers;
 
-import com.example.migrateFx.controller.SpriteController;
-import com.example.migrateFx.model.SpriteModel;
+import com.example.migrateFx.controller.sprite.SpriteController;
+import com.example.migrateFx.model.sprite.SpriteModel;
 import com.example.migrateFx.view.SpriteView;
 
 public abstract class Sprite {

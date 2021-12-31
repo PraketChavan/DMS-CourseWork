@@ -2,7 +2,7 @@ package com.example.migrateFx.view;
 
 import javafx.scene.layout.Pane;
 
-public class PaddleView extends SpriteView{
+public class PaddleView extends SpriteView {
     public PaddleView(String url) {
         super(url);
     }

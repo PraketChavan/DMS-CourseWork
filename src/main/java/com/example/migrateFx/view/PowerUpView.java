@@ -2,7 +2,7 @@ package com.example.migrateFx.view;
 
 import javafx.scene.layout.Pane;
 
-public class PowerUpView extends SpriteView{
+public class PowerUpView extends SpriteView {
     public PowerUpView(String url) {
         super(url);
     }
