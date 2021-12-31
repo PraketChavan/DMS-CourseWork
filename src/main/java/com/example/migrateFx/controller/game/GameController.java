@@ -9,7 +9,6 @@ import com.example.migrateFx.wrappers.brick.Brick;
 import com.example.migrateFx.wrappers.powerup.PowerUp;
 import com.example.migrateFx.wrappers.powerup.PowerUpFactory;
 import javafx.animation.AnimationTimer;
-import javafx.animation.FadeTransition;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,59 +23,194 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Duration;
 
 import java.io.IOException;
 
+/**
+ * This class is the main controller for the game, which handles all the user
+ * input when playing the game.
+ * <p>
+ * This class has been built from the GameFrame and the Wall class taking the
+ * method that handles the inputs
+ * <p>
+ * This class is the controller to the GameView.fxml
+ *
+ * @author Praket Chavan - modified
+ * @see GameModel
+ */
 public class GameController {
+
+    /**
+     * This constant defines the value that is awarded when a special brick
+     * is broken
+     */
+    private static final int SPECIAL_BRICK_SCORE = 15;
+
+    /**
+     * This constant defines the value that is awarded when a normal brick
+     * is broken
+     */
+    private static final int NORMAL_BRICK_SCORE = 10;
+    /**
+     * This holds the GameModel object that the controller is connected to
+     *
+     * @see #setModel(GameModel)
+     * @see #getModel()
+     */
     private GameModel m_model;
+
+    /**
+     * Stores the reference of the main game Pane from the fxml view. This
+     * object is effectively final.
+     *
+     * @see #getGamePane()
+     */
     @FXML private Pane m_gamePane;
+
+    /**
+     * Stores the reference of the brick count Label from the fxml view. This
+     * object is effectively final.
+     *
+     * @see #getBrickCount()
+     */
     @FXML private Label m_brickCount;
+
+    /**
+     * Stores the reference of the score count label from the fxml view.
+     * This
+     * object is effectively final.
+     *
+     * @see #getScore()
+     */
     @FXML private Label m_score;
+
+    /**
+     * Stores the reference of the ball count Label from the fxml view. This
+     * object is effectively final.
+     *
+     * @see #getBallCount()
+     */
     @FXML private Label m_ballCount;
+
+    /**
+     * Stores the reference of the level complete Label from the fxml view. This
+     * object is effectively final.
+     *
+     * @see #getLevelComplete()
+     */
     @FXML private Label m_levelComplete;
+
+    /**
+     * Stores the reference of the message Label from the fxml view. This
+     * object is effectively final.
+     *
+     * @see #getMessageText() ()
+     */
     @FXML private Label m_messageText;
 
+    /**
+     * Gets the ball count Label linked with the fxml view
+     *
+     * @return the Label object that shows the ball count
+     */
     public Label getBallCount() {
         return m_ballCount;
     }
 
+    /**
+     * Gets the brick count Label linked with the fxml view
+     *
+     * @return the Label object that shows the brick count
+     */
     public Label getBrickCount() {
         return m_brickCount;
     }
 
+    /**
+     * Gets the main game Pane linked with the fxml view
+     *
+     * @return the Pane object that is the main game area
+     */
     public Pane getGamePane() {
         return m_gamePane;
     }
 
+    /**
+     * Gets the level complete Label linked with fxml view
+     *
+     * @return the Label object that displays the LEVEL COMPLETE message
+     */
     public Label getLevelComplete() {
         return m_levelComplete;
     }
 
+    /**
+     * Gets the message Label linked with the fxml view
+     *
+     * @return the Label object that shows the message
+     */
     public Label getMessageText() {
         return m_messageText;
     }
 
+    /**
+     * Gets the GameModel object that the controller is currently linked with
+     *
+     * @return the GameModel object
+     * @see #setModel(GameModel)
+     */
     public GameModel getModel() {
         return m_model;
     }
 
+    /**
+     * Sets the GameModel object that the controller is linked with to the
+     * passed parameter
+     *
+     * @param model the GameModel object that is to be linked with the
+     *              controller
+     */
     public void setModel(GameModel model) {
         m_model = model;
     }
 
+    /**
+     * Gets the score Label linked with the fxml view
+     *
+     * @return the Label object that shows the game score
+     */
     public Label getScore() {
         return m_score;
     }
 
+    /**
+     * Runs an iteration of the game loop.
+     * It moves the sprites on the screen by calling the {@link GameModel#move()}
+     * models move method.
+     *<br>
+     * It handles the impacts by calling the
+     * {@link ImpactHandler#handleImpacts()} method of the model ImpactHandler.
+     *
+     * It calls checks for whether the ball has been lost and calls the
+     * appropriate methods.
+     *
+     * It checks if the player has finished the level and calls the
+     * appropriate methods.
+     *
+     * @see #onGameOver()
+     * @see #onGameComplete()
+     */
     private void gameTimer() {
         getModel().move();
         int impact = getModel().getImpactHandler().handleImpacts();
-        if (impact == ImpactHandler.SPECIAL_BRICK_BROKEN)
+        //Check to see if a normal or special brick is broken
+        if (impact == ImpactHandler.SPECIAL_BRICK_BROKEN) {
             getModel().createPowerUp(new PowerUpFactory().createPowerUP());
+            getModel().addScore(SPECIAL_BRICK_SCORE);
+        }
         else if (impact == ImpactHandler.NORMAL_BRICK_BROKEN)
-            getModel().addScore(10);
-        getModel().updateBrickCount();
+            getModel().addScore(NORMAL_BRICK_SCORE);
+        getModel().updateBrickCount();//Update the brick count every iteration
         if (getModel().isBallLost()) {
             getModel().onBallLost();
             if (getModel().getBallCount() <= 0)
@@ -85,12 +219,23 @@ public class GameController {
             if (getModel().hasNextLevel()) {
                 getModel().gameReset();
                 nextLevel();
-//                getModel().nextLevel();
-            } else
+            } else //If no Levels are left then the game has been completed
                 onGameComplete();
         }
     }
 
+    /**
+     * This method is called automatically when the view is created.
+     * It initialises the model object and created the AnimationTimer that
+     * runs the gameLoop.
+     * <br>
+     * This calls methods the {@link #initializeBinding()} method to
+     * initialise the binding between the view objects and the respective
+     * model property.
+     * <br>
+     * Calls the {@link #initializeListener()} to add listeners to some model
+     * list properties.
+     */
     @FXML
     private void initialize() {
         getGamePane().requestFocus();
@@ -112,19 +257,50 @@ public class GameController {
 
     }
 
+    /**
+     * Binds the view objects with the respective model properties to
+     * allow the view to listen to changes to the model and update itself.
+     * @see #initialize()
+     */
     private void initializeBinding() {
+        //Bind the ball count label to the ball count property in the model
         getBallCount().textProperty().bind(getModel().ballCountProperty()
                                                      .asString());
+        //Bind the score label to the score count property
         getScore().textProperty().bind(getModel().scoreCountProperty()
                                                  .asString());
+        //Bind the brick count label to the brick count property in the model
         getBrickCount().textProperty().bind(getModel().brickCountProperty()
                                                       .asString());
-
+        //Binds the message Label to the message property in the model.
         getMessageText().textProperty().bind(getModel().messageProperty());
+
+        getModel().focusProperty().bind(getGamePane().focusedProperty());
 
     }
 
+    /**
+     * Adds the change listeners to observable list in the model.
+     * @see #initialize()
+     */
     private void initializeListener() {
+        /*
+        Add listener to the focused property of the model and calls the
+        respective method
+         */
+        getGamePane().focusedProperty()
+                     .addListener((observableValue, aBoolean, t1) -> {
+                         if (t1)
+                             getModel().onFocusGain();
+                         else
+                             getModel().onFocusLost();
+                     });
+
+        /*
+        Adds change listener to the different sprite observable list and for
+        each sprite object added, create its view; and for each sprite object
+        removed from the list also remove it from the gamePane
+         */
         getModel().getPowerUps().addListener(
                 (ListChangeListener<? super PowerUp>) change -> {
                     if (change.next()) {
@@ -136,13 +312,6 @@ public class GameController {
                     }
                 });
 
-        getGamePane().focusedProperty()
-                     .addListener((observableValue, aBoolean, t1) -> {
-                         if (t1)
-                             getModel().onFocusGain();
-                         else
-                             getModel().onFocusLost();
-                     });
         getModel().getBricks()
                   .addListener((ListChangeListener<? super Brick>) change -> {
                       if (change.next()) {
@@ -154,31 +323,41 @@ public class GameController {
                               getGamePane().getChildren().remove(brick.getView()
                                                                       .getView());
                               getModel().setBrickCount(
-                                      getModel().getBallCount() - 1);
+                                      getModel().getBrickCount() - 1);
                           }
                       }
                   });
+
         getModel().getBalls()
                   .addListener((ListChangeListener<? super Ball>) change -> {
                       if (change.next()) {
                           for (Ball ball : change.getAddedSubList()) {
                               ball.getView().createView(getGamePane());
                           }
+                          for (Ball ball : change.getAddedSubList()) {
+                              getGamePane().getChildren().remove(ball);
+                          }
                       }
                   });
+        /*For each item removed from the impactHandler's powerUp list remove
+         the wrapper object associated with the powerUp from the powerUp
+         list in the model*/
         getModel().getImpactHandler().getPowerUp().addListener(
                 (ListChangeListener<? super Impactable>) change -> {
-                    if (change.next()) {
+                        if(change.next())
                         getModel().getPowerUps().removeAll(
-                                getModel().getPowerUps().stream()
-                                          .filter(powerUp -> change.getRemoved()
-                                                                   .contains(
-                                                                           powerUp.getModel())
-                                          ).toList());
-                    }
-                });
+                        getModel().getPowerUps().stream().filter(
+                                powerUp -> change.getRemoved().contains(
+                                        powerUp.getModel())
+                                  ).toList());});
     }
 
+    /**
+     * Checks to see if the model has any more levels. If it does then stops
+     * the level music and plays the next level music and starts the next level
+     * @see GameModel#hasNextLevel()
+     * @see GameModel#nextLevel()
+     */
     private void nextLevel() {
         if (getModel().getLevelSound() != null)
             getModel().getLevelSound().stop();
@@ -190,6 +369,9 @@ public class GameController {
         getModel().getLevelSound().setCycleCount(MediaPlayer.INDEFINITE);
     }
 
+    /**
+     * Creates the GameCompleteView and replaces the GameView scene with it
+     */
     private void onGameComplete() {
         getModel().stopTimer();
         FXMLLoader root = new FXMLLoader(getClass().getResource(
@@ -202,6 +384,9 @@ public class GameController {
         }
     }
 
+    /**
+     * Creates the GameOverView and replaces the GameView scene with it
+     */
     private void onGameOver() {
         getModel().stopTimer();
         FXMLLoader root = new FXMLLoader(getClass().getResource(
@@ -214,13 +399,18 @@ public class GameController {
         }
     }
 
+    /**
+     * Listens to the user input when the game timer starts and calls the
+     * method from the model depending on the input
+     * @param event the key event that the user inputted
+     */
     @FXML
     private void onKeyPressed(KeyEvent event) {
         switch (event.getCode()) {
             case LEFT -> getModel().leftKeyPressed();
             case RIGHT -> getModel().rightKeyPressed();
             case SPACE -> getModel().spaceKeyPressed();
-            case ESCAPE -> {
+            case ESCAPE -> { //Pause menu is created
                 getModel().escapeKeyPressed();
                 getGamePane().getScene().getRoot()
                              .setEffect(new GaussianBlur());
@@ -239,11 +429,7 @@ public class GameController {
 
                 popupStage.show();
             }
-//                this.setShowPauseMenu(!this.isShowPauseMenu());
-//                drawPauseMenu();
-//                this.getGameTimer().stop();
-//            }
-            case F1 -> {
+            case F1 -> { //create the debug window if the shift and alt is down
                 getModel().f1KeyPressed(event);
 
                 if (event.isAltDown() && event.isShiftDown()) {
@@ -259,15 +445,16 @@ public class GameController {
                         ex.printStackTrace();
                     }
                 }
-                //m_debugConsole.setVisible(true);
-
             }
         }
     }
 
+    /**
+     * Listens for when the user stops pressing a key and stops the player
+     * @param event the KeyEvent inputted by the user
+     */
     @FXML
     private void onKeyReleased(KeyEvent event) {
         getModel().stopPlayer();
     }
-
 }

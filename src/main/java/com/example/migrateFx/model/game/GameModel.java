@@ -311,7 +311,7 @@ public class GameModel implements Impactable {
         getPowerUps().clear();
         getBricks().forEach(brick -> getImpactHandler().addBrick(brick.getModel()));
         countBricks();
-        setLevelNumber(getLevelNumber() + 1);
+        setLevelNumber((getLevelNumber() + 1) % 6);
     }
 
     public void setBallXSpeed(double xSpeed) {

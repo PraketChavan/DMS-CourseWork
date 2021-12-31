@@ -1,5 +1,6 @@
 package com.example.migrateFx.controller.game;
 
+import com.example.migrateFx.util.HighScore;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -11,34 +12,94 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+/**
+ * Controller class for the HighScoreView. It is responsible for initializing
+ * the connection between the view and controller.
+ * @author Praket Chavan
+ * @see HighScore
+ */
 public class HighScoreController {
-    private final ObservableList<GameEndController.HighScore> m_list
+    /**
+     * List for storing the high scores read from the highscore.properties file
+     * @see #getList()
+     */
+    private final ObservableList<HighScore> m_list
             = FXCollections.observableArrayList();
-    private final Properties m_properties = new Properties();
-    @FXML private TableView<GameEndController.HighScore> m_highScoreList;
-    @FXML private TableColumn<GameEndController.HighScore, String> m_Name;
-    @FXML private TableColumn<GameEndController.HighScore, Integer> m_Score;
 
-    public TableView<GameEndController.HighScore> getHighScoreList() {
+    /**
+     * The Properties object that will be used to read the
+     * highscore.properties file
+     * @see #getProperties()
+     */
+    private final Properties m_properties = new Properties();
+
+    /**
+     * The table that will display the high scores
+     * @see #getHighScoreList()
+     */
+    @FXML private TableView<HighScore> m_highScoreList;
+
+    /**
+     * The column for the player name in the high score table
+     * @see #getName()
+     */
+    @FXML private TableColumn<HighScore, String> m_Name;
+
+    /**
+     * The column for the player score in the high score table
+     * @see #getScore()
+     */
+    @FXML private TableColumn<HighScore, Integer> m_Score;
+
+    /**
+     * Gets the TableView object that is linked with the fxml view
+     * @return TableView object
+     */
+    public TableView<HighScore> getHighScoreList() {
         return m_highScoreList;
     }
 
-    public ObservableList<GameEndController.HighScore> getList() {
+    /**
+     * Gets the list storing the high score that is read from the file
+     * @return ObservableList containing the high scores
+     */
+    public ObservableList<HighScore> getList() {
         return m_list;
     }
 
-    public TableColumn<GameEndController.HighScore, String> getName() {
+    /**
+     * Gets the TableColumn containing the player name that is linked in the
+     * fxml
+     * view
+     * @return TableColumn object
+     */
+    public TableColumn<HighScore, String> getName() {
         return m_Name;
     }
 
+    /**
+     * Gets the Properties object that is used to read the .properties file
+     * @return Properties object
+     */
     public Properties getProperties() {
         return m_properties;
     }
 
-    public TableColumn<GameEndController.HighScore, Integer> getScore() {
+    /**
+     * Gets the TableColumn containing the player score that is linked in the
+     * fxml view
+     * @return TableView object
+     */
+    public TableColumn<HighScore, Integer> getScore() {
         return m_Score;
     }
 
+    /**
+     * This method is called automatically when the HighScore view is created.
+     * Initialises the {@link FileInputStream} that is used to read the
+     * highscore.properties file and is loaded using the properties
+     * @see #readScores()
+     */
     @FXML
     private void initialize() {
         try {
@@ -48,7 +109,8 @@ public class HighScoreController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        readScores();
+        readScores(); //read in the highscores
+        //sort the list in ascending order
         getList().sort(
                 (o1, o2) -> Integer.compare(o2.getScore(), o1.getScore()));
         getHighScoreList().setItems(getList());
@@ -56,9 +118,15 @@ public class HighScoreController {
         getScore().setCellValueFactory(new PropertyValueFactory<>("score"));
     }
 
+    /**
+     * Reads all the key, value pairs from the .properties file create new
+     * HighScore objects and add it to the high score list
+     *
+     * @see HighScore
+     */
     private void readScores() {
         getProperties().forEach((k, v) -> getList().add(
-                new GameEndController.HighScore((String) k,
-                                                Integer.valueOf((String) v))));
+                new HighScore((String) k,
+                              Integer.valueOf((String) v))));
     }
 }

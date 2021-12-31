@@ -10,7 +10,7 @@ public class BrickFactory {
     private static final int FIFTY = 50;
     private static final int SEVENTY_FIVE = 75;
     private static final int MAX_RANDOM_NUMBER = 100;
-    private static final int MAX_SPECIAL = 10;
+    private static final int MAX_SPECIAL = 100;
     private static final int SPECIAL_THRESHOLD = 8;
     private final Random m_random = new Random();
 

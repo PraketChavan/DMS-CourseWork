@@ -22,46 +22,153 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+/**
+ * Controller class for the StartScreenView.fxml. It sets up the connection
+ * and binds GameModel attributes to the View. It is also responsible
+ * for handling the user inputs.
+ *
+ * @author Praket Chavan
+ */
 public class StartScreenController {
+    /**
+     * Constant for the Starting point of the screen animation
+     */
     private static final int START_SCREEN_OFFSET = 500;
-    private static final int ANIMATION_DURATION = 5000;
-    private static final double FADE_START_VALUE = 0.01;
-    private final Properties m_properties = new Properties();
-    private final FileInputStream file;
-    @FXML private Label m_title;
-    @FXML private ChoiceBox<String> m_themeChoice;
-    @FXML private Button m_start;
-    @FXML private Button m_highScore;
-    private MediaPlayer m_intoSound;
 
+    /**
+     * Constant to define the duration of the animation in milliseconds
+     */
+    private static final int ANIMATION_DURATION = 5000;
+
+    /**
+     * Constant to define the starting opacity for the fading animation
+     */
+    private static final double FADE_START_VALUE = 0.1;
+
+    /**
+     * Properties object that is used to load and write to the
+     * theme.properties file
+     *
+     * @see #getProperties()
+     */
+    private final Properties m_properties = new Properties();
+
+    /**
+     * FileInputStream object used to read the theme.properties file
+     *
+     * @see #getFile()
+     */
+    private final FileInputStream file;
+
+    /**
+     * Game Title Label object that is linked to the fxml file
+     *
+     * @see #getTitle()
+     */
+    @FXML private Label m_title;
+
+    /**
+     * Theme ChoiceBox object that is linked to the fxml file
+     *
+     * @see #getThemeChoice()
+     */
+    @FXML private ChoiceBox<String> m_themeChoice;
+
+    /**
+     * Start Button object that is linked to the fxml file
+     *
+     * @see #getStart()
+     */
+    @FXML private Button m_start;
+
+    /**
+     * Highscore Button object that is linked to the fxml file
+     *
+     * @see #getHighScore()
+     */
+    @FXML private Button m_highScore;
+
+    /**
+     * MediaPlayer objects that is used to play the game into song
+     * @see #getIntroSound()
+     * @see #setIntroSound(MediaPlayer)
+     */
+    private MediaPlayer m_introSound;
+
+    /**
+     * Gets the FileInputStream that is reading the theme.properties file
+     * @return FileInputStream object
+     */
+    public FileInputStream getFile() {
+        return file;
+    }
+
+    /**
+     * Gets the high score Button object
+     *
+     * @return Button object
+     */
     public Button getHighScore() {
         return m_highScore;
     }
 
-    public MediaPlayer getIntoSound() {
-        return m_intoSound;
+    /**
+     * Gets the Media player object used to play the intro sound for the game
+     *
+     * @return MediaPlayer object
+     */
+    public MediaPlayer getIntroSound() {
+        return m_introSound;
     }
 
-    public void setIntoSound(MediaPlayer intoSound) {
-        m_intoSound = intoSound;
+    /**
+     * Sets the MediaPlayer object that is used to play the intro sound
+     *
+     * @param introSound
+     */
+    public void setIntroSound(MediaPlayer introSound) {
+        m_introSound = introSound;
     }
 
+    /**
+     * Gets the Properties object that has been initialised
+     * @return Properties object
+     */
     public Properties getProperties() {
         return m_properties;
     }
 
+    /**
+     * Gets the start Button from the view
+     * @return Button object
+     */
     public Button getStart() {
         return m_start;
     }
 
+    /**
+     * Gets the ChoiceBox object from the view
+     * @return ChoiceBox object
+     */
     public ChoiceBox<String> getThemeChoice() {
         return m_themeChoice;
     }
 
+    /**
+     * Gets the get title Label object
+     * @return Label object
+     */
     public Label getTitle() {
         return m_title;
     }
 
+    /**
+     * Constructor to initialise the FileInputStream to read the
+     * theme.properties file.
+     * <br>
+     * The constructor is called automatically when the StartScreenView is
+     * created.
+     */
     public StartScreenController() {
         FileInputStream file1;
         try {
@@ -74,30 +181,53 @@ public class StartScreenController {
         file = file1;
     }
 
+    /**
+     * This method is called automatically when the StartScreenView is
+     * created. It initialises the MediaPlayer with the sound resource and
+     * loads in the properties file.
+     *<br>
+     * Creates and starts the screen translate and fade animation for the
+     * into screen
+     * @see FadeTransition
+     * @see TranslateTransition
+     */
     @FXML
     private void initialize() {
         Media welcomeSound = new Media(
                 ResourceHandler.getSoundResource("Intro Theme.mp3"));
-        setIntoSound(new MediaPlayer(welcomeSound));
-        getIntoSound().play();
+        setIntroSound(new MediaPlayer(welcomeSound));
+        getIntroSound().play();
         try {
-            getProperties().load(file);
+            getProperties().load(getFile());
         } catch (IOException e) {
             e.printStackTrace();
         }
+        //sets the default theme to be blue
         getProperties().setProperty("theme", "blue");
+
+        //Create the translate animation for the start screen
         getStart().getParent().getParent().setLayoutY(START_SCREEN_OFFSET);
         TranslateTransition translateTransition = new TranslateTransition(
-                Duration.millis(ANIMATION_DURATION), getStart().getParent().getParent());
+                Duration.millis(ANIMATION_DURATION),
+                getStart().getParent().getParent());
         translateTransition.setByY(-START_SCREEN_OFFSET);
+
+        //create the fade transition for the start screen
         FadeTransition fadeTransition = new FadeTransition(
-                Duration.millis((ANIMATION_DURATION)), getStart().getParent().getParent());
+                Duration.millis((ANIMATION_DURATION)),
+                getStart().getParent().getParent());
         fadeTransition.setFromValue(FADE_START_VALUE);
         fadeTransition.setToValue(1);
+
+        //start both the animation
         fadeTransition.play();
         translateTransition.play();
     }
 
+    /**
+     * Method is called when the High score Button is pressed.
+     * Create the HighScoreView view as a popup which displays the highscore.
+     */
     @FXML
     private void onHighScoreClick() {
 //        getStart().getScene().getRoot().setEffect(new GaussianBlur());
@@ -116,6 +246,13 @@ public class StartScreenController {
         popupStage.show();
     }
 
+    /**
+     * Method is called when the start button is pressed on StartScreenView
+     * Reads the theme from the theme selection and saves it in the
+     * properties file.
+     * <br>
+     * Creates the GameView view and replaces the StartScreenView with.
+     */
     @FXML
     private void onStartClick() {
         try {
@@ -127,15 +264,22 @@ public class StartScreenController {
                     getClass().getResource(
                             "/com/example/migrateFx/GameView.fxml"));
             Scene scene = new Scene(root.load());
+            //Replace the current scene with the new GameView scene
             ((Stage) getThemeChoice().getScene().getWindow()).setScene(scene);
             scene.getRoot().requestFocus();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        getIntoSound().stop();
+        //Stop the intro sound
+        getIntroSound().stop();
 
     }
 
+    /**
+     * This method is called when the user updated their theme choice
+     * It reads the new value from the ChoiceBox object and the writes to the
+     * theme.properties file
+     */
     @FXML
     private void onThemeSelected() {
         getProperties().setProperty("theme", getThemeChoice().getValue());
