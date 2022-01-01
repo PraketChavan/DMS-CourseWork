@@ -46,7 +46,7 @@ public class PauseMenuController {
      * Gets the continue Button object
      * @return
      */
-    public Button getContinue() {
+    private Button getContinue() {
         return m_Continue;
     }
 
@@ -62,7 +62,7 @@ public class PauseMenuController {
      * Gets the GameModel object connected to the controller
      * @return the GameModel instance
      */
-    public GameModel getModel() {
+    private GameModel getModel() {
         return m_Model;
     }
 
@@ -70,7 +70,7 @@ public class PauseMenuController {
      * Sets the m_Model member to the model parameter passed
      * @return the GameModel instance to be connected to the controller
      */
-    public void setModel(GameModel model) {
+    private void setModel(GameModel model) {
         m_Model = model;
     }
 

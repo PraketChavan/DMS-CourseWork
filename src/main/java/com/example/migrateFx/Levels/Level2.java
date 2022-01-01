@@ -19,8 +19,8 @@ public class Level2 extends Level {
     /**
      * Constant that defines the maximum allocated space for the bricks
      */
-    public static final double MAX_WIDTH = BRICK_WIDTH * MAX_BRICK_ON_LINE;
-    public static final double HALF = 0.5;
+    private static final double MAX_WIDTH = BRICK_WIDTH * MAX_BRICK_ON_LINE;
+    private static final double HALF = 0.5;
     private static final int THREE = 3;
 
     /**

@@ -55,7 +55,7 @@ public class HighScoreController {
      * Gets the TableView object that is linked with the fxml view
      * @return TableView object
      */
-    public TableView<HighScore> getHighScoreList() {
+    private TableView<HighScore> getHighScoreList() {
         return m_highScoreList;
     }
 
@@ -63,7 +63,7 @@ public class HighScoreController {
      * Gets the list storing the high score that is read from the file
      * @return ObservableList containing the high scores
      */
-    public ObservableList<HighScore> getList() {
+    private ObservableList<HighScore> getList() {
         return m_list;
     }
 
@@ -73,7 +73,7 @@ public class HighScoreController {
      * view
      * @return TableColumn object
      */
-    public TableColumn<HighScore, String> getName() {
+    private TableColumn<HighScore, String> getName() {
         return m_Name;
     }
 
@@ -81,7 +81,7 @@ public class HighScoreController {
      * Gets the Properties object that is used to read the .properties file
      * @return Properties object
      */
-    public Properties getProperties() {
+    private Properties getProperties() {
         return m_properties;
     }
 
@@ -90,7 +90,7 @@ public class HighScoreController {
      * fxml view
      * @return TableView object
      */
-    public TableColumn<HighScore, Integer> getScore() {
+    private TableColumn<HighScore, Integer> getScore() {
         return m_Score;
     }
 

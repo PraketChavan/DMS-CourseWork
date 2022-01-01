@@ -14,24 +14,24 @@ public abstract class Level {
     /**
      * Constant to define the Brick Width
      */
-    protected static final double BRICK_WIDTH = 80;
+    static final double BRICK_WIDTH = 80;
     /**
      * Constant to define the Brick height
      */
-    protected static final double BRICK_HEIGHT = 16;
+    static final double BRICK_HEIGHT = 16;
 
     /**
      * Constant to define the maximum number of bricks that can be created on
      * a line
      */
-    protected static final int MAX_BRICK_ON_LINE = 8;
+    static final int MAX_BRICK_ON_LINE = 8;
 
     /**
      * Constant BrickFactory object that is used to create the bricks that
      * are in the level
      * @see BrickFactory
      */
-    protected static final BrickFactory BRICK_FACTORY = new BrickFactory();
+    static final BrickFactory BRICK_FACTORY = new BrickFactory();
 
     /**
      * Integer value that signifies the difficulty of the level. Higher the
@@ -46,7 +46,7 @@ public abstract class Level {
      * @return the int that represent the difficulty
      * @see #setDifficulty(int)
      */
-    public int getDifficulty() {
+    int getDifficulty() {
         return m_difficulty;
     }
 
@@ -55,7 +55,7 @@ public abstract class Level {
      * @param difficulty the new difficulty that is to be set
      * @see #getDifficulty()
      */
-    public void setDifficulty(int difficulty) {
+    private void setDifficulty(int difficulty) {
         m_difficulty = difficulty;
     }
 
@@ -63,7 +63,7 @@ public abstract class Level {
      * Level constructor that is used to initialise the value of the difficulty
      * @param difficulty the difficulty that is to be set for the level
      */
-    public Level(int difficulty) {
+    Level(int difficulty) {
         setDifficulty(difficulty);
     }
 

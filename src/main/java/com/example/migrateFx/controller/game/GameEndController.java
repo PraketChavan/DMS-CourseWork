@@ -99,7 +99,7 @@ public class GameEndController {
      * Gets the Table View object that is in the fxml view
      * @return TableView object
      */
-    public TableView<HighScore> getHighScore() {
+    private TableView<HighScore> getHighScore() {
         return m_HighScore;
     }
 
@@ -107,7 +107,7 @@ public class GameEndController {
      * Gets the properties object
      * @return properties object
      */
-    public Properties getHighScoreFile() {
+    private Properties getHighScoreFile() {
         return m_highScoreFile;
     }
 
@@ -115,7 +115,7 @@ public class GameEndController {
      * Gets the list containing the high scores
      * @return ObservableList object
      */
-    public ObservableList<HighScore> getList() {
+    private ObservableList<HighScore> getList() {
         return m_list;
     }
 
@@ -124,7 +124,7 @@ public class GameEndController {
      * @return the GameModel object
      * @see #setModel(GameModel)
      */
-    public GameModel getModel() {
+    private GameModel getModel() {
         return m_model;
     }
 
@@ -133,7 +133,7 @@ public class GameEndController {
      * @param model the GameMobel instance to be linked with the controller
      * @see #getModel()
      */
-    public void setModel(GameModel model) {
+    private void setModel(GameModel model) {
         m_model = model;
     }
 
@@ -141,7 +141,7 @@ public class GameEndController {
      * Gets the name TextField
      * @return
      */
-    public TextField getName() {
+    private TextField getName() {
         return m_Name;
     }
 
@@ -149,7 +149,7 @@ public class GameEndController {
      * Gets the player name TableColumn in the high score table
      * @return
      */
-    public TableColumn<HighScore, String> getPlayerName() {
+    private TableColumn<HighScore, String> getPlayerName() {
         return m_PlayerName;
     }
 
@@ -157,7 +157,7 @@ public class GameEndController {
      * Gets the player score TableColumn in the high score table
      * @return
      */
-    public TableColumn<HighScore, Integer> getPlayerScore() {
+    private TableColumn<HighScore, Integer> getPlayerScore() {
         return m_PlayerScore;
     }
 

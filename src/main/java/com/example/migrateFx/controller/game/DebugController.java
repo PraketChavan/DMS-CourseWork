@@ -71,7 +71,7 @@ public class DebugController {
      * Gets the Ball X Speed slider associated to the fxml view
      * @return the Slider object
      */
-    public Slider getBallXSpeed() {
+    private Slider getBallXSpeed() {
         return m_BallXSpeed;
     }
 
@@ -79,7 +79,7 @@ public class DebugController {
      * Gets the Ball Y Speed Slider object associated to the fxml view
      * @return the Slider object
      */
-    public Slider getBallYSpeed() {
+    private Slider getBallYSpeed() {
         return m_BallYSpeed;
     }
 
@@ -87,7 +87,7 @@ public class DebugController {
      * Gets the Complete Game button object associated with the view
      * @return the Button object
      */
-    public Button getCompleteGame() {
+    private Button getCompleteGame() {
         return m_CompleteGame;
     }
 
@@ -96,7 +96,7 @@ public class DebugController {
      * @return the GameModel object
      * @see #setModel(GameModel)
      */
-    public GameModel getModel() {
+    private GameModel getModel() {
         return m_Model;
     }
 
@@ -108,7 +108,7 @@ public class DebugController {
      * @throws Exception if the model object passed is null
      * @see #getModel()
      */
-    public void setModel(GameModel model) throws Exception{
+    private void setModel(GameModel model) throws Exception{
         if (model == null)
             throw new Exception("Controller cannot link to a null model");
         this.m_Model = model;
