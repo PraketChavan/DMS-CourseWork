@@ -181,7 +181,7 @@ public class GameModel implements Impactable {
         m_ballCount = new SimpleIntegerProperty(0);
         m_pause = new SimpleBooleanProperty(true);
         m_focus = new SimpleBooleanProperty(true);
-        m_impactHandler = new ImpactHandler(null);
+        m_impactHandler = new ImpactHandler();
         m_ballLost = new SimpleBooleanProperty(false);
         m_player = createPlayer();
         m_message = new SimpleStringProperty();

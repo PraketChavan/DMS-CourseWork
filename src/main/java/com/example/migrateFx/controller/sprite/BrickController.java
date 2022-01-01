@@ -16,7 +16,7 @@ public class BrickController extends SpriteController {
 
     private static final double CONTRAST_VALUE = 0.3;
     private static final double HUE_VALUE = 0.05;
-    private static final double BRIGHTNESS_VALUE = 0.9;
+    private static final double BRIGHTNESS_VALUE = 0.5;
     private static final double SATURATION_VALUE = 0.7;
 
     /**
@@ -81,7 +81,7 @@ public class BrickController extends SpriteController {
         // Setting the contrast value
         colorAdjust.setContrast(CONTRAST_VALUE);
         // Setting the hue value
-        colorAdjust.setHue(-HUE_VALUE);
+//        colorAdjust.setHue(-HUE_VALUE);
         // Setting the brightness value
         colorAdjust.setBrightness(BRIGHTNESS_VALUE);
         // Setting the saturation value

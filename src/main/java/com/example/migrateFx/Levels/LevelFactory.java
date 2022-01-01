@@ -1,7 +1,21 @@
 package com.example.migrateFx.Levels;
 
+/**
+ * This class is used to implement the Factor Design Pattern for the Level types
+ * Provides functionality for the creation of different type of level without
+ * worrying about the concrete type
+ * @author Praket Chavan
+ * @see Level
+ */
 public class LevelFactory {
 
+    /**
+     * Method that is used to create the level type depending on the level no
+     * and the difficulty setting passed to the function
+     * @param levelno the level that is to be created
+     * @param difficulty the difficulty of the level
+     * @return an abstract Level object
+     */
     public Level createLevel(int levelno, int difficulty) {
         Level level = null;
         switch (levelno) {
@@ -12,7 +26,6 @@ public class LevelFactory {
             case 5 -> level = new Level5(difficulty);
         }
 
-//        m_bricks = level.createLevel();
         return level;
     }
 }

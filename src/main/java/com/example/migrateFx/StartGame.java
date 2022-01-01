@@ -21,6 +21,7 @@ public class StartGame extends Application {
                                SCREEN_HEIGHT);
         stage.setTitle("BREAKOUT GAME!!");
         stage.setScene(root);
+        stage.setResizable(false);
         root.getRoot().requestFocus();
         stage.show();
     }
