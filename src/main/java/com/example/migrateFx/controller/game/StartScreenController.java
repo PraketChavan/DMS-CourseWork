@@ -124,7 +124,7 @@ public class StartScreenController {
     /**
      * Sets the MediaPlayer object that is used to play the intro sound
      *
-     * @param introSound
+     * @param introSound the MediaPlayer object that need to be set to
      */
     public void setIntroSound(MediaPlayer introSound) {
         m_introSound = introSound;

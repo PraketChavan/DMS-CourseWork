@@ -11,8 +11,8 @@ public abstract class Brick extends Sprite {
     public static final int BRICK_WIDTH = 80;
     public static final int BRICK_HEIGHT = 16;
 
-    public Brick(String url, Point2D location, boolean isSpec) {
-        setModel(new BrickModel(location, isSpec));
+    public Brick(String url, Point2D location, boolean isSpec, String name) {
+        setModel(new BrickModel(location, isSpec, name));
         setView(new BrickView(url, BRICK_WIDTH, BRICK_HEIGHT));
         setController(new BrickController(getModel(), getView()));
     }

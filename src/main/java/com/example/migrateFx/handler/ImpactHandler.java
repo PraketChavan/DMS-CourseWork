@@ -132,7 +132,7 @@ public class ImpactHandler {
                                         "ClayBrick.mp3"));
                         case "Steel" -> impactSound = new AudioClip(
                                 ResourceHandler.getSoundResource(
-                                        "Steel.mp3"));
+                                        "SteelBrick.mp3"));
                         case "Unbreakable" -> impactSound = new AudioClip(
                                 ResourceHandler.getSoundResource(
                                         "Unbreakable.mp3"));

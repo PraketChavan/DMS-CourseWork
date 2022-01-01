@@ -64,13 +64,14 @@ public class BrickModel extends SpriteModel implements Breakable, Impactable {
         this.m_Special.set(special);
     }
 
-    public BrickModel(Point2D location, boolean isSpec) {
+    public BrickModel(Point2D location, boolean isSpec, String name) {
         super(location);
         m_Special = new SimpleBooleanProperty(isSpec);
         m_Broken = new SimpleBooleanProperty();
         m_Size = new SimpleObjectProperty<>();
         m_Strength = new SimpleIntegerProperty();
         m_FullStrength = new SimpleIntegerProperty();
+        setName(name);
         initializeProperties();
     }
 

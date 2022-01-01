@@ -202,7 +202,7 @@ public class GameModel implements Impactable {
     }
 
     public void initialize() {
-        createLevel(2);
+        createLevel(3);
         createLevel(1);
         setBallCount(3);
         createBall();
@@ -345,7 +345,7 @@ public class GameModel implements Impactable {
     public void move() {
         getBalls().forEach(ball -> ball.getController().move());
         getPlayer().getController().move();
-        getPowerUps().forEach(powerUp -> powerUp.getModel().move());
+        getPowerUps().forEach(powerUp -> powerUp.getController().move());
     }
 
     public void onBallLost() {
