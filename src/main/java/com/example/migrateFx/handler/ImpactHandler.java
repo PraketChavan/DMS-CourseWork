@@ -20,7 +20,7 @@ import java.util.List;
  *
  * The main code for this class was extracted from the original Wall class
  * and thus reduced the Wall class's responsibility
- *
+ * <br>
  * This class abstracts away from the individual class types and only deals
  * with Impactable objects
  *
@@ -43,7 +43,7 @@ public class ImpactHandler {
      * Constant defines the functions return value when the handle detects no
      * impacts in the game interation
      */
-    public static final int NO_BRICK_BROKEN = 0;
+    private static final int NO_BRICK_BROKEN = 0;
 
     /**
      * Constant defines the functions return value there is a normal wall
@@ -86,7 +86,7 @@ public class ImpactHandler {
      * Gets the Observable list of balls present on the screen
      * @return Observable list object
      */
-    public ObservableList<Impactable> getBalls() {
+    private ObservableList<Impactable> getBalls() {
         return m_Balls;
     }
 
@@ -102,7 +102,7 @@ public class ImpactHandler {
      * Gets the paddle object present on the screen
      * @return the current paddle on the screen as an Impactable object
      */
-    public Impactable getPaddle() {
+    private Impactable getPaddle() {
         return m_Paddle;
     }
 
@@ -203,9 +203,14 @@ public class ImpactHandler {
      * the {@link Impactable#onImpact(int)} method on the ball object
      */
     private boolean handleBallPaddleImpacts() {
-        for (Impactable ball : getBalls())
+        int impact;
+        for (Impactable ball : getBalls()) {
             //find the impact for each ball present on the screen
-            ball.onImpact(getPaddle().findImpact(ball));
+            impact = getPaddle().findImpact(ball);
+            ball.onImpact(impact);
+            if (impact != Impactable.NO_IMPACT)
+                ((BallModel)ball).setCollisions(true);
+        }
         return false;
     }
 
@@ -228,7 +233,7 @@ public class ImpactHandler {
         int impactSide;
         for (Impactable ball : getBalls()) {
             for (Impactable brick : getBricks()) {
-                impact  = false; // reset the impact boolean
+//                impact  = false; // reset the impact boolean
                 impactSide = brick.findImpact(ball);
                 switch (impactSide) {
                     //If any impact is detected

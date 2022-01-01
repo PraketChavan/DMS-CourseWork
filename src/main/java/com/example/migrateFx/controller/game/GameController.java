@@ -113,7 +113,7 @@ public class GameController {
      *
      * @return the Label object that shows the ball count
      */
-    public Label getBallCount() {
+    private Label getBallCount() {
         return m_ballCount;
     }
 
@@ -122,7 +122,7 @@ public class GameController {
      *
      * @return the Label object that shows the brick count
      */
-    public Label getBrickCount() {
+    private Label getBrickCount() {
         return m_brickCount;
     }
 
@@ -131,7 +131,7 @@ public class GameController {
      *
      * @return the Pane object that is the main game area
      */
-    public Pane getGamePane() {
+    private Pane getGamePane() {
         return m_gamePane;
     }
 
@@ -140,7 +140,7 @@ public class GameController {
      *
      * @return the Label object that displays the LEVEL COMPLETE message
      */
-    public Label getLevelComplete() {
+    private Label getLevelComplete() {
         return m_levelComplete;
     }
 
@@ -149,7 +149,7 @@ public class GameController {
      *
      * @return the Label object that shows the message
      */
-    public Label getMessageText() {
+    private Label getMessageText() {
         return m_messageText;
     }
 
@@ -159,7 +159,7 @@ public class GameController {
      * @return the GameModel object
      * @see #setModel(GameModel)
      */
-    public GameModel getModel() {
+    private GameModel getModel() {
         return m_model;
     }
 
@@ -170,7 +170,7 @@ public class GameController {
      * @param model the GameModel object that is to be linked with the
      *              controller
      */
-    public void setModel(GameModel model) {
+    private void setModel(GameModel model) {
         m_model = model;
     }
 
@@ -179,7 +179,7 @@ public class GameController {
      *
      * @return the Label object that shows the game score
      */
-    public Label getScore() {
+    private Label getScore() {
         return m_score;
     }
 
@@ -334,8 +334,8 @@ public class GameController {
                           for (Ball ball : change.getAddedSubList()) {
                               ball.getView().createView(getGamePane());
                           }
-                          for (Ball ball : change.getAddedSubList()) {
-                              getGamePane().getChildren().remove(ball);
+                          for (Ball ball : change.getRemoved()) {
+                              getGamePane().getChildren().remove(ball.getView().getView());
                           }
                       }
                   });

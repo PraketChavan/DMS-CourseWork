@@ -99,7 +99,7 @@ public class StartScreenController {
      * Gets the FileInputStream that is reading the theme.properties file
      * @return FileInputStream object
      */
-    public FileInputStream getFile() {
+    private FileInputStream getFile() {
         return file;
     }
 
@@ -117,7 +117,7 @@ public class StartScreenController {
      *
      * @return MediaPlayer object
      */
-    public MediaPlayer getIntroSound() {
+    private MediaPlayer getIntroSound() {
         return m_introSound;
     }
 
@@ -126,7 +126,7 @@ public class StartScreenController {
      *
      * @param introSound the MediaPlayer object that need to be set to
      */
-    public void setIntroSound(MediaPlayer introSound) {
+    private void setIntroSound(MediaPlayer introSound) {
         m_introSound = introSound;
     }
 
@@ -134,7 +134,7 @@ public class StartScreenController {
      * Gets the Properties object that has been initialised
      * @return Properties object
      */
-    public Properties getProperties() {
+    private Properties getProperties() {
         return m_properties;
     }
 
@@ -142,7 +142,7 @@ public class StartScreenController {
      * Gets the start Button from the view
      * @return Button object
      */
-    public Button getStart() {
+    private Button getStart() {
         return m_start;
     }
 
@@ -150,7 +150,7 @@ public class StartScreenController {
      * Gets the ChoiceBox object from the view
      * @return ChoiceBox object
      */
-    public ChoiceBox<String> getThemeChoice() {
+    private ChoiceBox<String> getThemeChoice() {
         return m_themeChoice;
     }
 

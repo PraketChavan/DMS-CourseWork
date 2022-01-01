@@ -40,7 +40,7 @@ public abstract class SpriteController {
      * @param model The model to be linked to the controller
      * @see #getModel()
      */
-    public void setModel(SpriteModel model) {
+    private void setModel(SpriteModel model) {
         m_Model = model;
     }
 
@@ -60,7 +60,7 @@ public abstract class SpriteController {
      * @param view The model to be linked to the controller
      * @see #getView()
      */
-    public void setView(SpriteView view) {
+    private void setView(SpriteView view) {
         m_View = view;
     }
 
@@ -91,5 +91,5 @@ public abstract class SpriteController {
      * Initialises the connection between the model and view by binding the
      * view and model properties.
      */
-    public abstract void initialize();
+    protected abstract void initialize();
 }
