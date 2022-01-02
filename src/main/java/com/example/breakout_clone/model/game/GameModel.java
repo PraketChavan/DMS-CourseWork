@@ -58,13 +58,15 @@ public class GameModel {
     /**
      * Constant that defines the balls starting y position
      */
-    private static final double BALL_START_Y = PLAYER_START_X - 50;
+    private static final double BALL_START_Y = PLAYER_START_Y - 50;
 
     private static final Point2D BALL_INITIAL_SPEED = new Point2D(2, -2);
 
     private static final int MAX_LEVEL = 5;
 
     private static final int DIFFICULTY = 6;
+
+    public static final int THREE = 3;
 
     /**
      * The singleton game model instance
@@ -540,9 +542,9 @@ public class GameModel {
      * Initialize the level queue and other counters to start the game
      */
     public void initialize() {
-        for (int i = 2; i < MAX_LEVEL; i++)
+        for (int i = 1; i <= MAX_LEVEL; i++)
             createLevel(i, DIFFICULTY);
-        setBallCount(3);
+        setBallCount(THREE);
         createBall();
         for (Ball ball : getBalls()) {
             ballLostProperty().bind(ball.getModel().lostProperty());
@@ -702,7 +704,9 @@ public class GameModel {
      * @see PaddleController
      */
     public void gameReset() {
-        getBalls().get(0).getController().reset();
+        getBalls().forEach(ball -> ball.getController().reset());
+        getBalls().forEach(
+                ball -> ball.getController().setSpeed(BALL_INITIAL_SPEED));
         getPlayer().getController().reset();
         getBalls().forEach(ball -> ball.getModel().setLost(false));
         stopTimer();

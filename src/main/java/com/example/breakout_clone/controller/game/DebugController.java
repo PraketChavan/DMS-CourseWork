@@ -230,6 +230,7 @@ public class DebugController {
             getModel().nextLevel();
             getModel().getLevelSound().play();
             getModel().getLevelSound().setCycleCount(MediaPlayer.INDEFINITE);
+            getModel().gameReset();
         }
     }
 }

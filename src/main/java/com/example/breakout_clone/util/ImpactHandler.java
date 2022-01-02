@@ -273,14 +273,13 @@ public class ImpactHandler {
             }
             //Remove all the broken bricks from the observable list
             getBricks().removeAll(broken);
-//            ((BallModel) ball).setCollisions(false);
         }
 
         //Return a specific constant value depending on the type of broken
         // brick
         if (specialBreak)
             return SPECIAL_BRICK_BROKEN;
-        else if (impact || broken.size() > 0)
+        else if (broken.size() > 0)
             return NORMAL_BRICK_BROKEN;
         else
             return NO_BRICK_BROKEN;

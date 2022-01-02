@@ -42,10 +42,8 @@ public class Level2 extends Level {
     public Brick[] createLevel() {
         Random rand = new Random();
         //Randomise the number of rows and columns each time
-        int numberOfLines = 1;//Math.max(getDifficulty(),
-                                //       getDifficulty() * THREE);
-        int numberOfColumn = 1;//Math.max(THREE, rand.nextInt
-        // (MAX_BRICK_ON_LINE));
+        int numberOfLines = Math.max(getDifficulty(),getDifficulty() * THREE);
+        int numberOfColumn = Math.max(THREE, rand.nextInt(MAX_BRICK_ON_LINE));
         int numberOfBricks = numberOfLines * numberOfColumn;
 
         Brick[] temp = new Brick[numberOfBricks];

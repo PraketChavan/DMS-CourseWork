@@ -22,9 +22,9 @@ public class BrickFactory {
 
     private static final int MAX_RANDOM_NUMBER = 100;
 
-    private static final int MAX_SPECIAL = 100;
+    private static final int MAX_SPECIAL = 15;
 
-    private static final int SPECIAL_THRESHOLD = 8;
+    private static final int SPECIAL_THRESHOLD = 10;
 
     private final Random m_random = new Random();
 

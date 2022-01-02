@@ -400,6 +400,7 @@ public class BallModel extends SpriteModel implements Movable, Impactable {
     @Override
     public int findImpact(Impactable parent) {
         Bounds bound = GAME_BOUNDS;
+        setCollisions(false);
         if (bottomProperty().get().getY() >= bound.getMaxY()) {
             setLost(true); // ball has been lost
         }
