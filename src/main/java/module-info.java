@@ -3,9 +3,7 @@ module com.example.breakout_clone {
     requires javafx.fxml;
     requires javafx.graphics;
     requires javafx.base;
-    requires javafx.swing;
     requires javafx.media;
-
 
     exports com.example.breakout_clone;
     exports com.example.breakout_clone.view;
