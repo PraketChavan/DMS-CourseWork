@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<HBox spacing="20.0" xmlns="http://javafx.com/javafx/11.0.2"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.breakout_clone.controller.game.DebugController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+    <VBox alignment="CENTER" spacing="10.0">
+        <Button fx:id="m_SkipLevel" mnemonicParsing="false"
+                onAction="#skipLevel" prefHeight="13.0"
+                prefWidth="130.0" text="Skip Level"/>
+        <Slider fx:id="m_BallXSpeed" blockIncrement="1.0"
+                majorTickUnit="1.0" max="5.0" minorTickCount="1"
+                prefHeight="37.0" prefWidth="130.0"
+                showTickLabels="true" showTickMarks="true"
+                snapToTicks="true"/>
+        <Label text="Ball X Speed"/>
+    </VBox>
+    <VBox alignment="TOP_CENTER" prefHeight="6.0" prefWidth="130.0">
+        <Button fx:id="m_CompleteGame" mnemonicParsing="false"
+                prefHeight="25.0" prefWidth="130.0"
+                text="Complete Game" onAction="#onCompleteClick"/>
+    </VBox>
+    <VBox alignment="TOP_CENTER" spacing="12.0">
+        <Button fx:id="m_ResetBalls" mnemonicParsing="false"
+                onAction="#resetBall" prefHeight="25.0"
+                prefWidth="130.0" text="Reset Balls"/>
+        <Slider fx:id="m_BallYSpeed" blockIncrement="1.0"
+                majorTickUnit="1.0" max="5.0" minorTickCount="1"
+                prefHeight="37.0" prefWidth="130.0"
+                showTickLabels="true" showTickMarks="true"
+                snapToTicks="true"/>
+        <Label text="Ball Y Speed"/>
+    </VBox>
+</HBox>

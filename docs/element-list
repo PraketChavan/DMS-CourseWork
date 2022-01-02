@@ -1,0 +1,14 @@
+module:com.example.breakout_clone
+com.example.breakout_clone
+com.example.breakout_clone.controller.game
+com.example.breakout_clone.controller.sprite
+com.example.breakout_clone.Levels
+com.example.breakout_clone.model.game
+com.example.breakout_clone.model.sprite
+com.example.breakout_clone.util
+com.example.breakout_clone.view
+com.example.breakout_clone.wrappers
+com.example.breakout_clone.wrappers.ball
+com.example.breakout_clone.wrappers.brick
+com.example.breakout_clone.wrappers.paddle
+com.example.breakout_clone.wrappers.powerup

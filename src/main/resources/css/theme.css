@@ -1,0 +1,32 @@
+.Blue {
+    -fx-background-color: lightblue;
+}
+
+.Cream {
+    -fx-background-color: #FFFDD0; /*defines the color Cream */
+}
+
+.Gold {
+    -fx-background-color: lightyellow;
+}
+
+.Green {
+    -fx-background-color: lightgreen;
+}
+
+.Grey {
+    -fx-background-color: lightgrey;
+}
+
+.Orange {
+    -fx-background-color: #FFD580; /* Defines the color light orange */
+}
+
+.Pink {
+    -fx-background-color: #FFEDF5; /*Defines the light shade of  pink*/
+}
+
+.Purple {
+    -fx-background-color: #CBC3E3; /* Defines the color light purple */
+}
+
