@@ -104,7 +104,8 @@ public class HighScoreController {
     private void initialize() {
         try {
             FileInputStream file = new FileInputStream(
-                    getClass().getResource("/properties/highscore.properties").getFile());
+                    getClass().getResource(
+                            "/properties/highscore.properties").getFile());
             getProperties().load(file);
         } catch (IOException e) {
             e.printStackTrace();

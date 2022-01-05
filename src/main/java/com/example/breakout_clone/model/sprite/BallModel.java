@@ -10,7 +10,9 @@ import javafx.geometry.Point2D;
 
 /**
  * Model class for the Ball MVC. The class implements the {@link Movable} and
- * the {@link Impactable} interfaces.
+ * the {@link Impactable} interfaces. This class contains the main sprite
+ * logic for how to move the ball and what happens when the ball collides
+ * with the something
  *
  * @author Praket Chavan
  * @see SpriteModel

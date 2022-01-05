@@ -325,8 +325,8 @@ public class GameController {
                           }
                           for (Brick brick :
                                   change.getRemoved()) {
-                              getGamePane().getChildren().remove(brick.getView()
-                                                                      .getView());
+                              getGamePane().getChildren().remove(
+                                      brick.getView().getView());
                               getModel().setBrickCount(
                                       getModel().getBrickCount() - 1);
                           }
@@ -340,7 +340,8 @@ public class GameController {
                               ball.getView().createView(getGamePane());
                           }
                           for (Ball ball : change.getRemoved()) {
-                              getGamePane().getChildren().remove(ball.getView().getView());
+                              getGamePane().getChildren().remove(
+                                      ball.getView().getView());
                           }
                       }
                   });

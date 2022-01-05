@@ -8,7 +8,7 @@ import javafx.geometry.Point2D;
  * The Model class for the Paddle MVC. It stores all the data of a Paddle object
  * and provides the controller with functions to allow it to modify the
  * state/data of the model
- * <br><br>
+ * <br>This class contains the main paddle logic on how to move the paddle.<br>
  * The class implements the Movable and the Impactable interface and all
  * its method
  * @author Praket Chavan

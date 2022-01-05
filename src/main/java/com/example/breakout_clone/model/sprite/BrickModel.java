@@ -13,7 +13,10 @@ import java.util.Random;
  * Model class for the Brick MVC. It stores all the data of a Brick object
  * and provides the controller with functions to allow it to modify the
  * state/data of the model
- * <br><br>
+ * <br>
+ * This class contains the brick logic for the game, i.e. what to do when
+ * the brick is broken, what to do when the ball collides with the brick,
+ * etc.<br>
  * The class implements the Breakable and the Impactable interface and all
  * its method
  * @author Praket Chavan

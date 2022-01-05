@@ -36,8 +36,8 @@ public class ResourceHandler {
      * Constant File object that opens the theme.properties file
      */
     private static final File FILE = new File(
-            ResourceHandler.class
-                    .getResource("/properties/theme.properties").getFile());
+            ResourceHandler.class.getResource(
+                    "/properties/theme.properties").getFile());
 
     /**
      * FileInputStream that will be used to read the theme.properties file
@@ -54,8 +54,8 @@ public class ResourceHandler {
             //Create the FileInputStream for the theme.properties file and
             // load it.
             RESOURSE = new FileInputStream(
-                    ResourceHandler.class
-                            .getResource("/properties/theme.properties").getFile());
+                    ResourceHandler.class.getResource(
+                            "/properties/theme.properties").getFile());
             properties.load(RESOURSE);
         } catch (IOException e) {
             e.printStackTrace();
@@ -77,8 +77,8 @@ public class ResourceHandler {
                */
             if (m_LastModified != FILE.lastModified()) {
                 RESOURSE = new FileInputStream(
-                        ResourceHandler.class
-                                .getResource("/properties/theme.properties").getFile());
+                        ResourceHandler.class.getResource(
+                                "/properties/theme.properties").getFile());
                 m_LastModified = FILE.lastModified();
             }
             properties.load(RESOURSE);

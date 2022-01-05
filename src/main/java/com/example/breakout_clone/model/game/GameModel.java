@@ -736,7 +736,8 @@ public class GameModel {
         getImpactHandler().getBricks().clear();
         getImpactHandler().getPowerUp().clear();
         getPowerUps().clear();
-        getBricks().forEach(brick -> getImpactHandler().addBrick(brick.getModel()));
+        getBricks().forEach(
+                brick -> getImpactHandler().addBrick(brick.getModel()));
         updateBrickCount();
         setLevelNumber((getLevelNumber() + 1) % DIFFICULTY);
     }

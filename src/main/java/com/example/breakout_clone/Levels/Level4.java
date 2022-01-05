@@ -15,9 +15,9 @@ import java.util.Random;
  */
 public class Level4 extends Level {
     //Constants defined to remove magic numbers
-    private static final int TEN = 10;
+    private static final int PROB_BOUND = 10;
     private static final int TWO = 2;
-    private static final int EIGHT = 8;
+    private static final int THRESHOLD = 8;
 
     /**
      * Constructor that is used to initialise the difficulty value
@@ -54,7 +54,7 @@ public class Level4 extends Level {
             p = new Point2D(x, y);
             //Randomise the generation of unbreakable Bricks and make sure
             // that the level does not become impossible
-            if (rand.nextInt(TEN) > EIGHT && i % TWO == 0)
+            if (rand.nextInt(PROB_BOUND) > THRESHOLD && i % TWO == 0)
                 temp[i] = BRICK_FACTORY.createBrick(BrickType.UNBREAKABLE, p);
             else
                 temp[i] = BRICK_FACTORY.createBrick(BrickType.CLAY, p);

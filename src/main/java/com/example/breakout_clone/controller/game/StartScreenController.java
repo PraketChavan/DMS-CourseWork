@@ -173,7 +173,8 @@ public class StartScreenController {
         FileInputStream file1;
         try {
             file1 = new FileInputStream(
-                    getClass().getResource("/properties/theme.properties").getFile());
+                    getClass().getResource(
+                            "/properties/theme.properties").getFile());
         } catch (FileNotFoundException e) {
             file1 = null;
             e.printStackTrace();
@@ -290,11 +291,12 @@ public class StartScreenController {
      */
     @FXML
     private void onThemeSelected() {
-        getStart().getScene().getRoot().getStyleClass().removeIf(s -> s.compareTo(
+        getStart().getScene().getRoot().getStyleClass()
+                  .removeIf(s -> s.compareTo(
                 getProperties().getProperty("theme")) == 0);
         getProperties().setProperty("theme", getThemeChoice().getValue());
-        getStart().getScene().getRoot().getStyleClass().add(getThemeChoice()
-                                                                    .getValue());
+        getStart().getScene().getRoot().getStyleClass().add(
+                getThemeChoice().getValue());
 
     }
 }

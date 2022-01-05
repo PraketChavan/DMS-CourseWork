@@ -193,7 +193,8 @@ public class GameEndController {
         //connect the highScore list to the table view
         getHighScore().setItems(getList());
         //create the cell factory for the column in the table
-        getPlayerName().setCellValueFactory(new PropertyValueFactory<>("name"));
+        getPlayerName().setCellValueFactory(
+                new PropertyValueFactory<>("name"));
         getPlayerScore().setCellValueFactory(
                 new PropertyValueFactory<>("score"));
     }
